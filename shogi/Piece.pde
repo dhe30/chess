@@ -3,7 +3,7 @@ public class Piece{
   boolean white;
   boolean promoted = false;
   ArrayList<int[]> potentialMoves = new ArrayList();
-  boolean isRoyal;
+  boolean isRoyal=false;
   public Piece(String x){
     if(x.equals("white")){
       white = true;
