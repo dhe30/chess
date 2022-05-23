@@ -81,6 +81,13 @@ void mouseClicked() {
         // adds coordinates to global variable (i.e. selects the piece), only occurs when no piece has been selected 
         InitialSelected.add(mouseX / 100);
         InitialSelected.add(mouseY / 100);
+        Piece piece = Board.board[mouseY/100][mouseX/100].piece;
+        ArrayList<int[]> list = piece.calcPotential(mouseX/100, mouseY/100);
+        for(int i = 0; i < list.size(); i++){
+          int x = list.get(i)[0];
+          int y = list.get(i)[1];
+          circle(x, y, 20);
+        }
       }
     } else if (InitialSelected.size() > 0) {
       // Only occurs when piece has been selected, row order means x and y switch positions!
