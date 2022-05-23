@@ -85,19 +85,23 @@ void mouseClicked() {
     } else if (InitialSelected.size() > 0) {
       // Only occurs when piece has been selected, row order means x and y switch positions!
       // make new tile piece disappear (it is being replaced by the selected piece)
-      fill(252, 204, 156);
-      strokeWeight(1);
-      stroke(0);
-      rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
-      // array logic
-      Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
-      // make old tile piece disappear (because it moved to new tile)
-      fill(252, 204, 156);
-      strokeWeight(1);
-      stroke(0);
-      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
-      InitialSelected.clear();
-      Turn = !Turn;
+      if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
+        InitialSelected.clear();
+      } else {
+        fill(252, 204, 156);
+        strokeWeight(1);
+        stroke(0);
+        rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
+        // array logic
+        Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+        // make old tile piece disappear (because it moved to new tile)
+        fill(252, 204, 156);
+        strokeWeight(1);
+        stroke(0);
+        rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+        InitialSelected.clear();
+        Turn = !Turn;
+      }
     }
   }
 }
