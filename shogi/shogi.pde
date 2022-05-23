@@ -42,7 +42,7 @@ void setup(){
     if(i==1 || i==7){
       Piece blackKnight = new Knight("black");
       Board.board[0][i].setPiece(blackKnight);
-      Piece whiteKnight = new Lance("white");
+      Piece whiteKnight = new Knight("white");
       Board.board[8][i].setPiece(whiteKnight);
     }
     //sets down silver generals
