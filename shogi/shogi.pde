@@ -1,7 +1,6 @@
 board Board;
 ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
-int xcoor;
-int ycoor;
+boolean Turn = true;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -74,21 +73,26 @@ void setup() {
 }
 
 void mouseClicked() {
-  // ex. mouse at (456,789) refers to tile (4,7)
-  if (InitialSelected.size() == 0){
-    InitialSelected.add(mouseX / 100);
-    InitialSelected.add(mouseY / 100);
-    System.out.println("initialX: " + mouseX / 100);
-    System.out.println("initialY: " +mouseY / 100);
-    System.out.println("SIZE: " + InitialSelected.size());
-  } else if (InitialSelected.size() > 0){
-    // row order means x and y switch positions!
-    Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
-    
-    InitialSelected.clear();
-    System.out.println("X: " + mouseX / 100);
-    System.out.println("Y: " + mouseY / 100);
-    System.out.println("SIZE: " + InitialSelected.size());
+  // ArrayOutOfBounds if click not within 900 * 900 and system crashes
+  if (mouseX < 900 && mouseY < 900) {
+    // ex. mouse at (456,789) refers to tile (4,7)
+    if (InitialSelected.size() == 0 && Board.board[mouseY / 100][mouseX / 100].piece != null) {
+      if (Board.board[mouseY / 100][mouseX / 100].piece.white == Turn) {
+        // adds coordinates to global variable (i.e. selects the piece), only occurs when no piece has been selected 
+        InitialSelected.add(mouseX / 100);
+        InitialSelected.add(mouseY / 100);
+      }
+    } else if (InitialSelected.size() > 0) {
+      // Only occurs when piece has been selected, row order means x and y switch positions!
+      Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+      // make old tile piece disappear (because it moved to new tile)
+      fill(252, 204, 156);
+      strokeWeight(1);
+      stroke(0);
+      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+      InitialSelected.clear();
+      Turn = !Turn;
+    }
   }
 }
 void draw() {
