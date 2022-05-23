@@ -15,3 +15,7 @@ May 19, 2022
     Daniel: worked on development stages, descriptions, and basic outline of our prototype 
 
     Samuel: wrote down ideas for how to implement threatening, checkmates, and captured pieces
+
+May 22, 2022
+
+    Samuel: created the basic setup as well as all the chess pieces. added calcPotential to all the pieces. Had the board and pieces drawn in processing. 
