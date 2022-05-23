@@ -3,7 +3,7 @@ public class Pawn extends Piece{
     super(x);
     role="pawn";
   }
-  ArrayList<int[]> calcPotential(int x, int y){
+  void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
     if(white){
       if(y!=0){
@@ -17,6 +17,6 @@ public class Pawn extends Piece{
         ans.add(down);
       }
     }
-    return ans;
+    potentialMoves=(ArrayList)ans.clone();
   }
 }
