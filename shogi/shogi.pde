@@ -1,6 +1,5 @@
 board Board;
-Piece InitialSelected = null;
-Piece moveTo = null;
+ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
 int xcoor;
 int ycoor;
 void setup() {
@@ -76,6 +75,21 @@ void setup() {
 
 void mouseClicked() {
   // ex. mouse at (456,789) refers to tile (4,7)
+  if (InitialSelected.size() == 0){
+    InitialSelected.add(mouseX / 100);
+    InitialSelected.add(mouseY / 100);
+    System.out.println("initialX: " + mouseX / 100);
+    System.out.println("initialY: " +mouseY / 100);
+    System.out.println("SIZE: " + InitialSelected.size());
+  } else if (InitialSelected.size() > 0){
+    // row order means x and y switch positions!
+    Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+    
+    InitialSelected.clear();
+    System.out.println("X: " + mouseX / 100);
+    System.out.println("Y: " + mouseY / 100);
+    System.out.println("SIZE: " + InitialSelected.size());
+  }
 }
 void draw() {
   strokeWeight(0);
