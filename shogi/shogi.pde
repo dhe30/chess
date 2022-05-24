@@ -171,6 +171,11 @@ void draw() {
         Board.board[1][i].piece.canPromote();
       }
     }
+    if(Board.board[2][i].piece!=null){
+      if(Board.board[2][i].piece.white && (Board.board[2][i].piece.role.equals("lance") || Board.board[2][i].piece.role.equals("pawn") || Board.board[2][i].piece.role.equals("silver\nGeneral") || Board.board[2][i].piece.role.equals("knight"))){
+        Board.board[2][i].piece.canPromote();
+      }
+    }
     if(Board.board[8][i].piece!=null){
       if(!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))){
         Piece blackGoldGeneral = new GoldGeneral("black");
@@ -181,6 +186,14 @@ void draw() {
       if(!Board.board[7][i].piece.white && Board.board[7][i].piece.role.equals("knight")){
         Piece blackGoldGeneral = new GoldGeneral("black");
         Board.board[7][i].setPiece(blackGoldGeneral);
+      }
+      if(!Board.board[7][i].piece.white && (Board.board[7][i].piece.role.equals("lance") || Board.board[7][i].piece.role.equals("pawn") || Board.board[7][i].piece.role.equals("silver\nGeneral"))){
+        Board.board[7][i].piece.canPromote();
+      }
+    }
+    if(Board.board[6][i].piece!=null){
+      if(!Board.board[6][i].piece.white && (Board.board[6][i].piece.role.equals("lance") || Board.board[6][i].piece.role.equals("pawn") || Board.board[6][i].piece.role.equals("silver\nGeneral") || Board.board[6][i].piece.role.equals("knight"))){
+        Board.board[6][i].piece.canPromote();
       }
     }
   }
