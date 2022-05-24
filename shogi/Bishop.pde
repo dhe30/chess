@@ -4,7 +4,7 @@ public class Bishop extends Piece{
     role="bishop";
     isRoyal=true;
   }
-  ArrayList<int[]> calcPotential(int x, int y){
+  void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
     int ogX = x;
     int ogY = y;
@@ -48,6 +48,6 @@ public class Bishop extends Piece{
         ans.add(down);
       }
     }
-    return ans;
+    potentialMoves=(ArrayList)ans.clone();
   }
 }

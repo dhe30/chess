@@ -106,9 +106,16 @@ void mouseClicked() {
   }
 }
 void draw() {
+  fill(252, 204, 156);
+  rect(0, 0, 900, 900);
+  strokeWeight(1);
+  stroke(0);
+  for (int i = 0; i <=9; i++) {
+    line(100*i, 0, 100*i, 900);
+    line(0, 100*i, 900, 100*i);
+  }
   strokeWeight(0);
   stroke(255, 0);
-  fill(0);
   textSize(12);
   fill(255);
   /*
@@ -135,6 +142,17 @@ void draw() {
           fill(255);
         }
       }
+    }
+  }
+  if(InitialSelected.size() > 0){
+    Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
+    piece.calcPotential(InitialSelected.get(0), InitialSelected.get(1));
+    ArrayList<int [] > list = piece.potentialMoves;
+    fill(20, 50);
+    for(int i = 0; i < list.size(); i++){
+      int x = list.get(i)[0];
+      int y = list.get(i)[1];
+      circle(x*100 + 50, y*100+50, 30);
     }
   }
 }
