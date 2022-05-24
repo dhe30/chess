@@ -166,7 +166,7 @@ void draw() {
         piece.calcPotential(InitialSelected.get(0), InitialSelected.get(1));
       }
     }
-    ArrayList<int [] > list = piece.potentialMoves;
+    ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
     for (int i = 0; i < list.size(); i++) {
       int x = list.get(i)[0];
@@ -268,5 +268,26 @@ public class board {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
       }
     }
+  }
+  ArrayList<int[]> legalMoves(int x, int y){
+    ArrayList<int[]> ans = new ArrayList();
+    Piece piece = board[x][y].piece;
+    if(!piece.isRoyal){
+      piece.calcPotential(y, x);
+    }
+    else{
+      royalPotential(x,y);
+    }
+    ans=piece.potentialMoves;
+    for(int i = 0; i < ans.size(); i++){
+      Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
+      if(tile.piece != null){
+        if((tile.piece.white && piece.white) || (!tile.piece.white && !piece.white)){
+          ans.remove(i);
+          i--;
+        }
+      }
+    }
+    return ans;
   }
 }
