@@ -156,6 +156,30 @@ void draw() {
         }
       }
     }
+    if(Board.board[0][i].piece!=null){
+      if(Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))){
+        Piece whiteGoldGeneral = new GoldGeneral("white");
+        Board.board[0][i].setPiece(whiteGoldGeneral);
+      }
+    }
+    if(Board.board[1][i].piece!=null){
+      if(Board.board[1][i].piece.white && Board.board[1][i].piece.role.equals("knight")){
+        Piece whiteGoldGeneral = new GoldGeneral("white");
+        Board.board[1][i].setPiece(whiteGoldGeneral);
+      }
+    }
+    if(Board.board[8][i].piece!=null){
+      if(!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))){
+        Piece blackGoldGeneral = new GoldGeneral("black");
+        Board.board[8][i].setPiece(blackGoldGeneral);
+      }
+    }
+    if(Board.board[7][i].piece!=null){
+      if(!Board.board[7][i].piece.white && Board.board[7][i].piece.role.equals("knight")){
+        Piece blackGoldGeneral = new GoldGeneral("black");
+        Board.board[7][i].setPiece(blackGoldGeneral);
+      }
+    }
   }
   if (InitialSelected.size() > 0) {
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
