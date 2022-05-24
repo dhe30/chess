@@ -87,6 +87,12 @@ void keyPressed() {
   if (key == ' ') {
     Test = !Test;
   }
+  if(InitialSelected.size()>0){
+    Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
+    if(key == 'p' && piece.canPromote){
+      piece.promote();
+    }
+  }
 }
 void mouseClicked() {
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
@@ -167,9 +173,71 @@ void draw() {
         }
       }
     }
+    if(Board.board[0][i].piece!=null){
+      if(Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))){
+        Board.board[0][i].piece.promote();
+      }
+      if(Board.board[0][i].piece.white && !Board.board[0][i].piece.promoted && (Board.board[0][i].piece.role.equals("silver\nGeneral") || Board.board[0][i].piece.role.equals("rook") || Board.board[0][i].piece.role.equals("bishop"))){
+        Board.board[0][i].piece.canPromote();
+      }
+    }
+    if(Board.board[1][i].piece!=null){
+      if(Board.board[1][i].piece.white && Board.board[1][i].piece.role.equals("knight")){
+        Board.board[1][i].piece.promote();
+      }
+      if(Board.board[1][i].piece.white && !Board.board[1][i].piece.promoted && (Board.board[1][i].piece.role.equals("lance") || Board.board[1][i].piece.role.equals("pawn") || 
+         Board.board[1][i].piece.role.equals("silver\nGeneral") || Board.board[1][i].piece.role.equals("rook") || Board.board[1][i].piece.role.equals("bishop"))){
+        Board.board[1][i].piece.canPromote();
+      }
+    }
+    if(Board.board[2][i].piece!=null){
+      if(Board.board[2][i].piece.white && !Board.board[2][i].piece.promoted &&(Board.board[2][i].piece.role.equals("lance") || Board.board[2][i].piece.role.equals("pawn") || 
+         Board.board[2][i].piece.role.equals("silver\nGeneral") || Board.board[2][i].piece.role.equals("knight") || Board.board[2][i].piece.role.equals("rook") || Board.board[2][i].piece.role.equals("bishop"))){
+        Board.board[2][i].piece.canPromote();
+      }
+    }
+    if(Board.board[8][i].piece!=null){
+      if(!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))){
+        Board.board[8][i].piece.promote();
+      }
+      if(!Board.board[8][i].piece.white && !Board.board[8][i].piece.promoted && (Board.board[8][i].piece.role.equals("silver\nGeneral")|| Board.board[8][i].piece.role.equals("rook") || Board.board[8][i].piece.role.equals("bishop"))){
+        Board.board[8][i].piece.canPromote();
+      }
+    }
+    if(Board.board[7][i].piece!=null){
+      if(!Board.board[7][i].piece.white && Board.board[7][i].piece.role.equals("knight")){
+        Board.board[7][i].piece.promote();
+      }
+      if(!Board.board[7][i].piece.white && !Board.board[7][i].piece.promoted && (Board.board[7][i].piece.role.equals("lance") || Board.board[7][i].piece.role.equals("pawn") || 
+          Board.board[7][i].piece.role.equals("silver\nGeneral") || Board.board[7][i].piece.role.equals("rook") || Board.board[7][i].piece.role.equals("bishop"))){
+        Board.board[7][i].piece.canPromote();
+      }
+    }
+    if(Board.board[6][i].piece!=null){
+      if(!Board.board[6][i].piece.white && !Board.board[8][i].piece.promoted && (Board.board[6][i].piece.role.equals("lance") || Board.board[6][i].piece.role.equals("pawn") || 
+          Board.board[6][i].piece.role.equals("silver\nGeneral") || Board.board[6][i].piece.role.equals("knight") || Board.board[6][i].piece.role.equals("rook") || Board.board[6][i].piece.role.equals("bishop"))){
+        Board.board[6][i].piece.canPromote();
+      }
+    }
+  }
+  fill(255);
+  rect(900, 0, 1500, 900);
+  fill(0);
+  textSize(20);
+  if(Turn){
+    text("white's turn", 950, 50);
+  }
+  else{
+    text("black's turn", 950, 50);
   }
   if (InitialSelected.size() > 0) {
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
+    if(piece.canPromote){
+      fill(13, 178, 46, 150);
+      rect(950, 100, 150, 80);
+      fill(0);
+      text("press 'P'  \n to promote", 960, 120);
+    }
     if (piece.potentialMoves.size() == 0) {
       if (piece.isRoyal) {
         Board.royalPotential(InitialSelected.get(1), InitialSelected.get(0));
@@ -177,7 +245,7 @@ void draw() {
         piece.calcPotential(InitialSelected.get(0), InitialSelected.get(1));
       }
     }
-    ArrayList<int [] > list = piece.potentialMoves;
+    ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
     for (int i = 0; i < list.size(); i++) {
       int x = list.get(i)[0];
@@ -290,5 +358,26 @@ public class board {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setBlackThreats(-1);
       }
     }
+  }
+  ArrayList<int[]> legalMoves(int x, int y){
+    ArrayList<int[]> ans = new ArrayList();
+    Piece piece = board[x][y].piece;
+    if(!piece.isRoyal){
+      piece.calcPotential(y, x);
+    }
+    else{
+      royalPotential(x,y);
+    }
+    ans=piece.potentialMoves;
+    for(int i = 0; i < ans.size(); i++){
+      Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
+      if(tile.piece != null){
+        if((tile.piece.white && piece.white) || (!tile.piece.white && !piece.white)){
+          ans.remove(i);
+          i--;
+        }
+      }
+    }
+    return ans;
   }
 }
