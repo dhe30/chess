@@ -193,15 +193,15 @@ public class board {
     // UNTHREATEN BOTH 
     // NEED TO UNTHREATEN other tile
     if (board[x][y].piece.isRoyal) {
-      threaten(x,y); // initially, all threatens are 0, check for that 
+      threaten(x, y); // initially, all threatens are 0, check for that 
       unthreaten(x, y);
     }
     // move current piece to other tile, set current tile's piece to null
     board[x1][y1].setPiece(board[x][y].piece);
     board[x][y].setPiece(null);
     // recalculate royal pieces' moves only if current piece had been blocking them 
-    if(board[x][y].royalThreats.size() > 0){
-      for(int i = 0; i < board[x][y].royalThreats.size(); i++){
+    if (board[x][y].royalThreats.size() > 0) {
+      for (int i = 0; i < board[x][y].royalThreats.size(); i++) {
         //coordinate pair [0],[1] because r.T is in RMO
         royalPotential(board[x][y].royalThreats.get(i)[0], board[x][y].royalThreats.get(i)[1]);
       }
@@ -214,8 +214,8 @@ public class board {
       board[x1][y1].piece.calcPotential(y1, x1);
     }
     // current is now moved and may be blocking royals, recalculate royals' moves if so  
-    if(board[x1][y1].royalThreats.size() > 0){
-      for(int i = 0; i < board[x1][y1].royalThreats.size(); i++){
+    if (board[x1][y1].royalThreats.size() > 0) {
+      for (int i = 0; i < board[x1][y1].royalThreats.size(); i++) {
         //coordinate pair [0],[1] because r.T is in RMO
         royalPotential(board[x1][y1].royalThreats.get(i)[0], board[x1][y1].royalThreats.get(i)[1]);
       }
@@ -254,18 +254,29 @@ public class board {
   }
   // CALL THREATEN and UNTHREATEN IN ROW MAJOR ORDER 
   // THREATEN THREATENS all potentialMoves of piece at x, y (assume row major order), 
-  void threaten(int x, int y){
-    if (board[x][y].piece.isRoyal){
-      for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++){
+  void threaten(int x, int y) {
+
+    for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
+      if (board[x][y].piece.isRoyal) {
         // POTENTIAL MOVES NOT IN ROW MAJOR, SO X AND Y are SWITCHED ------- adding x and y to ROYALTHREATS, x and y are given in row major
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].addRoyalThreat(new int[] {x, y});
       }
+      if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.white) {
+        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setWhiteThreats(1);
+      } else {
+        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setBlackThreats(1);
+      }
     }
   }
-  void unthreaten(int x, int y){
-    if (board[x][y].piece.isRoyal){
-      for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++){
+  void unthreaten(int x, int y) {
+    for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
+      if (board[x][y].piece.isRoyal) {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
+      }
+      if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.white) {
+        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setWhiteThreats(-1);
+      } else {
+        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setBlackThreats(-1);
       }
     }
   }
