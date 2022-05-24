@@ -194,11 +194,12 @@ public class board {
     board[x1][y1].setPiece(board[x][y].piece);
     board[x][y].setPiece(null);
     if (board[x1][y1].piece.isRoyal) {
-      royalPotential(x1, y1);
+      royalPotential(x1, y1); // x then y because move parameters are given in row major order
     } else {
       board[x1][y1].piece.calcPotential(y1, x1);
     }
   }
+  //ROYAL POTENTIAL IS ALWAYS CALLED IN ROW MAJOR ORDER 
   void royalPotential(int x, int y) {
     System.out.println(x +", " + y);
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
@@ -206,12 +207,11 @@ public class board {
 
     board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
-      int[] coors = {board[x][y].piece.potentialMoves.get(i)[0], board[x][y].piece.potentialMoves.get(i)[1]};
+      int[] coors = board[x][y].piece.potentialMoves.get(i);
       if (coors[0] == 100 && crashed) {
         crashed = false; // hit the end of direction and can continue 
         // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
       } else if (!crashed && coors[0] != 100) {
-        int[] pass = {coors[1], coors[0]};
         if (board[coors[1]][coors[0]].piece != null) {
           System.out.println(coors[1] + " " + coors[0] + " " + board[coors[1]][coors[0]].piece.role);
           royalMoves.add(coors);
@@ -228,6 +228,16 @@ public class board {
 
       System.out.println("ROYAL" + ans);
       board[x][y].piece.setPotential((ArrayList)royalMoves.clone());
+    }
+  }
+  // CALL THREATEN IN ROW MAJOR ORDER 
+  // THREATEN THREATENS all potentialMoves of piece at x, y (assume row major order)
+  void threaten(int x, int y){
+    if (board[x][y].piece.isRoyal){
+      for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++){
+        // POTENTIAL MOVES NOT IN ROW MAJOR, SO X AND Y are SWITCHED ------- adding x and y to ROYALTHREATS, x and y are given in row major
+        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].addRoyalThreat(new int[] {x, y});
+      }
     }
   }
 }

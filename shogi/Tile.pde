@@ -2,7 +2,7 @@ public class Tile{
   Piece piece;
   int whiteThreatened=0;
   int blackThreatened=0;
-  ArrayList<int[]> royalThreats = new ArrayList();
+  ArrayList<int[]> royalThreats = new ArrayList(); // THIS SHALL BE IN ROW MAJOR ORDER
   public Tile(){
   }
   void setPiece(Piece other){
