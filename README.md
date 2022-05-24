@@ -21,3 +21,6 @@ May 22, 2022
     Daniel : added clicking to move pieces and turns (can move anywhere for now). fixed NullPointer and OutOfBounds edge cases.
      
     Samuel: created the basic setup as well as all the chess pieces. added calcPotential to all the pieces. Had the board and pieces drawn in processing. 
+May 23, 2022
+
+    Samuel:added highlighting. discussed with Daniel about how to deal with royal pieces, blocking, and checks. 
