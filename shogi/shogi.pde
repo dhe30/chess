@@ -1,4 +1,5 @@
 board Board;
+boolean Test = false;
 ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
 boolean Turn = true;
 void setup() {
@@ -71,36 +72,47 @@ void setup() {
     }
   }
 }
-
+void keyPressed() {
+  if (key == ' ') {
+    Test = !Test;
+  }
+}
 void mouseClicked() {
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
-  if (mouseX < 900 && mouseY < 900) {
-    // ex. mouse at (456,789) refers to tile (4,7)
-    if (InitialSelected.size() == 0 && Board.board[mouseY / 100][mouseX / 100].piece != null) {
-      if (Board.board[mouseY / 100][mouseX / 100].piece.white == Turn) {
-        // adds coordinates to global variable (i.e. selects the piece), only occurs when no piece has been selected 
-        InitialSelected.add(mouseX / 100);
-        InitialSelected.add(mouseY / 100);
-      }
-    } else if (InitialSelected.size() > 0) {
-      // Only occurs when piece has been selected, row order means x and y switch positions!
-      // make new tile piece disappear (it is being replaced by the selected piece)
-      if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
-        InitialSelected.clear();
-      } else {
-        fill(252, 204, 156);
-        strokeWeight(1);
-        stroke(0);
-        rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
-        // array logic
-        Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
-        // make old tile piece disappear (because it moved to new tile)
-        fill(252, 204, 156);
-        strokeWeight(1);
-        stroke(0);
-        rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
-        InitialSelected.clear();
-        Turn = !Turn;
+  if (Test) {
+    if (Board.board[mouseY / 100][mouseX / 100].piece != null){
+    System.out.println("notNull" + " " + mouseY / 100 + " " + mouseX / 100);
+    } else {    System.out.println("Null"  + " " + mouseY / 100 + " " + mouseX / 100);
+}
+  } else {
+    if (mouseX < 900 && mouseY < 900) {
+      // ex. mouse at (456,789) refers to tile (4,7)
+      if (InitialSelected.size() == 0 && Board.board[mouseY / 100][mouseX / 100].piece != null) {
+        if (Board.board[mouseY / 100][mouseX / 100].piece.white == Turn) {
+          // adds coordinates to global variable (i.e. selects the piece), only occurs when no piece has been selected 
+          InitialSelected.add(mouseX / 100);
+          InitialSelected.add(mouseY / 100);
+        }
+      } else if (InitialSelected.size() > 0) {
+        // Only occurs when piece has been selected, row order means x and y switch positions!
+        // make new tile piece disappear (it is being replaced by the selected piece)
+        if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
+          InitialSelected.clear();
+        } else {
+          fill(252, 204, 156);
+          strokeWeight(1);
+          stroke(0);
+          rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
+          // array logic
+          Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+          // make old tile piece disappear (because it moved to new tile)
+          fill(252, 204, 156);
+          strokeWeight(1);
+          stroke(0);
+          rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+          InitialSelected.clear();
+          Turn = !Turn;
+        }
       }
     }
   }
@@ -146,8 +158,8 @@ void draw() {
   }
   if (InitialSelected.size() > 0) {
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
-    if(piece.potentialMoves.size() == 0){
-      if(piece.isRoyal){
+    if (piece.potentialMoves.size() == 0) {
+      if (piece.isRoyal) {
         Board.royalPotential(InitialSelected.get(1), InitialSelected.get(0));
       } else {
         piece.calcPotential(InitialSelected.get(0), InitialSelected.get(1));
@@ -180,9 +192,12 @@ public class board {
     // move current piece to other tile, set current tile's piece to null
     board[x1][y1].setPiece(board[x][y].piece);
     board[x][y].setPiece(null);
-    if(board[x1][y1].)
+    if (board[x1][y1].piece.isRoyal) {
+      royalPotential(x1, y1);
+    }
   }
   void royalPotential(int x, int y) {
+    System.out.println(x +", " + y);
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
     boolean crashed = false; // if it hit a piece
     if (board[x][y].piece.role.equals("bishop")) {
@@ -192,8 +207,9 @@ public class board {
         if (coors[0] == 100 && crashed) {
           crashed = false; // hit the end of direction and can continue 
           // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
-        } else if (!crashed && coors[0] != 100) {
-          if (board[coors[0]][coors[1]].piece != null) {
+        } 
+        if (!crashed && coors[0] != 100) {
+          if (board[coors[1]][coors[0]].piece != null) {
             royalMoves.add(coors);
             crashed = true;
           } else {
@@ -201,6 +217,11 @@ public class board {
           }
         }
       }
+      String ans ="";
+      for (int i = 0; i < royalMoves.size(); i++) {
+        ans += "[" + royalMoves.get(i)[0] + "," + royalMoves.get(i)[1] + "], ";
+      }
+      System.out.println("ROYAL" + ans);
       board[x][y].piece.setPotential((ArrayList)royalMoves.clone());
     }
   }

@@ -60,6 +60,11 @@ public class Bishop extends Piece{
         ans.add(down);
       }
     }
+    String answ ="";
+      for(int i = 0; i < ans.size(); i++){
+        answ += "[" + ans.get(i)[0] + "," + ans.get(i)[1] + "], ";
+      }
+      System.out.println("NORM" + answ);
     potentialMoves=(ArrayList)ans.clone();
   }
 }
