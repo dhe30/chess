@@ -80,10 +80,11 @@ void keyPressed() {
 void mouseClicked() {
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
   if (Test) {
-    if (Board.board[mouseY / 100][mouseX / 100].piece != null){
-    System.out.println("notNull" + " " + mouseY / 100 + " " + mouseX / 100);
-    } else {    System.out.println("Null"  + " " + mouseY / 100 + " " + mouseX / 100);
-}
+    if (Board.board[mouseY / 100][mouseX / 100].piece != null) {
+      System.out.println("notNull" + " " + mouseY / 100 + " " + mouseX / 100);
+    } else {    
+      System.out.println("Null"  + " " + mouseY / 100 + " " + mouseX / 100);
+    }
   } else {
     if (mouseX < 900 && mouseY < 900) {
       // ex. mouse at (456,789) refers to tile (4,7)
@@ -202,30 +203,29 @@ public class board {
     System.out.println(x +", " + y);
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
     boolean crashed = false; // if it hit a piece
-    if (board[x][y].piece.role.equals("bishop")) {
-      board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
-      for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
-        int[] coors = {board[x][y].piece.potentialMoves.get(i)[0],board[x][y].piece.potentialMoves.get(i)[1]};
-        if (coors[0] == 100 && crashed) {
-          crashed = false; // hit the end of direction and can continue 
-          // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
-        } 
-        else if (!crashed && coors[0] != 100) {
-          int[] pass = {coors[1],coors[0]};
-          if (board[coors[1]][coors[0]].piece != null) {
-            System.out.println(coors[1] + " " + coors[0] + " " + board[coors[1]][coors[0]].piece.role);
-            royalMoves.add(coors);
-            crashed = true;
-          } else {
-            System.out.println(coors[1] + " " + coors[0]);
-            royalMoves.add(coors);
-          }
+
+    board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
+    for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
+      int[] coors = {board[x][y].piece.potentialMoves.get(i)[0], board[x][y].piece.potentialMoves.get(i)[1]};
+      if (coors[0] == 100 && crashed) {
+        crashed = false; // hit the end of direction and can continue 
+        // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
+      } else if (!crashed && coors[0] != 100) {
+        int[] pass = {coors[1], coors[0]};
+        if (board[coors[1]][coors[0]].piece != null) {
+          System.out.println(coors[1] + " " + coors[0] + " " + board[coors[1]][coors[0]].piece.role);
+          royalMoves.add(coors);
+          crashed = true;
+        } else {
+          System.out.println(coors[1] + " " + coors[0]);
+          royalMoves.add(coors);
         }
       }
-      String ans ="";
-      for (int i = 0; i < royalMoves.size(); i++) {
-        ans += "[" + royalMoves.get(i)[0] + "," + royalMoves.get(i)[1] + "], ";
-      }
+    }
+    String ans ="";
+    for (int i = 0; i < royalMoves.size(); i++) {
+      ans += "[" + royalMoves.get(i)[0] + "," + royalMoves.get(i)[1] + "], ";
+
       System.out.println("ROYAL" + ans);
       board[x][y].piece.setPotential((ArrayList)royalMoves.clone());
     }

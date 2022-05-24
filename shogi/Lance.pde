@@ -8,13 +8,15 @@ public class Lance extends Piece{
     ArrayList<int[]> ans = new ArrayList();
     if(white){
       while(y>0){
-        int[] up = {x, y-1};
+        y--;
+        int[] up = {x, y};
         ans.add(up);
       }
     }
     else{
       while(y<8){
-        int[] down = {x, y+1};
+        y++;
+        int[] down = {x, y};
         ans.add(down);
       }
     }
