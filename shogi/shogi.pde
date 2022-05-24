@@ -82,6 +82,10 @@ void keyPressed() {
       piece.canPromote=false;
       piece.promote();
     }
+    else if(key == 'x' && piece.canPromote){
+      InitialSelected.clear();
+      Turn = !Turn;
+    }
   }
 }
 void mouseClicked() {
@@ -107,6 +111,7 @@ void mouseClicked() {
         if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
           InitialSelected.clear();
         } else {
+          Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
           fill(252, 204, 156);
           strokeWeight(1);
           stroke(0);
@@ -118,8 +123,10 @@ void mouseClicked() {
           strokeWeight(1);
           stroke(0);
           rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
-          InitialSelected.clear();
-          Turn = !Turn;
+          if(!piece.canPromote){
+            InitialSelected.clear();
+            Turn = !Turn;
+          }
         }
       }
     }
@@ -146,23 +153,6 @@ void draw() {
    fill(255);
    */
   for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 9; j++) {
-      if (Board.board[i][j].piece!=null) {
-        if (Board.board[i][j].piece.white==true) {
-          rect(j*100+20, i*100+40, 60, 50);
-          triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
-          fill(0);
-          text(Board.board[i][j].piece.role, j*100+30, i*100+55);
-          fill(255);
-        } else {
-          rect(j*100+20, i*100+10, 60, 50);
-          triangle(j*100+20, i*100+60, j*100+80, i*100+60, j*100+50, i*100+90);
-          fill(0);
-          text(Board.board[i][j].piece.role, j*100+30, i*100+45);
-          fill(255);
-        }
-      }
-    }
     if(Board.board[0][i].piece!=null){
       if(Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))){
         Board.board[0][i].piece.promote();
@@ -209,6 +199,23 @@ void draw() {
         Board.board[6][i].piece.canPromote();
       }
     }
+    for (int j = 0; j < 9; j++) {
+      if (Board.board[i][j].piece!=null) {
+        if (Board.board[i][j].piece.white==true) {
+          rect(j*100+20, i*100+40, 60, 50);
+          triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
+          fill(0);
+          text(Board.board[i][j].piece.role, j*100+30, i*100+55);
+          fill(255);
+        } else {
+          rect(j*100+20, i*100+10, 60, 50);
+          triangle(j*100+20, i*100+60, j*100+80, i*100+60, j*100+50, i*100+90);
+          fill(0);
+          text(Board.board[i][j].piece.role, j*100+30, i*100+45);
+          fill(255);
+        }
+      }
+    }
   }
   fill(255);
   rect(900, 0, 1500, 900);
@@ -224,9 +231,9 @@ void draw() {
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
     if(piece.canPromote){
       fill(13, 178, 46, 150);
-      rect(950, 100, 150, 80);
+      rect(950, 100, 160, 150);
       fill(0);
-      text("press 'P'  \n to promote", 960, 120);
+      text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
     }
     if (piece.potentialMoves.size() == 0) {
       if (piece.isRoyal) {
