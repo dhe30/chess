@@ -3,7 +3,7 @@ public class King extends Piece{
     super(x);
     role="king";
   }
-  ArrayList<int[]> calcPotential(int x, int y){
+  void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
     if(x!=0){
        int[] left={x-1, y};
@@ -37,6 +37,6 @@ public class King extends Piece{
       int[] down = {x, y+1};
       ans.add(down);
     }
-    return ans;
+    potentialMoves=(ArrayList)ans.clone();
   }
 }

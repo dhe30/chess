@@ -15,12 +15,9 @@ public class Piece{
   void switchSides(){
     white=!white;
   }
-  ArrayList<int[]> calcPotential(int x, int y){
+  void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
-    return ans;
-  }
-  void setMoves(ArrayList<int[]> x){
-    potentialMoves=(ArrayList)x.clone();
+    potentialMoves=(ArrayList)ans.clone();
   }
   void promote(){
     promoted=true;

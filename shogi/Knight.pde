@@ -3,7 +3,7 @@ public class Knight extends Piece{
     super(x);
     role="knight";
   }
-  ArrayList<int[]> calcPotential(int x, int y){
+  void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
     if(white){
       if(x!=0 && y>1){
@@ -25,6 +25,6 @@ public class Knight extends Piece{
         ans.add(downRightKnight);
       }
     }
-    return ans;
+    potentialMoves=(ArrayList)ans.clone();
   }
 }

@@ -3,7 +3,7 @@ public class SilverGeneral extends Piece{
     super(x);
     role="silver\nGeneral";
   }
-  ArrayList<int[]> calcPotential(int x, int y){
+  void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
     if(white){
       if(y!=0){
@@ -49,6 +49,6 @@ public class SilverGeneral extends Piece{
         ans.add(upperRight);
       }
     }
-    return ans;
+    potentialMoves=(ArrayList)ans.clone();
   }
 }
