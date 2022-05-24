@@ -267,8 +267,9 @@ public class board {
     // NEED TO UNTHREATEN other tile
     if (board[x][y].piece.isRoyal) {
       // initially, all threatens are 0, check for that 
-      unthreaten(x, y);
     }
+    unthreaten(x, y);
+    unthreaten(x1, y1);
     // move current piece to other tile, set current tile's piece to null
     board[x1][y1].setPiece(board[x][y].piece);
     board[x][y].setPiece(null);
@@ -300,6 +301,7 @@ public class board {
   }
   //ROYAL POTENTIAL IS ALWAYS CALLED IN ROW MAJOR ORDER 
   void royalPotential(int x, int y) {
+    unthreaten(x, y);
     System.out.println(x +", " + y);
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
     boolean crashed = false; // if it hit a piece
@@ -328,6 +330,7 @@ public class board {
       System.out.println("ROYAL" + ans);
     }
     board[x][y].piece.setPotential((ArrayList)royalMoves.clone());
+    threaten(x,y);
   }
   // CALL THREATEN and UNTHREATEN IN ROW MAJOR ORDER 
   // THREATEN THREATENS all potentialMoves of piece at x, y (assume row major order), 
