@@ -14,6 +14,7 @@ public class Bishop extends Piece{
       int[] move = {x, y};
       ans.add(move);
     }
+    ans.add(new int[]{100,100});
     x=ogX;
     y=ogY;
     while(x>0 && y<8){
@@ -22,6 +23,7 @@ public class Bishop extends Piece{
       int[] move = {x, y};
       ans.add(move);
     }
+    ans.add(new int[]{100,100});
     x=ogX;
     y=ogY;
     while(x<8 && y>0){
@@ -30,6 +32,7 @@ public class Bishop extends Piece{
       int[] move = {x, y};
       ans.add(move);
     }
+    ans.add(new int[]{100,100});
     x=ogX;
     y=ogY;
     while(x<8 && y<8){
@@ -38,6 +41,7 @@ public class Bishop extends Piece{
       int[] move = {x, y};
       ans.add(move);
     }
+    ans.add(new int[]{100,100});
     if(promoted){
       if(ogX!=8){
         int[] right = {ogX +1, ogY};

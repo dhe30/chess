@@ -2,7 +2,7 @@ public class Piece{
   String role;
   boolean white;
   boolean promoted = false;
-  ArrayList<int[]> potentialMoves = new ArrayList();
+  ArrayList<int[]> potentialMoves = new ArrayList<int[]>();
   boolean isRoyal=false;
   public Piece(String x){
     if(x.equals("white")){
@@ -21,5 +21,8 @@ public class Piece{
   }
   void promote(){
     promoted=true;
+  }
+  void setPotential(ArrayList<int[]> newMoves){
+    potentialMoves = newMoves;
   }
 }

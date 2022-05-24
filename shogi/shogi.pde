@@ -144,12 +144,18 @@ void draw() {
       }
     }
   }
-  if(InitialSelected.size() > 0){
+  if (InitialSelected.size() > 0) {
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
-    piece.calcPotential(InitialSelected.get(0), InitialSelected.get(1));
+    if(piece.potentialMoves.size() == 0){
+      if(piece.isRoyal){
+        Board.royalPotential(InitialSelected.get(1), InitialSelected.get(0));
+      } else {
+        piece.calcPotential(InitialSelected.get(0), InitialSelected.get(1));
+      }
+    }
     ArrayList<int [] > list = piece.potentialMoves;
     fill(20, 50);
-    for(int i = 0; i < list.size(); i++){
+    for (int i = 0; i < list.size(); i++) {
       int x = list.get(i)[0];
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
@@ -174,5 +180,28 @@ public class board {
     // move current piece to other tile, set current tile's piece to null
     board[x1][y1].setPiece(board[x][y].piece);
     board[x][y].setPiece(null);
+    if(board[x1][y1].)
+  }
+  void royalPotential(int x, int y) {
+    ArrayList<int[]> royalMoves = new ArrayList<int[]>();
+    boolean crashed = false; // if it hit a piece
+    if (board[x][y].piece.role.equals("bishop")) {
+      board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
+      for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
+        int[] coors = board[x][y].piece.potentialMoves.get(i);
+        if (coors[0] == 100 && crashed) {
+          crashed = false; // hit the end of direction and can continue 
+          // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
+        } else if (!crashed && coors[0] != 100) {
+          if (board[coors[0]][coors[1]].piece != null) {
+            royalMoves.add(coors);
+            crashed = true;
+          } else {
+            royalMoves.add(coors);
+          }
+        }
+      }
+      board[x][y].piece.setPotential((ArrayList)royalMoves.clone());
+    }
   }
 }
