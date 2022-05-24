@@ -67,4 +67,8 @@ public class Bishop extends Piece{
       System.out.println("NORM" + answ);
     potentialMoves=(ArrayList)ans.clone();
   }
+  void promote(){
+    promoted=!promoted;
+    role="promoted \n bishop";
+  }
 }

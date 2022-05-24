@@ -107,4 +107,8 @@ public class SilverGeneral extends Piece{
     }
     potentialMoves=(ArrayList)ans.clone();
   }
+  void promote(){
+    promoted=!promoted;
+    role="promoted \n silver \n general";
+  }
 }
