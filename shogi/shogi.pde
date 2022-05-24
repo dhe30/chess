@@ -174,6 +174,15 @@ void draw() {
       circle(x*100 + 50, y*100+50, 30);
     }
   }
+  fill(255);
+  rect(900, 0, 1500, 900);
+  fill(0);
+  if(Turn){
+    text("white's turn", 1000, 50);
+  }
+  else{
+    text("black's turn", 1000, 50);
+  }
 }
 public class board {
   ArrayList<Piece> whiteCaptured = new ArrayList();
