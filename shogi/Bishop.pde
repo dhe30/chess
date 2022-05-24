@@ -9,25 +9,33 @@ public class Bishop extends Piece{
     int ogX = x;
     int ogY = y;
     while(x>0 && y>0){
-      int[] move = {x-1, y-1};
+      x--;
+      y--;
+      int[] move = {x, y};
       ans.add(move);
     }
     x=ogX;
     y=ogY;
     while(x>0 && y<8){
-      int[] move = {x-1, y+1};
+      x--;
+      y++;
+      int[] move = {x, y};
       ans.add(move);
     }
     x=ogX;
     y=ogY;
     while(x<8 && y>0){
-      int[] move = {x+1, y+1};
+      x++;
+      y--;
+      int[] move = {x, y};
       ans.add(move);
     }
     x=ogX;
     y=ogY;
     while(x<8 && y<8){
-      int[] move = {x+1, y+1};
+      x++;
+      y++;
+      int[] move = {x, y};
       ans.add(move);
     }
     if(promoted){
