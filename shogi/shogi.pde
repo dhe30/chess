@@ -76,6 +76,12 @@ void keyPressed() {
   if (key == ' ') {
     Test = !Test;
   }
+  if(InitialSelected.size()>0){
+    Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
+    if(key == 'p' && piece.canPromote){
+      piece.promote();
+    }
+  }
 }
 void mouseClicked() {
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
