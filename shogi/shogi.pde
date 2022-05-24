@@ -71,6 +71,17 @@ void setup() {
       Board.board[8][i].setPiece(whiteKing);
     }
   }
+  for (int i = 0; i < Board.board.length; i++) {
+    for (int a = 0; a < Board.board[i].length; i++) {
+      if (Board.board[i][a].piece != null) {
+        if (Board.board[i][a].piece.isRoyal) {
+          Board.royalPotential(i, a);
+        } else {
+          Board.board[i][a].piece.calcPotential(a, i); // calcPotential should not be in RMO
+        }
+      }
+    }
+  }
 }
 void keyPressed() {
   if (key == ' ') {
