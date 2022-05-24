@@ -9,25 +9,29 @@ public class Rook extends Piece{
     int ogX = x;
     int ogY = y;
     while(x<8){
-      int[] right = {x+1, y};
+      x++;
+      int[] right = {x, y};
       ans.add(right);
     }
     x=ogX;
     y=ogY;
     while(x>0){
-      int[] left = {x-1, y};
+      x--;
+      int[] left = {x, y};
       ans.add(left);
     }
     x=ogX;
     y=ogY;
     while(y<8){
-      int[] down = {x, y+1};
+      y++;
+      int[] down = {x, y};
       ans.add(down);
     }
     x=ogX;
     y=ogY;
     while(y>0){
-      int[] up = {x, y-1};
+      y--;
+      int[] up = {x, y};
       ans.add(up);
     }
     if(promoted){
