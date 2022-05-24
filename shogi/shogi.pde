@@ -79,6 +79,7 @@ void keyPressed() {
   if(InitialSelected.size()>0){
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
     if(key == 'p' && piece.canPromote){
+      piece.canPromote=false;
       piece.promote();
     }
   }
