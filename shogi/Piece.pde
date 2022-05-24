@@ -1,28 +1,27 @@
-public class Piece{
+public class Piece {
   String role;
   boolean white;
   boolean promoted = false;
   ArrayList<int[]> potentialMoves = new ArrayList<int[]>();
   boolean isRoyal=false;
-  public Piece(String x){
-    if(x.equals("white")){
+  public Piece(String x) {
+    if (x.equals("white")) {
       white = true;
-    }
-    else{
+    } else {
       white=false;
     }
   }
-  void switchSides(){
+  void switchSides() {
     white=!white;
   }
-  void calcPotential(int x, int y){
+  void calcPotential(int x, int y) {
     ArrayList<int[]> ans = new ArrayList();
     potentialMoves=(ArrayList)ans.clone();
   }
-  void promote(){
+  void promote() {
     promoted=true;
   }
-  void setPotential(ArrayList<int[]> newMoves){
+  void setPotential(ArrayList<int[]> newMoves) {
     potentialMoves = newMoves;
   }
 }
