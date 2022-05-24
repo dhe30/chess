@@ -197,8 +197,24 @@ void draw() {
       }
     }
   }
+  fill(255);
+  rect(900, 0, 1500, 900);
+  fill(0);
+  textSize(20);
+  if(Turn){
+    text("white's turn", 950, 50);
+  }
+  else{
+    text("black's turn", 950, 50);
+  }
   if (InitialSelected.size() > 0) {
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
+    if(piece.canPromote){
+      fill(13, 178, 46, 150);
+      rect(950, 100, 150, 80);
+      fill(0);
+      text("press 'P'  \n to promote", 960, 120);
+    }
     if (piece.potentialMoves.size() == 0) {
       if (piece.isRoyal) {
         Board.royalPotential(InitialSelected.get(1), InitialSelected.get(0));
@@ -213,15 +229,6 @@ void draw() {
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
     }
-  }
-  fill(255);
-  rect(900, 0, 1500, 900);
-  fill(0);
-  if(Turn){
-    text("white's turn", 1000, 50);
-  }
-  else{
-    text("black's turn", 1000, 50);
   }
 }
 public class board {
