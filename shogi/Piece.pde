@@ -4,6 +4,7 @@ public class Piece {
   boolean promoted = false;
   ArrayList<int[]> potentialMoves = new ArrayList<int[]>();
   boolean isRoyal=false;
+  boolean canPromote=false;
   public Piece(String x) {
     if (x.equals("white")) {
       white = true;
@@ -23,5 +24,8 @@ public class Piece {
   }
   void setPotential(ArrayList<int[]> newMoves) {
     potentialMoves = newMoves;
+  }
+  void canPromote(){
+    canPromote=true;
   }
 }
