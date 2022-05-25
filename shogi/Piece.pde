@@ -26,6 +26,6 @@ public class Piece {
     potentialMoves = newMoves;
   }
   void canPromote(){
-    canPromote=true;
+    canPromote=!canPromote;
   }
 }
