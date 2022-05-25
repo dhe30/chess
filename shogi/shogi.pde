@@ -2,6 +2,7 @@ board Board;
 boolean Test = false;
 ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
 boolean Turn = true;
+boolean showPromote = false;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -79,10 +80,14 @@ void keyPressed() {
   if(InitialSelected.size()>0){
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
     if(key == 'p' && piece.canPromote){
+      showPromote=false;
       piece.canPromote=false;
       piece.promote();
+      InitialSelected.clear();
+      Turn=!Turn;
     }
     else if(key == 'x' && piece.canPromote){
+      showPromote=false;
       InitialSelected.clear();
       Turn = !Turn;
     }
@@ -118,6 +123,77 @@ void mouseClicked() {
           rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
           // array logic
           Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+          InitialSelected.clear();
+          InitialSelected.add(mouseX / 100);
+          InitialSelected.add(mouseY / 100);
+          for(int i = 0; i < 9; i++){
+            if(Board.board[0][i].piece!=null){
+              if(Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))){
+                Board.board[0][i].piece.promote();
+              }
+              if(Board.board[0][i].piece.white && !Board.board[0][i].piece.promoted && !Board.board[0][i].piece.canPromote && (Board.board[0][i].piece.role.equals("silver\nGeneral") || Board.board[0][i].piece.role.equals("rook") || Board.board[0][i].piece.role.equals("bishop"))){
+                Board.board[0][i].piece.canPromote();
+              }
+            }
+            if(Board.board[1][i].piece!=null){
+              if(Board.board[1][i].piece.white && Board.board[1][i].piece.role.equals("knight")){
+                Board.board[1][i].piece.promote();
+              }
+              if(Board.board[1][i].piece.white && !Board.board[1][i].piece.promoted && !Board.board[1][i].piece.canPromote && (Board.board[1][i].piece.role.equals("lance") || Board.board[1][i].piece.role.equals("pawn") || 
+                 Board.board[1][i].piece.role.equals("silver\nGeneral") || Board.board[1][i].piece.role.equals("rook") || Board.board[1][i].piece.role.equals("bishop"))){
+                Board.board[1][i].piece.canPromote();
+              }
+            }
+            if(Board.board[2][i].piece!=null){
+              if(Board.board[2][i].piece.white && !Board.board[2][i].piece.promoted && !Board.board[2][i].piece.canPromote &&(Board.board[2][i].piece.role.equals("lance") || Board.board[2][i].piece.role.equals("pawn") || 
+                 Board.board[2][i].piece.role.equals("silver\nGeneral") || Board.board[2][i].piece.role.equals("knight") || Board.board[2][i].piece.role.equals("rook") || Board.board[2][i].piece.role.equals("bishop"))){
+                Board.board[2][i].piece.canPromote();
+              }
+            }
+            if(Board.board[8][i].piece!=null){
+              if(!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))){
+                Board.board[8][i].piece.promote();
+              }
+              if(!Board.board[8][i].piece.white && !Board.board[8][i].piece.promoted && !Board.board[8][i].piece.canPromote && (Board.board[8][i].piece.role.equals("silver\nGeneral")|| Board.board[8][i].piece.role.equals("rook") || Board.board[8][i].piece.role.equals("bishop"))){
+                Board.board[8][i].piece.canPromote();
+              }
+            }
+            if(Board.board[7][i].piece!=null){
+              if(!Board.board[7][i].piece.white && Board.board[7][i].piece.role.equals("knight")){
+                Board.board[7][i].piece.promote();
+              }
+              if(!Board.board[7][i].piece.white && !Board.board[7][i].piece.promoted && !Board.board[7][i].piece.canPromote && (Board.board[7][i].piece.role.equals("lance") || Board.board[7][i].piece.role.equals("pawn") || 
+                  Board.board[7][i].piece.role.equals("silver\nGeneral") || Board.board[7][i].piece.role.equals("rook") || Board.board[7][i].piece.role.equals("bishop"))){
+                Board.board[7][i].piece.canPromote();
+              }
+            }
+            if(Board.board[6][i].piece!=null){
+              if(!Board.board[6][i].piece.white && !Board.board[8][i].piece.promoted && !Board.board[6][i].piece.canPromote && (Board.board[6][i].piece.role.equals("lance") || Board.board[6][i].piece.role.equals("pawn") || 
+                  Board.board[6][i].piece.role.equals("silver\nGeneral") || Board.board[6][i].piece.role.equals("knight") || Board.board[6][i].piece.role.equals("rook") || Board.board[6][i].piece.role.equals("bishop"))){
+                Board.board[6][i].piece.canPromote();
+              }
+            }
+            if(Board.board[3][i].piece!=null){
+              if(Board.board[3][i].piece.white && Board.board[3][i].piece.canPromote){
+                Board.board[3][i].piece.canPromote();
+              }
+            }
+            if(Board.board[5][i].piece!=null){
+              if(!Board.board[5][i].piece.white && Board.board[5][i].piece.canPromote){
+                Board.board[5][i].piece.canPromote();
+              }
+            }
+          }
+          if(piece.canPromote){
+            showPromote=true;
+          }
+          if (piece.potentialMoves.size() == 0) {
+            if (piece.isRoyal) {
+              Board.royalPotential(InitialSelected.get(1), InitialSelected.get(0));
+            } else {
+              piece.calcPotential(InitialSelected.get(0), InitialSelected.get(1));
+            }
+          }
           // make old tile piece disappear (because it moved to new tile)
           fill(252, 204, 156);
           strokeWeight(1);
@@ -153,62 +229,6 @@ void draw() {
    fill(255);
    */
   for (int i = 0; i < 9; i++) {
-    if(Board.board[0][i].piece!=null){
-      if(Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))){
-        Board.board[0][i].piece.promote();
-      }
-      if(Board.board[0][i].piece.white && !Board.board[0][i].piece.promoted && !Board.board[0][i].piece.canPromote && (Board.board[0][i].piece.role.equals("silver\nGeneral") || Board.board[0][i].piece.role.equals("rook") || Board.board[0][i].piece.role.equals("bishop"))){
-        Board.board[0][i].piece.canPromote();
-      }
-    }
-    if(Board.board[1][i].piece!=null){
-      if(Board.board[1][i].piece.white && Board.board[1][i].piece.role.equals("knight")){
-        Board.board[1][i].piece.promote();
-      }
-      if(Board.board[1][i].piece.white && !Board.board[1][i].piece.promoted && !Board.board[1][i].piece.canPromote && (Board.board[1][i].piece.role.equals("lance") || Board.board[1][i].piece.role.equals("pawn") || 
-         Board.board[1][i].piece.role.equals("silver\nGeneral") || Board.board[1][i].piece.role.equals("rook") || Board.board[1][i].piece.role.equals("bishop"))){
-        Board.board[1][i].piece.canPromote();
-      }
-    }
-    if(Board.board[2][i].piece!=null){
-      if(Board.board[2][i].piece.white && !Board.board[2][i].piece.promoted && !Board.board[2][i].piece.canPromote &&(Board.board[2][i].piece.role.equals("lance") || Board.board[2][i].piece.role.equals("pawn") || 
-         Board.board[2][i].piece.role.equals("silver\nGeneral") || Board.board[2][i].piece.role.equals("knight") || Board.board[2][i].piece.role.equals("rook") || Board.board[2][i].piece.role.equals("bishop"))){
-        Board.board[2][i].piece.canPromote();
-      }
-    }
-    if(Board.board[8][i].piece!=null){
-      if(!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))){
-        Board.board[8][i].piece.promote();
-      }
-      if(!Board.board[8][i].piece.white && !Board.board[8][i].piece.promoted && !Board.board[8][i].piece.canPromote && (Board.board[8][i].piece.role.equals("silver\nGeneral")|| Board.board[8][i].piece.role.equals("rook") || Board.board[8][i].piece.role.equals("bishop"))){
-        Board.board[8][i].piece.canPromote();
-      }
-    }
-    if(Board.board[7][i].piece!=null){
-      if(!Board.board[7][i].piece.white && Board.board[7][i].piece.role.equals("knight")){
-        Board.board[7][i].piece.promote();
-      }
-      if(!Board.board[7][i].piece.white && !Board.board[7][i].piece.promoted && !Board.board[7][i].piece.canPromote && (Board.board[7][i].piece.role.equals("lance") || Board.board[7][i].piece.role.equals("pawn") || 
-          Board.board[7][i].piece.role.equals("silver\nGeneral") || Board.board[7][i].piece.role.equals("rook") || Board.board[7][i].piece.role.equals("bishop"))){
-        Board.board[7][i].piece.canPromote();
-      }
-    }
-    if(Board.board[6][i].piece!=null){
-      if(!Board.board[6][i].piece.white && !Board.board[8][i].piece.promoted && !Board.board[6][i].piece.canPromote && (Board.board[6][i].piece.role.equals("lance") || Board.board[6][i].piece.role.equals("pawn") || 
-          Board.board[6][i].piece.role.equals("silver\nGeneral") || Board.board[6][i].piece.role.equals("knight") || Board.board[6][i].piece.role.equals("rook") || Board.board[6][i].piece.role.equals("bishop"))){
-        Board.board[6][i].piece.canPromote();
-      }
-    }
-    if(Board.board[3][i].piece!=null){
-      if(Board.board[3][i].piece.white && Board.board[3][i].piece.canPromote){
-        Board.board[3][i].piece.canPromote();
-      }
-    }
-    if(Board.board[5][i].piece!=null){
-      if(!Board.board[5][i].piece.white && Board.board[5][i].piece.canPromote){
-        Board.board[5][i].piece.canPromote();
-      }
-    }
     for (int j = 0; j < 9; j++) {
       if (Board.board[i][j].piece!=null) {
         if (Board.board[i][j].piece.white==true) {
@@ -237,21 +257,13 @@ void draw() {
   else{
     text("black's turn", 950, 50);
   }
+  if(showPromote){
+    fill(13, 178, 46, 150);
+    rect(950, 100, 160, 150);
+    fill(0);
+    text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
+  }
   if (InitialSelected.size() > 0) {
-    Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
-    if(piece.canPromote){
-      fill(13, 178, 46, 150);
-      rect(950, 100, 160, 150);
-      fill(0);
-      text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
-    }
-    if (piece.potentialMoves.size() == 0) {
-      if (piece.isRoyal) {
-        Board.royalPotential(InitialSelected.get(1), InitialSelected.get(0));
-      } else {
-        piece.calcPotential(InitialSelected.get(0), InitialSelected.get(1));
-      }
-    }
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
     for (int i = 0; i < list.size(); i++) {
