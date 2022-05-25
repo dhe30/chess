@@ -3,6 +3,8 @@ boolean Test = false;
 ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
 boolean Turn = true;
 boolean showPromote = false;
+boolean selected = false;
+boolean sameRow=false;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -72,6 +74,7 @@ void setup() {
       Board.board[8][i].setPiece(whiteKing);
     }
   }
+
   for (int i = 0; i < Board.board.length; i++) {
     for (int a = 0; a < Board.board[i].length; a++) {
       if (Board.board[i][a].piece != null) {
@@ -85,19 +88,19 @@ void setup() {
       }
     }
   }
+
 }
 void keyPressed() {
   if (key == ' ') {
     Test = !Test;
   }
-  if (InitialSelected.size()>0) {
+  if(InitialSelected.size()>0){
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
-
     if(key == 'p' && piece.canPromote){
       showPromote=false;
       piece.canPromote=false;
-      Board.unthreaten(InitialSelected.get(1),InitialSelected.get(0));
       piece.promote();
+
       if (piece.isRoyal){
         Board.royalPotential(InitialSelected.get(1),InitialSelected.get(0));
       } else {
@@ -118,7 +121,6 @@ void mouseClicked() {
   if (Test) {
     if (Board.board[mouseY / 100][mouseX / 100].piece != null) {
       System.out.println("notNull" + " " + mouseY / 100 + " " + mouseX / 100);
-      System.out.println("notNull" + " " + mouseY / 100 + " " + mouseX / 100);
     } else {    
       System.out.println("Null"  + " " + mouseY / 100 + " " + mouseX / 100);
     }
@@ -130,12 +132,14 @@ void mouseClicked() {
           // adds coordinates to global variable (i.e. selects the piece), only occurs when no piece has been selected 
           InitialSelected.add(mouseX / 100);
           InitialSelected.add(mouseY / 100);
+          selected=true;
         }
-      } else if (InitialSelected.size() > 0) {
+      } else if (InitialSelected.size() > 0 && selected) {
         // Only occurs when piece has been selected, row order means x and y switch positions!
         // make new tile piece disappear (it is being replaced by the selected piece)
         if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
           InitialSelected.clear();
+          selected=false;
         } else {
           Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
           fill(252, 204, 156);
@@ -144,6 +148,10 @@ void mouseClicked() {
           rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
           // array logic
           Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+          if(InitialSelected.get(1)==mouseY/100){
+            sameRow=true;
+          }
+          selected=false;
           InitialSelected.clear();
           InitialSelected.add(mouseX / 100);
           InitialSelected.add(mouseY / 100);
@@ -194,13 +202,18 @@ void mouseClicked() {
                 Board.board[6][i].piece.canPromote();
               }
             }
+            if(Board.board[4][i].piece!=null){
+              if(Board.board[4][i].piece.canPromote){
+                Board.board[4][i].piece.canPromote();
+              }
+            }
             if(Board.board[3][i].piece!=null){
-              if(Board.board[3][i].piece.white && Board.board[3][i].piece.canPromote){
+              if(Board.board[3][i].piece.white && Board.board[3][i].piece.canPromote && sameRow){
                 Board.board[3][i].piece.canPromote();
               }
             }
             if(Board.board[5][i].piece!=null){
-              if(!Board.board[5][i].piece.white && Board.board[5][i].piece.canPromote){
+              if(!Board.board[5][i].piece.white && Board.board[5][i].piece.canPromote && sameRow){
                 Board.board[5][i].piece.canPromote();
               }
             }
@@ -272,9 +285,10 @@ void draw() {
   rect(900, 0, 1500, 900);
   fill(0);
   textSize(20);
-  if (Turn) {
+  if(Turn){
     text("white's turn", 950, 50);
-  } else {
+  }
+  else{
     text("black's turn", 950, 50);
   }
   if(showPromote){
@@ -308,30 +322,20 @@ public class board {
         whiteCaptured.add(board[x1][y1].piece);
       }
     }
-    // UNTHREATEN BOTH
-    //System.out.println(board[x1][y1].royalThreats.size() + " " + board[x1][y1].royalThreats.get(0)[0] + " " +board[x1][y1].royalThreats.get(0)[1]+ " " + board[x1][y1].royalThreats.get(1)[0] + " " +board[x1][y1].royalThreats.get(1)[1]);
-
-    //System.out.println("BUG1");
-    //System.out.println(x+" " + y);
-    //System.out.println("BUTT" + board[x][y].piece.potentialMoves.size());
-    //System.out.println(board[x][y].piece.potentialMoves.size() + " " + board[x][y].piece.potentialMoves.get(0)[0] + " " +board[x][y].piece.potentialMoves.get(0)[1]+ " " + board[x][y].piece.potentialMoves.get(1)[0] + " " +board[x][y].piece.potentialMoves.get(1)[1]);
-
-    unthreaten(x, y);
-    //System.out.println(board[x][y].piece.potentialMoves.size() + " " + board[x][y].piece.potentialMoves.get(0)[0] + " " +board[x][y].piece.potentialMoves.get(0)[1]+ " " + board[x][y].piece.potentialMoves.get(1)[0] + " " +board[x][y].piece.potentialMoves.get(1)[1]);
-
-    //System.out.println("BUG2");
-    if (board[x1][y1].piece != null){
-      unthreaten(x1, y1);
+    // UNTHREATEN BOTH 
+    // NEED TO UNTHREATEN other tile
+    if (board[x][y].piece.isRoyal) {
+      threaten(x,y); // initially, all threatens are 0, check for that 
+      unthreaten(x, y);
     }
     // move current piece to other tile, set current tile's piece to null
     board[x1][y1].setPiece(board[x][y].piece);
     board[x][y].setPiece(null);
     // recalculate royal pieces' moves only if current piece had been blocking them 
-    if (board[x][y].royalThreats.size() > 0) {
-      ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
-      for (int i = 0; i < temp.size(); i++) {
+    if(board[x][y].royalThreats.size() > 0){
+      for(int i = 0; i < board[x][y].royalThreats.size(); i++){
         //coordinate pair [0],[1] because r.T is in RMO
-        
+
         unthreaten(temp.get(i)[0], temp.get(i)[1]);
         royalPotential(temp.get(i)[0], temp.get(i)[1]);
         threaten(temp.get(i)[0], temp.get(i)[1]);
@@ -340,17 +344,13 @@ public class board {
     // if current is royal, recalculate moves
     if (board[x1][y1].piece.isRoyal) {
       royalPotential(x1, y1); // x then y because move parameters are given in row major order
+      threaten(x1, y1); // MOVE OUT OF IF STATEMENT when threaten is generalized
     } else {
       board[x1][y1].piece.calcPotential(y1, x1);
     }
-    threaten(x1, y1); 
     // current is now moved and may be blocking royals, recalculate royals' moves if so  
-    if (board[x1][y1].royalThreats.size() > 0) {
-      ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
-      System.out.println(board[x1][y1].royalThreats.size());
-      System.out.println(board[x1][y1].piece.role);
-
-      for (int i = 0; i < temp.size(); i++) {
+    if(board[x1][y1].royalThreats.size() > 0){
+      for(int i = 0; i < board[x1][y1].royalThreats.size(); i++){
         //coordinate pair [0],[1] because r.T is in RMO
         unthreaten(temp.get(i)[0], temp.get(i)[1]);
         royalPotential(temp.get(i)[0], temp.get(i)[1]);
@@ -360,9 +360,9 @@ public class board {
   }
   //ROYAL POTENTIAL IS ALWAYS CALLED IN ROW MAJOR ORDER 
   void royalPotential(int x, int y) {
+    System.out.println(x +", " + y);
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
     boolean crashed = false; // if it hit a piece
-    
     board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       int[] coors = board[x][y].piece.potentialMoves.get(i);
@@ -371,65 +371,61 @@ public class board {
         // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
       } else if (!crashed && coors[0] != 100) {
         if (board[coors[1]][coors[0]].piece != null) {
-          if (x==8 && y ==0) {
-            System.out.println(coors[1] + " " + coors[0]);
-            System.out.println(royalMoves.size());
-          }
+          System.out.println(coors[1] + " " + coors[0] + " " + board[coors[1]][coors[0]].piece.role);
           royalMoves.add(coors);
-          if (x==8 && y ==0) {
-           
-            System.out.println(royalMoves.size());
-          }
           crashed = true;
         } else {
+          System.out.println(coors[1] + " " + coors[0]);
           royalMoves.add(coors);
         }
       }
     }
+<<<<<<< HEAD
     
     board[x][y].piece.setPotential((ArrayList)royalMoves.clone());
           System.out.println("BUTT " + board[x][y].piece.potentialMoves.size());
 
+=======
+    String ans ="";
+    for (int i = 0; i < royalMoves.size(); i++) {
+      ans += "[" + royalMoves.get(i)[0] + "," + royalMoves.get(i)[1] + "], ";
+
+      System.out.println("ROYAL" + ans);
+      board[x][y].piece.setPotential((ArrayList)royalMoves.clone());
+    }
+>>>>>>> sam
   }
   // CALL THREATEN and UNTHREATEN IN ROW MAJOR ORDER 
   // THREATEN THREATENS all potentialMoves of piece at x, y (assume row major order), 
-  void threaten(int x, int y) {
-
-    for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
-      if (board[x][y].piece.isRoyal) {
+  void threaten(int x, int y){
+    if (board[x][y].piece.isRoyal){
+      for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++){
         // POTENTIAL MOVES NOT IN ROW MAJOR, SO X AND Y are SWITCHED ------- adding x and y to ROYALTHREATS, x and y are given in row major
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].addRoyalThreat(new int[] {x, y});
       }
-      if (board[x][y].piece.white) {
-        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setWhiteThreats(1);
-      } else {
-        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setBlackThreats(1);
-      }
     }
   }
-  void unthreaten(int x, int y) {
-    for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
-
-      if (board[x][y].piece.isRoyal) {
-        System.out.println("FIRST: " +  board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].royalThreats.size());
+  void unthreaten(int x, int y){
+    if (board[x][y].piece.isRoyal){
+      for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++){
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
-        System.out.println("SECOND: " +  board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].royalThreats.size());
-      }
-      if (board[x][y].piece.white) {
-        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setWhiteThreats(-1);
-      } else {
-        board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setBlackThreats(-1);
       }
     }
   }
-  ArrayList<int[]> legalMoves(int x, int y) {
+  ArrayList<int[]> legalMoves(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
     Piece piece = board[x][y].piece;
-    ans=(ArrayList)piece.potentialMoves.clone();
-    for (int i = 0; i < ans.size(); i++) {
+    if(!piece.isRoyal){
+      piece.calcPotential(y, x);
+    }
+    else{
+      royalPotential(x,y);
+    }
+    ans=piece.potentialMoves;
+    for(int i = 0; i < ans.size(); i++){
       Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
-      if (tile.piece != null) {
-        if ((tile.piece.white && piece.white) || (!tile.piece.white && !piece.white)) {
+      if(tile.piece != null){
+        if((tile.piece.white && piece.white) || (!tile.piece.white && !piece.white)){
           ans.remove(i);
           i--;
         }
