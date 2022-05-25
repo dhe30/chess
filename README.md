@@ -25,3 +25,7 @@ May 22, 2022
 May 23, 2022
 
     Daniel: added royalPotential and necessary fields/ methods to make it work. Threaten and unthreaten methods are deployed but only work for royals. 
+    Samuel: added highlighting and finished up calcPotential
+
+May 24: 
+    Samuel: added the start of the promotion concept. still need to work on making the order right. added forced promotion and optional promotion.
