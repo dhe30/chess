@@ -75,6 +75,11 @@ void setup() {
     for (int a = 0; a < Board.board[i].length; a++) {
       if (Board.board[i][a].piece != null) {
         if (Board.board[i][a].piece.isRoyal) {
+          if (i==8 && a ==0) {
+
+
+            System.out.println("SETUPL");
+          }
           Board.royalPotential(i, a);
         } else {
           Board.board[i][a].piece.calcPotential(a, i); // calcPotential should not be in RMO
@@ -263,21 +268,34 @@ public class board {
         whiteCaptured.add(board[x1][y1].piece);
       }
     }
-    // UNTHREATEN BOTH 
-    // NEED TO UNTHREATEN other tile
-    if (board[x][y].piece.isRoyal) {
-      // initially, all threatens are 0, check for that 
-    }
+    // UNTHREATEN BOTH
+    //System.out.println(board[x1][y1].royalThreats.size() + " " + board[x1][y1].royalThreats.get(0)[0] + " " +board[x1][y1].royalThreats.get(0)[1]+ " " + board[x1][y1].royalThreats.get(1)[0] + " " +board[x1][y1].royalThreats.get(1)[1]);
+
+    //System.out.println("BUG1");
+    //System.out.println(x+" " + y);
+    //System.out.println("BUTT" + board[x][y].piece.potentialMoves.size());
+    //System.out.println(board[x][y].piece.potentialMoves.size() + " " + board[x][y].piece.potentialMoves.get(0)[0] + " " +board[x][y].piece.potentialMoves.get(0)[1]+ " " + board[x][y].piece.potentialMoves.get(1)[0] + " " +board[x][y].piece.potentialMoves.get(1)[1]);
+
     unthreaten(x, y);
-    unthreaten(x1, y1);
+    //System.out.println(board[x][y].piece.potentialMoves.size() + " " + board[x][y].piece.potentialMoves.get(0)[0] + " " +board[x][y].piece.potentialMoves.get(0)[1]+ " " + board[x][y].piece.potentialMoves.get(1)[0] + " " +board[x][y].piece.potentialMoves.get(1)[1]);
+
+    //System.out.println("BUG2");
+    if (board[x1][y1].piece != null){
+      unthreaten(x1, y1);
+    }
     // move current piece to other tile, set current tile's piece to null
     board[x1][y1].setPiece(board[x][y].piece);
     board[x][y].setPiece(null);
     // recalculate royal pieces' moves only if current piece had been blocking them 
     if (board[x][y].royalThreats.size() > 0) {
-      for (int i = 0; i < board[x][y].royalThreats.size(); i++) {
+      ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
+      for (int i = 0; i < temp.size(); i++) {
         //coordinate pair [0],[1] because r.T is in RMO
-        royalPotential(board[x][y].royalThreats.get(i)[0], board[x][y].royalThreats.get(i)[1]);
+        System.out.println("BUG3");
+
+        unthreaten(temp.get(i)[0], temp.get(i)[1]);
+        royalPotential(temp.get(i)[0], temp.get(i)[1]);
+        threaten(temp.get(i)[0], temp.get(i)[1]);
       }
     }
     // if current is royal, recalculate moves
@@ -286,26 +304,31 @@ public class board {
     } else {
       board[x1][y1].piece.calcPotential(y1, x1);
     }
-    threaten(x1, y1);
+    threaten(x1, y1); 
     // current is now moved and may be blocking royals, recalculate royals' moves if so  
     if (board[x1][y1].royalThreats.size() > 0) {
-      for (int i = 0; i < board[x1][y1].royalThreats.size(); i++) {
+      ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
+      System.out.println(board[x1][y1].royalThreats.size());
+      System.out.println(board[x1][y1].piece.role);
+
+      for (int i = 0; i < temp.size(); i++) {
         //coordinate pair [0],[1] because r.T is in RMO
-        if (board[x1][y1].getRoyalThreatIndex(new int[]{x, y}) != -1) {
-          board[x1][y1].removeRoyalThreat(new int[]{x, y});
-        } else {
-          royalPotential(board[x1][y1].royalThreats.get(i)[0], board[x1][y1].royalThreats.get(i)[1]);
-        }
+        System.out.println("BUG4");
+        System.out.println(temp.get(i)[0]+" " + temp.get(i)[1]);
+        unthreaten(temp.get(i)[0], temp.get(i)[1]);
+        royalPotential(temp.get(i)[0], temp.get(i)[1]);
+        threaten(temp.get(i)[0], temp.get(i)[1]);
       }
     }
   }
   //ROYAL POTENTIAL IS ALWAYS CALLED IN ROW MAJOR ORDER 
   void royalPotential(int x, int y) {
-    unthreaten(x, y);
-    System.out.println(x +", " + y);
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
     boolean crashed = false; // if it hit a piece
-    System.out.println("BUG: "+ x + " " +y + " " +board[x][y].piece.role);
+    if (x==8 && y ==0) {
+
+      System.out.println("INRARA");
+    }
     board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       int[] coors = board[x][y].piece.potentialMoves.get(i);
@@ -314,23 +337,31 @@ public class board {
         // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
       } else if (!crashed && coors[0] != 100) {
         if (board[coors[1]][coors[0]].piece != null) {
-          System.out.println(coors[1] + " " + coors[0] + " " + board[coors[1]][coors[0]].piece.role);
+          if (x==8 && y ==0) {
+            System.out.println(coors[1] + " " + coors[0]);
+            System.out.println(royalMoves.size());
+          }
           royalMoves.add(coors);
+          if (x==8 && y ==0) {
+           
+            System.out.println(royalMoves.size());
+          }
           crashed = true;
         } else {
-          System.out.println(coors[1] + " " + coors[0]);
           royalMoves.add(coors);
         }
       }
     }
-    String ans ="";
-    for (int i = 0; i < royalMoves.size(); i++) {
-      ans += "[" + royalMoves.get(i)[0] + "," + royalMoves.get(i)[1] + "], ";
-
+    if (x==8 && y ==0) {
+      String ans ="";
+      for (int i = 0; i < royalMoves.size(); i++) {
+        ans += "[" + royalMoves.get(i)[0] + "," + royalMoves.get(i)[1] + "], ";
+      }
       System.out.println("ROYAL" + ans);
     }
     board[x][y].piece.setPotential((ArrayList)royalMoves.clone());
-    threaten(x,y);
+          System.out.println("BUTT " + board[x][y].piece.potentialMoves.size());
+
   }
   // CALL THREATEN and UNTHREATEN IN ROW MAJOR ORDER 
   // THREATEN THREATENS all potentialMoves of piece at x, y (assume row major order), 
@@ -350,8 +381,11 @@ public class board {
   }
   void unthreaten(int x, int y) {
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
+
       if (board[x][y].piece.isRoyal) {
+        System.out.println("FIRST: " +  board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].royalThreats.size());
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
+        System.out.println("SECOND: " +  board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].royalThreats.size());
       }
       if (board[x][y].piece.white) {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setWhiteThreats(-1);
@@ -363,13 +397,7 @@ public class board {
   ArrayList<int[]> legalMoves(int x, int y) {
     ArrayList<int[]> ans = new ArrayList();
     Piece piece = board[x][y].piece;
-    if(!piece.isRoyal){
-      piece.calcPotential(y, x);
-    }
-    else{
-      royalPotential(x,y);
-    }
-    ans=piece.potentialMoves;
+    ans=(ArrayList)piece.potentialMoves.clone();
     for (int i = 0; i < ans.size(); i++) {
       Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
       if (tile.piece != null) {

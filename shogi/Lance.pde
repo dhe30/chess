@@ -13,6 +13,7 @@ public class Lance extends Piece{
           int[] up = {x, y};
           ans.add(up);
         }
+        ans.add(new int[]{100,100});
       }
       else{
         if(x!=0){
@@ -76,6 +77,11 @@ public class Lance extends Piece{
         }
       }
     }
+    String answ ="";
+      for(int i = 0; i < ans.size(); i++){
+        answ += "[" + ans.get(i)[0] + "," + ans.get(i)[1] + "], ";
+      }
+      System.out.println("NORM" + answ);
     potentialMoves=(ArrayList)ans.clone();
   }
   void promote(){
