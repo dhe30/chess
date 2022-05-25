@@ -4,6 +4,7 @@ ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
 boolean Turn = true;
 boolean showPromote = false;
 boolean selected = false;
+boolean sameRow=false;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -126,6 +127,9 @@ void mouseClicked() {
           rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
           // array logic
           Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+          if(InitialSelected.get(1)==mouseY/100){
+            sameRow=true;
+          }
           selected=false;
           InitialSelected.clear();
           InitialSelected.add(mouseX / 100);
@@ -177,13 +181,18 @@ void mouseClicked() {
                 Board.board[6][i].piece.canPromote();
               }
             }
+            if(Board.board[4][i].piece!=null){
+              if(Board.board[4][i].piece.canPromote){
+                Board.board[4][i].piece.canPromote();
+              }
+            }
             if(Board.board[3][i].piece!=null){
-              if(Board.board[3][i].piece.white && Board.board[3][i].piece.canPromote){
+              if(Board.board[3][i].piece.white && Board.board[3][i].piece.canPromote && sameRow){
                 Board.board[3][i].piece.canPromote();
               }
             }
             if(Board.board[5][i].piece!=null){
-              if(!Board.board[5][i].piece.white && Board.board[5][i].piece.canPromote){
+              if(!Board.board[5][i].piece.white && Board.board[5][i].piece.canPromote && sameRow){
                 Board.board[5][i].piece.canPromote();
               }
             }
