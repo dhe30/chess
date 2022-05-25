@@ -3,6 +3,7 @@ boolean Test = false;
 ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
 boolean Turn = true;
 boolean showPromote = false;
+boolean selected = false;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -109,12 +110,14 @@ void mouseClicked() {
           // adds coordinates to global variable (i.e. selects the piece), only occurs when no piece has been selected 
           InitialSelected.add(mouseX / 100);
           InitialSelected.add(mouseY / 100);
+          selected=true;
         }
-      } else if (InitialSelected.size() > 0) {
+      } else if (InitialSelected.size() > 0 && selected) {
         // Only occurs when piece has been selected, row order means x and y switch positions!
         // make new tile piece disappear (it is being replaced by the selected piece)
         if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
           InitialSelected.clear();
+          selected=false;
         } else {
           Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
           fill(252, 204, 156);
@@ -123,6 +126,7 @@ void mouseClicked() {
           rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
           // array logic
           Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+          selected=false;
           InitialSelected.clear();
           InitialSelected.add(mouseX / 100);
           InitialSelected.add(mouseY / 100);
