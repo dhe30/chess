@@ -240,7 +240,7 @@ void mouseClicked() {
             InitialSelected.clear();
             Turn = !Turn;
             System.out.println("Love");
-            Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins 
+            Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
           }
         }
       }
@@ -451,23 +451,25 @@ public class board {
   void preventCheck() {
     System.out.println("PREVENT INITIATING");
     boolean look = true;
-    int x;
-    int y;
+    int ogX;
+    int ogY;
+    int x; int y;
     ArrayList<Integer> protector = new ArrayList<Integer>(); 
     // white king checking 
     if (Turn) {
       System.out.println("TURNED PASS " + Turn);
 
-      x = whiteKingLocation[0];
-      y = whiteKingLocation[1];
-      // check top vertical
+      ogX = whiteKingLocation[0];
+      ogY = whiteKingLocation[1];
     } else {
-      x = blackKingLocation[0];
-      y = blackKingLocation[1];
+      ogX = blackKingLocation[0];
+      ogY = blackKingLocation[1];
     }
-    // This assumes 
-    while (x > 0 && look) {
-      x-=1;
+    // check vertical
+    x = 0;
+    y = ogY;
+    while (x < 8 && look) {
+      x+=1;
       if (board[x][y].piece != null) {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
@@ -484,7 +486,6 @@ public class board {
           // Juicy code: if potentialMoves of protector is NOT in the SAME VERTICAL ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
-          restrictedPieces.add(new int[]{pX,pY});
           ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
           for (int i = 0; i < restriction.size(); i++) { // REMEMBER TO i-- when removing
             if (y != restriction.get(i)[0]) { // unthreaten then remove
@@ -508,5 +509,11 @@ public class board {
         }
       }
     }
+    // re-set variables
+    x = ogX;
+    y = ogY;
+    look = true;
+    // check bottom vertical
+    
   }
 }
