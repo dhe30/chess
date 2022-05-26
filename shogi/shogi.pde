@@ -308,6 +308,9 @@ void draw() {
   }
 }
 public class board {
+  int[] whiteKingLocation = new int[]{8, 4};
+  int[] blackKingLocation = new int[]{0, 4};
+
   ArrayList<Piece> whiteCaptured = new ArrayList();
   ArrayList<Piece> blackCaptured = new ArrayList();
   Tile[][] board = new Tile[9][9];
@@ -371,6 +374,14 @@ public class board {
         threaten(temp.get(i)[0], temp.get(i)[1]);
       }
     }
+    // check if orginal coors were king's Location 
+    if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
+      whiteKingLocation[0] = x1;
+      whiteKingLocation[1] = y1;
+    } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
+      blackKingLocation[0] = x1;
+      blackKingLocation[1] = y1;
+    }
   }
   //ROYAL POTENTIAL IS ALWAYS CALLED IN ROW MAJOR ORDER 
   void royalPotential(int x, int y) {
@@ -378,11 +389,11 @@ public class board {
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
     boolean crashed = false; // if it hit a piece
     board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
-     String ans ="";
+    String ans ="";
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       ans += "[" + board[x][y].piece.potentialMoves.get(i)[1] + "," + board[x][y].piece.potentialMoves.get(i)[0] + "], ";
     }
-          System.out.println("CANDY" + ans);
+    System.out.println("CANDY" + ans);
 
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       int[] coors = board[x][y].piece.potentialMoves.get(i);
@@ -453,5 +464,7 @@ public class board {
       }
     }
     return ans;
+  }
+  void preventCheck() {
   }
 }
