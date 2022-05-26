@@ -458,30 +458,40 @@ public class board {
     ArrayList<Integer> protector = new ArrayList<Integer>(); 
     // white king checking 
     if (Turn) {
-          System.out.println("TURNED PASS");
+      System.out.println("TURNED PASS " + Turn);
 
       x = whiteKingLocation[0];
       y = whiteKingLocation[1];
       // check top vertical
-
-      while (x > 0 && look) {
-        x-=1;
-        if (board[x][y].piece != null) {
-          if (protector.size() == 0 && board[x][y].piece.white) {
-            protector.add(x);
-            protector.add(y);
-            System.out.println("hitted and ally");
-          } else if (board[x][y].piece.white) {
-            System.out.println("hitted and ally and then hitted an ally");
-            look = false;
-          } else {
-            if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
-              System.out.println("Enemy on the horizon!");
-            }
-          }
+    } else {
+      x = blackKingLocation[0];
+      y = blackKingLocation[1];
+    }
+    // This assumes 
+    while (x > 0 && look) {
+      x-=1;
+      if (board[x][y].piece != null) {
+        if (protector.size() == 0 && board[x][y].piece.white == Turn) {
+          protector.add(x);
+          protector.add(y);
+          System.out.println("hitted and ally");
+        } else if (board[x][y].piece.white == Turn) {
+          System.out.println("hitted and ally and then hitted an ally");
+          look = false;
+        } else if (board[x][y].piece.white != Turn) { // no ally hit and piece hit is not an ally 
+          System.out.println("IN CHECK!");
+          look = false;
+        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
+          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
+          // Juicy code: if potentialMoves of protector is NOT in the SAME VERTICAL ROW, remove from potential, unthreaten 
+          int pX = protector.get(0); int pY = protector.get(1);
+          ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
+          look = false;
+        } else {
+          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
+          look = false;
         }
       }
     }
-    // black king checking
   }
 }
