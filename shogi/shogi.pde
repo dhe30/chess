@@ -510,10 +510,52 @@ public class board {
       }
     }
     // re-set variables
+    System.out.println("LOOKING AT ROW");
+    protector.clear();
     x = ogX;
-    y = ogY;
+    y = 0;
     look = true;
-    // check bottom vertical
-    
+    // check the row
+    while (y < 8 && look) {
+      y+=1;
+      if (board[x][y].piece != null) {
+        if (protector.size() == 0 && board[x][y].piece.white == Turn) {
+          protector.add(x);
+          protector.add(y);
+          System.out.println("hitted and ally in row " + x + " " + y);
+        } else if (board[x][y].piece.white == Turn) {
+          System.out.println("hitted and ally and then hitted an ally in row");
+          look = false;
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
+          System.out.println("IN CHECK!");
+          look = false;
+        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
+          System.out.println("hitted an ally and then hitted an Enemy on the horizon! in row");
+          // Juicy code: if potentialMoves of protector is NOT in the SAME VERTICAL ROW, remove from potential, unthreaten 
+          int pX = protector.get(0); 
+          int pY = protector.get(1);
+          ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
+          for (int i = 0; i < restriction.size(); i++) { // REMEMBER TO i-- when removing
+            if (x != restriction.get(i)[1]) { // unthreaten then remove
+              if (board[pX][pY].piece.isRoyal) {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
+              }
+              if (Turn) {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
+              } else {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
+              }
+              restriction.remove(i);
+              i--;
+            } // set new Potential
+            board[pX][pY].piece.setPotential(restriction);
+          }
+          look = false;
+        } else {
+          System.out.println("Enemy on the horizon! BUT THEY DONT HIT in row");
+          look = false;
+        }
+      }
+    }
   }
 }
