@@ -8,7 +8,7 @@ boolean sameRow=false;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
-  size(1500, 900);
+  size(1800, 900);
   Board = new board();
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
@@ -20,7 +20,7 @@ void setup() {
     line(100*i, 0, 100*i, 900);
     line(0, 100*i, 900, 100*i);
   }
-  fill(255);
+  fill(180);
   rect(900, 0, 1500, 900);
   //sets down the rooks
   Piece blackRook = new Rook("black");
@@ -286,7 +286,7 @@ void draw() {
       }
     }
   }
-  fill(255);
+  fill(180);
   rect(900, 0, 1500, 900);
   fill(0);
   textSize(20);
@@ -309,6 +309,33 @@ void draw() {
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
     }
+  }
+  textSize(12);
+  int x=0;
+  for(int i = 0; i < Board.whiteCaptured.size(); i++){
+    if(x==8){
+      x=0;
+    }
+    int j=i/8;
+    fill(255);
+    rect(x*100+950, j*100+340, 60, 50);
+    triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
+    fill(0);
+    text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
+    x++;
+  }
+  x=0;
+  for(int i = 0; i < Board.blackCaptured.size(); i++){
+    if(x==8){
+      x=0;
+    }
+    int j=i/8;
+    fill(255);
+    rect(x*100+950, j*100+610, 60, 50);
+    triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
+    fill(0);
+    text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
+    x++;
   }
 }
 public class board {
@@ -484,7 +511,6 @@ public class board {
           // Juicy code: if potentialMoves of protector is NOT in the SAME VERTICAL ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
-          restrictedPieces.add(new int[]{pX,pY});
           ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
           for (int i = 0; i < restriction.size(); i++) { // REMEMBER TO i-- when removing
             if (y != restriction.get(i)[0]) { // unthreaten then remove
@@ -509,4 +535,9 @@ public class board {
       }
     }
   }
+  //boolean drop(int x, int x1, int y1){
+  //  if(Turn){
+      
+  //  }
+  //}
 }
