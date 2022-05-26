@@ -245,6 +245,23 @@ void mouseClicked() {
         }
       }
     }
+    else{
+      if(InitialSelected.size() == 1){
+        InitialSelected.clear();
+      }
+      for(int i = 0; i < Board.whiteCaptured.size(); i++){
+        Piece piece = Board.whiteCaptured.get(i);
+        if(mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50){
+          InitialSelected.add(i);
+        }
+      }
+      for(int i = 0; i < Board.blackCaptured.size(); i++){
+        Piece piece = Board.blackCaptured.get(i);
+        if(mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50){
+          InitialSelected.add(i);
+        }
+      }
+    }
   }
 }
 void draw() {
@@ -301,7 +318,7 @@ void draw() {
     fill(0);
     text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
   }
-  if (InitialSelected.size() > 0) {
+  if (InitialSelected.size() > 1) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
     for (int i = 0; i < list.size(); i++) {
@@ -320,6 +337,8 @@ void draw() {
     fill(255);
     rect(x*100+950, j*100+340, 60, 50);
     triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
+    Board.whiteCaptured.get(i).x=x*100+950;
+    Board.whiteCaptured.get(i).y=j*100+340;
     fill(0);
     text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
     x++;
@@ -333,10 +352,24 @@ void draw() {
     fill(255);
     rect(x*100+950, j*100+610, 60, 50);
     triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
+    Board.blackCaptured.get(i).x=x*100+950;
+    Board.blackCaptured.get(i).y=j*100+610;
     fill(0);
     text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
     x++;
   }
+  //if(InitialSelected.size()==1){
+  //  System.out.println(Board.whiteCaptured.get(InitialSelected.get(0)).role);
+  //}
+  //System.out.println(InitialSelected.size());
+  if(Board.whiteCaptured.size()>0){
+    System.out.println("white capture: " + Board.whiteCaptured.get(0).x + "," + Board.whiteCaptured.get(0).y);
+  }
+  System.out.println(mouseX + "," + mouseY);
+  if(InitialSelected.size()==1){
+    System.out.println("its size 1");
+  }
+  
 }
 public class board {
   int[] whiteKingLocation = new int[]{8, 4};
