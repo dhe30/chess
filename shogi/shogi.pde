@@ -114,6 +114,8 @@ void keyPressed() {
       showPromote=false;
       InitialSelected.clear();
       Turn = !Turn;
+      System.out.println("PROMOTE TURN");
+      Board.preventCheck();
     }
   }
 }
@@ -237,6 +239,9 @@ void mouseClicked() {
           if (!piece.canPromote) {
             InitialSelected.clear();
             Turn = !Turn;
+            System.out.println("Love");
+
+            Board.preventCheck();
           }
         }
       }
@@ -327,16 +332,8 @@ public class board {
     }
     // UNTHREATEN BOTH 
     // NEED TO UNTHREATEN other tile
-    System.out.println("BUG1");
-    String ans ="";
-    for (int i = 0; i < board[x][y].royalThreats.size(); i++) {
-      ans += "[" + board[x][y].royalThreats.get(i)[0] + "," + board[x][y].royalThreats.get(i)[1] + "], ";
-    }
-    System.out.println("ROYALThreat" + ans);
-
     unthreaten(x, y);
     if (board[x1][y1].piece != null) {
-      System.out.println("BUG2");
 
       unthreaten(x1, y1);
     }
@@ -347,7 +344,6 @@ public class board {
     if (board[x][y].royalThreats.size() > 0) {
       ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
       for (int i = 0; i < temp.size(); i++) {
-        System.out.println("BUG3");
 
         unthreaten(temp.get(i)[0], temp.get(i)[1]);
         royalPotential(temp.get(i)[0], temp.get(i)[1]);
@@ -367,7 +363,6 @@ public class board {
       ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
       for (int i = 0; i < temp.size(); i++) {
         //coordinate pair [0],[1] because r.T is in RMO
-        System.out.println("BUG4");
 
         unthreaten(temp.get(i)[0], temp.get(i)[1]);
         royalPotential(temp.get(i)[0], temp.get(i)[1]);
@@ -382,37 +377,27 @@ public class board {
       blackKingLocation[0] = x1;
       blackKingLocation[1] = y1;
     }
+    System.out.println("KINGKING: " + whiteKingLocation[0] + " " + whiteKingLocation[1]);
   }
   //ROYAL POTENTIAL IS ALWAYS CALLED IN ROW MAJOR ORDER 
   void royalPotential(int x, int y) {
-    System.out.println(x +", " + y);
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
     boolean crashed = false; // if it hit a piece
     board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
-    String ans ="";
-    for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
-      ans += "[" + board[x][y].piece.potentialMoves.get(i)[1] + "," + board[x][y].piece.potentialMoves.get(i)[0] + "], ";
-    }
-    System.out.println("CANDY" + ans);
-
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       int[] coors = board[x][y].piece.potentialMoves.get(i);
       if (coors[0] == 100 && crashed) {
         crashed = false; // hit the end of direction and can continue 
         // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
       } else if (!crashed && coors[0] != 100) {
-        System.out.println("Love: " + coors[1] + " " + coors[0]);
         if (board[coors[1]][coors[0]].piece != null) {
-          System.out.println(coors[1] + " " + coors[0] + " " + board[coors[1]][coors[0]].piece.role);
           royalMoves.add(coors);
           crashed = true;
         } else {
-          System.out.println(coors[1] + " " + coors[0]);
           royalMoves.add(coors);
         }
       }
     }
-    System.out.println("BUTT " + board[x][y].piece.potentialMoves.size());
     //String ans ="";
     //for (int i = 0; i < royalMoves.size(); i++) {
     //  ans += "[" + royalMoves.get(i)[0] + "," + royalMoves.get(i)[1] + "], ";
@@ -440,7 +425,6 @@ public class board {
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
 
       if (board[x][y].piece.isRoyal) {
-        System.out.println("ALIABBA: " + x + " " + y);
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
       }
       if (board[x][y].piece.white) {
@@ -465,6 +449,37 @@ public class board {
     }
     return ans;
   }
+  // prevent check should be called at the beginning of a turn
   void preventCheck() {
+    System.out.println("PREVENT");
+    int x;
+    int y;
+    ArrayList<Integer> protector = new ArrayList<Integer>(); 
+    // white king checking 
+    if (Turn) {
+          System.out.println("TURNED PASS");
+
+      x = whiteKingLocation[0];
+      y = whiteKingLocation[1];
+      // check top vertical
+
+      while (x > 0) {
+        x-=1;
+        if (board[x][y].piece != null) {
+          if (protector.size() == 0) {
+            protector.add(x);
+            protector.add(y);
+            System.out.println("hitted and ally");
+          } else if (board[x][y].piece.white) {
+            System.out.println("hitted and ally and then hitted an ally");
+          } else {
+            if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
+              System.out.println("Enemy on the horizon!");
+            }
+          }
+        }
+      }
+    }
+    // black king checking
   }
 }

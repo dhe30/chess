@@ -21,7 +21,6 @@ public class Tile{
     }
   }
   void removeRoyalThreat(int[] a){
-    System.out.println(a[0] + " "+ a[1]);
     royalThreats.remove(getRoyalThreatIndex(a));
   }
   void addRoyalThreat(int[] a){
