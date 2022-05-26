@@ -314,7 +314,6 @@ void draw() {
 public class board {
   int[] whiteKingLocation = new int[]{8, 4};
   int[] blackKingLocation = new int[]{0, 4};
-  ArrayList<int[]> restrictedPieces = new ArrayList<int[]>();
   ArrayList<Piece> whiteCaptured = new ArrayList();
   ArrayList<Piece> blackCaptured = new ArrayList();
   Tile[][] board = new Tile[9][9];
@@ -450,7 +449,7 @@ public class board {
   }
   // prevent check should be called at the beginning of a turn
   void preventCheck() {
-    System.out.println("PREVENT");
+    System.out.println("PREVENT INITIATING");
     boolean look = true;
     int x;
     int y;
