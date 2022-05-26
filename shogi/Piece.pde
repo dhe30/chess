@@ -5,6 +5,7 @@ public class Piece {
   ArrayList<int[]> potentialMoves = new ArrayList<int[]>();
   boolean isRoyal=false;
   boolean canPromote=false;
+  boolean protector = false;
   public Piece(String x) {
     if (x.equals("white")) {
       white = true;
@@ -27,5 +28,8 @@ public class Piece {
   }
   void canPromote(){
     canPromote=!canPromote;
+  }
+  void setProtector(boolean a){
+    protector = a;
   }
 }
