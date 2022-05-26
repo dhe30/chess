@@ -452,6 +452,7 @@ public class board {
   // prevent check should be called at the beginning of a turn
   void preventCheck() {
     System.out.println("PREVENT");
+    boolean look = true;
     int x;
     int y;
     ArrayList<Integer> protector = new ArrayList<Integer>(); 
@@ -463,15 +464,16 @@ public class board {
       y = whiteKingLocation[1];
       // check top vertical
 
-      while (x > 0) {
+      while (x > 0 && look) {
         x-=1;
         if (board[x][y].piece != null) {
-          if (protector.size() == 0) {
+          if (protector.size() == 0 && board[x][y].piece.white) {
             protector.add(x);
             protector.add(y);
             System.out.println("hitted and ally");
           } else if (board[x][y].piece.white) {
             System.out.println("hitted and ally and then hitted an ally");
+            look = false;
           } else {
             if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
               System.out.println("Enemy on the horizon!");
