@@ -25,7 +25,15 @@ May 22, 2022
 May 23, 2022
 
     Daniel: added royalPotential and necessary fields/ methods to make it work. Threaten and unthreaten methods are deployed but only work for royals. 
-    Samuel: added highlighting and finished up calcPotential
+
+    Samuel: added highlighting and finished up calcPotential. discussed with Daniel about how to deal with royal pieces, blocking, and checks. 
 
 May 24: 
+
     Samuel: added the start of the promotion concept. still need to work on making the order right. added forced promotion and optional promotion.
+
+    Daniel: worked on threaten and potential methods and fixed bugs, they now cause no issues with 90% confidence
+
+May 25:
+
+    Daniel: Began method that checks for illegal moves that would put your king into check, method currently only looks at the column above the king.
