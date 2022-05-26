@@ -378,12 +378,19 @@ public class board {
     ArrayList<int[]> royalMoves = new ArrayList<int[]>();
     boolean crashed = false; // if it hit a piece
     board[x][y].piece.calcPotential(y, x); // separated each direction calculation with an array of {100,100}
+     String ans ="";
+    for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
+      ans += "[" + board[x][y].piece.potentialMoves.get(i)[1] + "," + board[x][y].piece.potentialMoves.get(i)[0] + "], ";
+    }
+          System.out.println("CANDY" + ans);
+
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       int[] coors = board[x][y].piece.potentialMoves.get(i);
       if (coors[0] == 100 && crashed) {
         crashed = false; // hit the end of direction and can continue 
         // next line below: checks if there is a piece and sets crashed to true, does not add anymore until end of direction is hit
       } else if (!crashed && coors[0] != 100) {
+        System.out.println("Love: " + coors[1] + " " + coors[0]);
         if (board[coors[1]][coors[0]].piece != null) {
           System.out.println(coors[1] + " " + coors[0] + " " + board[coors[1]][coors[0]].piece.role);
           royalMoves.add(coors);
