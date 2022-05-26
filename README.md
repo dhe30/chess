@@ -21,11 +21,17 @@ May 22, 2022
     Daniel : added clicking to move pieces and turns (can move anywhere for now). fixed NullPointer and OutOfBounds edge cases.
      
     Samuel: created the basic setup as well as all the chess pieces. added calcPotential to all the pieces. Had the board and pieces drawn in processing. 
-
+<<<<<<< HEAD
 May 23, 2022
+
+    Samuel:added highlighting. discussed with Daniel about how to deal with royal pieces, blocking, and checks. 
 
     Daniel: added royalPotential and necessary fields/ methods to make it work. Threaten and unthreaten methods are deployed but only work for royals. 
     Samuel: added highlighting and finished up calcPotential
 
 May 24: 
+
     Samuel: added the start of the promotion concept. still need to work on making the order right. added forced promotion and optional promotion.
+
+    Daniel: worked on threaten and potential methods and fixed bugs, they now cause no issues with 90% confidence
+
