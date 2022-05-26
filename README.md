@@ -37,3 +37,4 @@ May 24:
 May 25:
 
     Daniel: Began method that checks for illegal moves that would put your king into check, method currently only looks at the column above the king.
+    Samuel: completed promotion
