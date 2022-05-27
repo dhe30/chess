@@ -394,6 +394,10 @@ public class board {
   ArrayList<int[]> restricted = new  ArrayList<int[]>();
   boolean whiteCheck = true;
   boolean blackCheck = true;
+  ArrayList<int[]> blackCheckers = new ArrayList();
+  ArrayList<int[]> whiteCheckers = new ArrayList();
+  ArrayList<int[]> supplementalThreats = new ArrayList();
+
   Tile[][] board = new Tile[9][9];
   public board() {
   }
@@ -539,21 +543,21 @@ public class board {
       blackKingLocation[1] = y1;
     }
     // check if enemy king is in check
-    if (Turn) {
-      if (board[blackKingLocation[0]][blackKingLocation[1]].whiteThreatened > 0) {
-        blackCheck = true;
-      } else {
-        blackCheck = false;
-      }
-      System.out.println("You have just moved a white piece and black is in check: " + blackCheck);
-    } else {
-      if (board[whiteKingLocation[0]][whiteKingLocation[1]].blackThreatened > 0) {
-        whiteCheck = true;
-      } else {
-        whiteCheck = false;
-      }
-      System.out.println("You have just moved a black piece and white is in check: " + whiteCheck);
-    }
+    //if (Turn) {
+    //  if (board[blackKingLocation[0]][blackKingLocation[1]].whiteThreatened > 0) {
+    //    blackCheck = true;
+    //  } else {
+    //    blackCheck = false;
+    //  }
+    //  System.out.println("You have just moved a white piece and black is in check: " + blackCheck);
+    //} else {
+    //  if (board[whiteKingLocation[0]][whiteKingLocation[1]].blackThreatened > 0) {
+    //    whiteCheck = true;
+    //  } else {
+    //    whiteCheck = false;
+    //  }
+    //  System.out.println("You have just moved a black piece and white is in check: " + whiteCheck);
+    //}
   }
   //ROYAL POTENTIAL IS ALWAYS CALLED IN ROW MAJOR ORDER 
   void royalPotential(int x, int y) {
@@ -591,8 +595,22 @@ public class board {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].addRoyalThreat(new int[] {x, y});
       }
       if (board[x][y].piece.white) {
+        if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece != null) {
+          if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.role.equals("king") && !board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.white) {
+            blackCheckers.add(new int[] {x, y});
+            blackCheck = true;
+            System.out.println("Checking black in threaten");
+          }
+        }
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setWhiteThreats(1);
       } else {
+        if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece != null) {
+          if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.role.equals("king") && board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.white) {
+            whiteCheckers.add(new int[] {x, y});
+            whiteCheck = true;
+            System.out.println("Checking white in threaten");
+          }
+        }
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setBlackThreats(1);
       }
     }
@@ -603,8 +621,46 @@ public class board {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
       }
       if (board[x][y].piece.white) {
+        if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece != null) {
+          if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.role.equals("king") && !board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.white) {
+            int index = -1;
+            for (int a = 0; a < blackCheckers.size(); a++) {
+              if (x == blackCheckers.get(a)[0] && y == blackCheckers.get(a)[1]) {
+                index = a;
+              }
+            }
+            if (index == -1) { 
+              System.out.println("PLEASE FIX!");
+            } else {
+              blackCheckers.remove(index);
+              if (blackCheckers.size() == 0) {
+                blackCheck = false;
+                System.out.println("NO more black check");
+              }
+            }
+          }
+        }
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setWhiteThreats(-1);
       } else {
+        if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece != null) {
+          if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.role.equals("king") && !board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.white) {
+            int index = -1;
+            for (int a = 0; a < whiteCheckers.size(); a++) {
+              if (x == whiteCheckers.get(a)[0] && y == whiteCheckers.get(a)[1]) {
+                index = a;
+              }
+            }
+            if (index == -1) { 
+              System.out.println("PLEASE FIX!");
+            } else {
+              whiteCheckers.remove(index);
+              if (whiteCheckers.size() == 0) {
+                whiteCheck = false;
+                System.out.println("NO more white check");
+              }
+            }
+          }
+        }
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setBlackThreats(-1);
       }
     }
@@ -617,15 +673,21 @@ public class board {
       if (piece.white) {
         for (int i = 0; i < ans.size(); i++) {
           Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
-          if (tile.blackThreatened > 0 || (tile.piece != null && tile.piece.white)){
+          if (tile.blackThreatened > 0 || (tile.piece != null && tile.piece.white)) {
             ans.remove(i);
             i--;
           }
         }
+        //if (whiteCheckers.size() > 0){
+        //  for(int a = 0; a < whiteCheckers.size(); a++){
+        //    // destroy illegal king moves that keep the king in check 
+        //    if()
+        //  }
+        //}
       } else {
         for (int i = 0; i < ans.size(); i++) {
           Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
-          if (tile.whiteThreatened > 0 || (tile.piece != null && !tile.piece.white)){
+          if (tile.whiteThreatened > 0 || (tile.piece != null && !tile.piece.white)) {
             ans.remove(i);
             i--;
           }
@@ -646,7 +708,6 @@ public class board {
   }
   // prevent check should be called at the beginning of a turn
   void topColumn(int ogX, int ogY) {
-    System.out.println("Top COLUMN PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -659,16 +720,17 @@ public class board {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
           protector.add(y);
-          System.out.println("hitted and ally");
+          //
         } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally");
+          // System.out.println("hitted and ally and then hitted an ally");
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
           System.out.println("IN CHECK!");
+          // DO QUICK: THREATEN tile below the king in the same row based on TURN , add to supplement threats, REMOVE IN revert method opposite of turn 
+          // because revert happens after the turn changes 
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
-          // Juicy code: if potentialMoves of protector is NOT in the SAME VERTICAL ROW, remove from potential, unthreaten 
+          //  System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
           if (board[x][y].piece.role.equals("lance") && x <= ogX) {
             look = false;
           } else {
@@ -696,14 +758,14 @@ public class board {
             look = false;
           }
         } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
+          //System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
         }
       }
     }
   }
   void bottomColumn(int ogX, int ogY) {
-    System.out.println("Bottom COLUMN PREVENTION");
+    // System.out.println("Bottom COLUMN PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -716,15 +778,15 @@ public class board {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
           protector.add(y);
-          System.out.println("hitted and ally");
+          //
         } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally");
+          //   System.out.println("hitted and ally and then hitted an ally");
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
-          System.out.println("IN CHECK!");
+          //   System.out.println("IN CHECK!");
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
+          //  System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
           if (board[x][y].piece.role.equals("lance") && x >= ogX) {
             look = false;
           } else {
@@ -754,14 +816,14 @@ public class board {
             }
           }
         } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
+          //  System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
         }
       }
     }
   }
   void leftRow(int ogX, int ogY) {
-    System.out.println("left ROW PREVENTION");
+    // System.out.println("left ROW PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -774,15 +836,15 @@ public class board {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
           protector.add(y);
-          System.out.println("hitted and ally");
+          //
         } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally");
+          //    System.out.println("hitted and ally and then hitted an ally");
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook"))) { // no ally hit and piece hit is not an ally 
-          System.out.println("IN CHECK!");
+          //   System.out.println("IN CHECK!");
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
+          //   System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
 
           // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
@@ -809,14 +871,13 @@ public class board {
             look = false;
           }
         } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
+          //  System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
         }
       }
     }
   }
   void rightRow(int ogX, int ogY) {
-    System.out.println("left ROW PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -829,16 +890,11 @@ public class board {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
           protector.add(y);
-          System.out.println("hitted and ally");
         } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally");
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook"))) { // no ally hit and piece hit is not an ally 
-          System.out.println("IN CHECK!");
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
-          // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
           ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
@@ -862,14 +918,12 @@ public class board {
             look = false;
           }
         } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
         }
       }
     }
   }
   void rightTopDiagonal(int ogX, int ogY) {
-    System.out.println("left ROW PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -883,16 +937,11 @@ public class board {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
           protector.add(y);
-          System.out.println("hitted and ally");
         } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally");
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
-          System.out.println("IN CHECK!");
           look = false;
         } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
-          // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
           ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
@@ -915,14 +964,12 @@ public class board {
             look = false;
           }
         } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
         }
       }
     }
   }
   void leftTopDiagonal(int ogX, int ogY) {
-    System.out.println("left ROW PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -936,16 +983,11 @@ public class board {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
           protector.add(y);
-          System.out.println("hitted and ally");
         } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally");
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
-          System.out.println("IN CHECK!");
           look = false;
         } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
-          // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
           ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
@@ -968,14 +1010,12 @@ public class board {
             look = false;
           }
         } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
         }
       }
     }
   }
   void rightBottomDiagonal(int ogX, int ogY) {
-    System.out.println("left ROW PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -989,15 +1029,11 @@ public class board {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
           protector.add(y);
-          System.out.println("hitted and ally");
         } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally");
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
-          System.out.println("IN CHECK!");
           look = false;
         } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
           // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
@@ -1021,14 +1057,12 @@ public class board {
             look = false;
           }
         } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
         }
       }
     }
   }
   void leftBottomDiagonal(int ogX, int ogY) {
-    System.out.println("left ROW PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -1042,15 +1076,11 @@ public class board {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
           protector.add(y);
-          System.out.println("hitted and ally");
         } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally");
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
-          System.out.println("IN CHECK!");
           look = false;
         } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
           // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
@@ -1074,7 +1104,6 @@ public class board {
             look = false;
           }
         } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
         }
       }
