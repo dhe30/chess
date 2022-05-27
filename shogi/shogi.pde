@@ -5,6 +5,7 @@ boolean Turn = true;
 boolean showPromote = false;
 boolean selected = false;
 boolean sameRow=false;
+boolean canDrop=true;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -131,6 +132,7 @@ void mouseClicked() {
     if (mouseX < 900 && mouseY < 900) {
       // ex. mouse at (456,789) refers to tile (4,7)
       if (InitialSelected.size() == 0 && Board.board[mouseY / 100][mouseX / 100].piece != null) {
+        canDrop=true;
         if (Board.board[mouseY / 100][mouseX / 100].piece.white == Turn) {
           // adds coordinates to global variable (i.e. selects the piece), only occurs when no piece has been selected 
           InitialSelected.add(mouseX / 100);
@@ -245,12 +247,19 @@ void mouseClicked() {
         }
       }
       else if(InitialSelected.size()==1){
-        Board.drop(InitialSelected.get(0), mouseX/100, mouseY/100);
-        InitialSelected.clear();
-        Turn=!Turn;
+        canDrop=true;
+        if(Board.drop(InitialSelected.get(0), mouseX/100, mouseY/100)==false){
+          canDrop=false;
+          InitialSelected.clear();
+        }
+        else{
+          InitialSelected.clear();
+          Turn=!Turn;
+        }
       }
     }
     else{
+      canDrop=true;
       if(InitialSelected.size() == 1){
         InitialSelected.clear();
       }
@@ -366,9 +375,16 @@ void draw() {
     x++;
   }
   if(InitialSelected.size()==1){
-    System.out.println("xasd");
+    if(Turn){
+      text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
+    }
+    else{
+      text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
+    }
   }
-  
+  if(!canDrop){
+    text("can't drop piece there", 950, 100);
+  }
 }
 public class board {
   int[] whiteKingLocation = new int[]{8, 4};
@@ -384,12 +400,26 @@ public class board {
     }
     else{
       if(Turn){
+        for(int i = 0; i < 9; i++){
+          if(board[i][x1].piece!=null){
+            if(board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white){
+              return false;
+            }
+          }
+        }
         board[y1][x1].setPiece(whiteCaptured.get(x));
         whiteCaptured.remove(x);
         board[y1][x1].piece.switchSides();
         return true;
       }
       else{
+        for(int i = 0; i < 9; i++){
+          if(board[i][x1].piece!=null){
+            if(board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white){
+              return false;
+            }
+          }
+        }
         board[y1][x1].setPiece(blackCaptured.get(x));
         blackCaptured.remove(x);
         board[y1][x1].piece.switchSides();
