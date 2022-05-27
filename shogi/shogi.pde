@@ -240,6 +240,15 @@ void mouseClicked() {
             InitialSelected.clear();
             Turn = !Turn;
             System.out.println("Love");
+            if (Board.restricted.size() > 0) {
+              for (int i = 0; i < Board.restricted.size(); i++) {
+                System.out.println("BUGG: "+Board.restricted.get(i)[0] + " " + Board.restricted.get(i)[1] );
+                Board.unthreaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
+                Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.calcPotential(Board.restricted.get(i)[1], Board.restricted.get(i)[0]);
+                Board.threaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
+              }
+              Board.restricted.clear();
+            }
             Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
           }
         }
@@ -316,10 +325,28 @@ public class board {
   int[] blackKingLocation = new int[]{0, 4};
   ArrayList<Piece> whiteCaptured = new ArrayList();
   ArrayList<Piece> blackCaptured = new ArrayList();
+  ArrayList<int[]> restricted = new  ArrayList<int[]>();
   Tile[][] board = new Tile[9][9];
   public board() {
   }
+  int restrictedIndex(int x, int y) {
+    for (int i = 0; i < restricted.size(); i++) {
+      if (restricted.get(i)[0] == x && restricted.get(i)[1] == y) {
+        return i;
+      }
+    }
+    return -1;
+  }
   void move(int x, int y, int x1, int y1) {
+    // update restricted if x y is found inside 
+    // MOVE this if statement when x1 and y1 are passed through unchecked and are potentially illegal
+    if (restricted.size() > 0) {
+      int index = restrictedIndex(x, y);
+      if (index != -1) {
+        restricted.remove(index);
+        restricted.add(new int[]{x1, y1});
+      }
+    }
     // if there is a piece on other tile, move to Captured array 
     if (board[x1][y1].piece!=null) {
       if (board[x1][y1].piece.white==true) {
@@ -421,7 +448,6 @@ public class board {
   }
   void unthreaten(int x, int y) {  
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
-
       if (board[x][y].piece.isRoyal) {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
       }
@@ -448,28 +474,16 @@ public class board {
     return ans;
   }
   // prevent check should be called at the beginning of a turn
-  void preventCheck() {
-    System.out.println("PREVENT INITIATING");
+  void topColumn(int ogX, int ogY) {
+    System.out.println("TOP COLUMN PREVENTION");
     boolean look = true;
-    int ogX;
-    int ogY;
-    int x; int y;
+    int x = ogX; 
+    int y = ogY;
     ArrayList<Integer> protector = new ArrayList<Integer>(); 
     // white king checking 
-    if (Turn) {
-      System.out.println("TURNED PASS " + Turn);
-
-      ogX = whiteKingLocation[0];
-      ogY = whiteKingLocation[1];
-    } else {
-      ogX = blackKingLocation[0];
-      ogY = blackKingLocation[1];
-    }
     // check vertical
-    x = 0;
-    y = ogY;
-    while (x < 8 && look) {
-      x+=1;
+    while (x > 0 && look) {
+      x-=1;
       if (board[x][y].piece != null) {
         if (protector.size() == 0 && board[x][y].piece.white == Turn) {
           protector.add(x);
@@ -491,6 +505,7 @@ public class board {
             if (y != restriction.get(i)[0]) { // unthreaten then remove
               if (board[pX][pY].piece.isRoyal) {
                 board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
+              } else {
               }
               if (Turn) {
                 board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
@@ -500,8 +515,9 @@ public class board {
               restriction.remove(i);
               i--;
             } // set new Potential
-            board[pX][pY].piece.setPotential(restriction);
           }
+          restricted.add(new int[]{pX, pY});
+          board[pX][pY].piece.setPotential(restriction);
           look = false;
         } else {
           System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
@@ -509,53 +525,18 @@ public class board {
         }
       }
     }
-    // re-set variables
-    System.out.println("LOOKING AT ROW");
-    protector.clear();
-    x = ogX;
-    y = 0;
-    look = true;
-    // check the row
-    while (y < 8 && look) {
-      y+=1;
-      if (board[x][y].piece != null) {
-        if (protector.size() == 0 && board[x][y].piece.white == Turn) {
-          protector.add(x);
-          protector.add(y);
-          System.out.println("hitted and ally in row " + x + " " + y);
-        } else if (board[x][y].piece.white == Turn) {
-          System.out.println("hitted and ally and then hitted an ally in row");
-          look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
-          System.out.println("IN CHECK!");
-          look = false;
-        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
-          System.out.println("hitted an ally and then hitted an Enemy on the horizon! in row");
-          // Juicy code: if potentialMoves of protector is NOT in the SAME VERTICAL ROW, remove from potential, unthreaten 
-          int pX = protector.get(0); 
-          int pY = protector.get(1);
-          ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
-          for (int i = 0; i < restriction.size(); i++) { // REMEMBER TO i-- when removing
-            if (x != restriction.get(i)[1]) { // unthreaten then remove
-              if (board[pX][pY].piece.isRoyal) {
-                board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
-              }
-              if (Turn) {
-                board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
-              } else {
-                board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
-              }
-              restriction.remove(i);
-              i--;
-            } // set new Potential
-            board[pX][pY].piece.setPotential(restriction);
-          }
-          look = false;
-        } else {
-          System.out.println("Enemy on the horizon! BUT THEY DONT HIT in row");
-          look = false;
-        }
-      }
+  }
+  void preventCheck() {
+    int ogX; 
+    int ogY;
+    if (Turn) {
+      System.out.println("TURNED PASS " + Turn);
+      ogX = whiteKingLocation[0];
+      ogY = whiteKingLocation[1];
+    } else {
+      ogX = blackKingLocation[0];
+      ogY = blackKingLocation[1];
     }
+    topColumn(ogX, ogY);
   }
 }
