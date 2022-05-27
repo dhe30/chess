@@ -8,7 +8,7 @@ boolean sameRow=false;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
-  size(1500, 900);
+  size(1800, 900);
   Board = new board();
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
@@ -20,7 +20,7 @@ void setup() {
     line(100*i, 0, 100*i, 900);
     line(0, 100*i, 900, 100*i);
   }
-  fill(255);
+  fill(180);
   rect(900, 0, 1500, 900);
   //sets down the rooks
   Piece blackRook = new Rook("black");
@@ -138,7 +138,7 @@ void mouseClicked() {
           InitialSelected.add(mouseY / 100);
           selected=true;
         }
-      } else if (InitialSelected.size() > 0 && selected) {
+      } else if (InitialSelected.size() > 1 && selected) {
         // Only occurs when piece has been selected, row order means x and y switch positions!
         // make new tile piece disappear (it is being replaced by the selected piece)
         if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
@@ -245,6 +245,29 @@ void mouseClicked() {
             Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
           }
         }
+      } else if (InitialSelected.size()==1) {
+        Board.drop(InitialSelected.get(0), mouseX/100, mouseY/100);
+        InitialSelected.clear();
+        Turn=!Turn;
+        Board.revertPreviousPreventCheck();
+        Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
+      }
+    } else {
+      if (InitialSelected.size() == 1) {
+        InitialSelected.clear();
+      } else {
+        for (int i = 0; i < Board.whiteCaptured.size(); i++) {
+          Piece piece = Board.whiteCaptured.get(i);
+          if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
+            InitialSelected.add(i);
+          }
+        }
+        for (int i = 0; i < Board.blackCaptured.size(); i++) {
+          Piece piece = Board.blackCaptured.get(i);
+          if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
+            InitialSelected.add(i);
+          }
+        }
       }
     }
   }
@@ -288,7 +311,7 @@ void draw() {
       }
     }
   }
-  fill(255);
+  fill(180);
   rect(900, 0, 1500, 900);
   fill(0);
   textSize(20);
@@ -303,7 +326,7 @@ void draw() {
     fill(0);
     text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
   }
-  if (InitialSelected.size() > 0) {
+  if (InitialSelected.size() > 1) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
     for (int i = 0; i < list.size(); i++) {
@@ -311,6 +334,40 @@ void draw() {
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
     }
+  }
+  textSize(12);
+  int x=0;
+  for (int i = 0; i < Board.whiteCaptured.size(); i++) {
+    if (x==8) {
+      x=0;
+    }
+    int j=i/8;
+    fill(255);
+    rect(x*100+950, j*100+340, 60, 50);
+    triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
+    Board.whiteCaptured.get(i).x=x*100+950;
+    Board.whiteCaptured.get(i).y=j*100+340;
+    fill(0);
+    text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
+    x++;
+  }
+  x=0;
+  for (int i = 0; i < Board.blackCaptured.size(); i++) {
+    if (x==8) {
+      x=0;
+    }
+    int j=i/8;
+    fill(255);
+    rect(x*100+950, j*100+610, 60, 50);
+    triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
+    Board.blackCaptured.get(i).x=x*100+950;
+    Board.blackCaptured.get(i).y=j*100+610;
+    fill(0);
+    text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
+    x++;
+  }
+  if (InitialSelected.size()==1) {
+    System.out.println("xasd");
   }
 }
 public class board {
@@ -322,6 +379,7 @@ public class board {
   Tile[][] board = new Tile[9][9];
   public board() {
   }
+
   int restrictedIndex(int x, int y) {
     for (int i = 0; i < restricted.size(); i++) {
       if (restricted.get(i)[0] == x && restricted.get(i)[1] == y) {
@@ -329,6 +387,51 @@ public class board {
       }
     }
     return -1;
+  }
+  boolean drop(int x, int x1, int y1) { // x1 and y1 are not row major order
+    if (board[y1][x1].piece!=null) {
+      return false;
+    } else {
+      if (Turn) {
+        board[y1][x1].setPiece(whiteCaptured.get(x));
+        whiteCaptured.remove(x);
+        board[y1][x1].piece.switchSides();
+        if (board[y1][x1].piece.isRoyal) {
+          royalPotential(y1, x1);
+          threaten(y1, x1);
+        } else {
+          board[y1][x1].piece.calcPotential(x1, y1);
+        }
+        if (board[y1][x1].royalThreats.size() > 0) {
+          ArrayList<int[]> temp = (ArrayList)board[y1][x1].royalThreats.clone();
+          for (int i = 0; i < temp.size(); i++) {           
+            unthreaten(temp.get(i)[0], temp.get(i)[1]);
+            royalPotential(temp.get(i)[0], temp.get(i)[1]);
+            threaten(temp.get(i)[0], temp.get(i)[1]);
+          }
+        }
+        return true;
+      } else {
+        board[y1][x1].setPiece(blackCaptured.get(x));
+        blackCaptured.remove(x);
+        board[y1][x1].piece.switchSides();
+        if (board[y1][x1].piece.isRoyal) {
+          royalPotential(y1, x1);
+          threaten(y1, x1);
+        } else {
+          board[y1][x1].piece.calcPotential(x1, y1);
+        }
+        if (board[y1][x1].royalThreats.size() > 0) {
+          ArrayList<int[]> temp = (ArrayList)board[y1][x1].royalThreats.clone();
+          for (int i = 0; i < temp.size(); i++) {           
+            unthreaten(temp.get(i)[0], temp.get(i)[1]);
+            royalPotential(temp.get(i)[0], temp.get(i)[1]);
+            threaten(temp.get(i)[0], temp.get(i)[1]);
+          }
+        }
+        return true;
+      }
+    }
   }
   void move(int x, int y, int x1, int y1) {
     // update restricted if x y is found inside 
@@ -938,4 +1041,10 @@ public class board {
       Board.restricted.clear();
     }
   }
+
+  //boolean drop(int x, int x1, int y1){
+  //  if(Turn){
+
+  //  }
+  //}
 }
