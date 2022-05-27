@@ -39,7 +39,8 @@ May 25:
     Daniel: Began method that checks for illegal moves that would put your king into check, method currently only looks at the column above the king.
 
     Samuel: completed promotion
-
-May 26: 
-
+May 26:
+	
+    Samuel: started working on drop
+    
     Daniel: Finished illegal move (puts king in check) prevention and fixed edge cases
