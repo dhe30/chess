@@ -137,7 +137,7 @@ void mouseClicked() {
           InitialSelected.add(mouseY / 100);
           selected=true;
         }
-      } else if (InitialSelected.size() > 0 && selected) {
+      } else if (InitialSelected.size() > 1 && selected) {
         // Only occurs when piece has been selected, row order means x and y switch positions!
         // make new tile piece disappear (it is being replaced by the selected piece)
         if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
@@ -244,21 +244,28 @@ void mouseClicked() {
           }
         }
       }
+      else if(InitialSelected.size()==1){
+        Board.drop(InitialSelected.get(0), mouseX/100, mouseY/100);
+        InitialSelected.clear();
+        Turn=!Turn;
+      }
     }
     else{
       if(InitialSelected.size() == 1){
         InitialSelected.clear();
       }
-      for(int i = 0; i < Board.whiteCaptured.size(); i++){
-        Piece piece = Board.whiteCaptured.get(i);
-        if(mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50){
-          InitialSelected.add(i);
+      else{
+        for(int i = 0; i < Board.whiteCaptured.size(); i++){
+          Piece piece = Board.whiteCaptured.get(i);
+          if(mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50){
+            InitialSelected.add(i);
+          }
         }
-      }
-      for(int i = 0; i < Board.blackCaptured.size(); i++){
-        Piece piece = Board.blackCaptured.get(i);
-        if(mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50){
-          InitialSelected.add(i);
+        for(int i = 0; i < Board.blackCaptured.size(); i++){
+          Piece piece = Board.blackCaptured.get(i);
+          if(mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50){
+            InitialSelected.add(i);
+          }
         }
       }
     }
@@ -358,16 +365,8 @@ void draw() {
     text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
     x++;
   }
-  //if(InitialSelected.size()==1){
-  //  System.out.println(Board.whiteCaptured.get(InitialSelected.get(0)).role);
-  //}
-  //System.out.println(InitialSelected.size());
-  if(Board.whiteCaptured.size()>0){
-    System.out.println("white capture: " + Board.whiteCaptured.get(0).x + "," + Board.whiteCaptured.get(0).y);
-  }
-  System.out.println(mouseX + "," + mouseY);
   if(InitialSelected.size()==1){
-    System.out.println("its size 1");
+    System.out.println("xasd");
   }
   
 }
@@ -378,6 +377,25 @@ public class board {
   ArrayList<Piece> blackCaptured = new ArrayList();
   Tile[][] board = new Tile[9][9];
   public board() {
+  }
+  boolean drop(int x, int x1, int y1){
+    if(board[y1][x1].piece!=null){
+      return false;
+    }
+    else{
+      if(Turn){
+        board[y1][x1].setPiece(whiteCaptured.get(x));
+        whiteCaptured.remove(x);
+        board[y1][x1].piece.switchSides();
+        return true;
+      }
+      else{
+        board[y1][x1].setPiece(blackCaptured.get(x));
+        blackCaptured.remove(x);
+        board[y1][x1].piece.switchSides();
+        return true;
+      }
+    }
   }
   void move(int x, int y, int x1, int y1) {
     // if there is a piece on other tile, move to Captured array 
