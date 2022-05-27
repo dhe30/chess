@@ -384,7 +384,6 @@ void draw() {
     }
     if (!canDrop) {
       text("can't drop piece there", 950, 100);
-      >>>>>>> sam
     }
   }
   public class board {
