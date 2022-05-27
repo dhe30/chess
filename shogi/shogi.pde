@@ -398,6 +398,12 @@ public class board {
   public board() {
   }
   boolean isCheckmate(boolean turn) {
+    if (turn){
+      ArrayList<int[]> kingLegals = legalMoves(whiteKingLocation[0], whiteKingLocation[1]);
+      for(int i = 0; i < kingLegals.size(); i++){
+        if (board[int)
+      }
+    }
     return false;
   }
   int restrictedIndex(int x, int y) {
@@ -540,6 +546,13 @@ public class board {
         blackCheck = false;
       }
       System.out.println("You have just moved a white piece and black is in check: " + blackCheck);
+    } else {
+      if (board[whiteKingLocation[0]][whiteKingLocation[1]].blackThreatened > 0) {
+        whiteCheck = true;
+      } else {
+        whiteCheck = false;
+      }
+      System.out.println("You have just moved a black piece and white is in check: " + whiteCheck);
     }
   }
   //ROYAL POTENTIAL IS ALWAYS CALLED IN ROW MAJOR ORDER 
