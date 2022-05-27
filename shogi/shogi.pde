@@ -503,14 +503,14 @@ public class board {
                   board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
                 } 
 
-                  if (Turn) {
-                    board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
-                  } else {
-                    board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
-                  }
-                  restriction.remove(i);
-                  i--;
-                 // set new Potential
+                if (Turn) {
+                  board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
+                } else {
+                  board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
+                }
+                restriction.remove(i);
+                i--;
+                // set new Potential
               }
             }
             restricted.add(new int[]{pX, pY});
@@ -560,14 +560,14 @@ public class board {
                   board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
                 } 
 
-                  if (Turn) {
-                    board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
-                  } else {
-                    board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
-                  }
-                  restriction.remove(i);
-                  i--;
-                 // set new Potential
+                if (Turn) {
+                  board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
+                } else {
+                  board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
+                }
+                restriction.remove(i);
+                i--;
+                // set new Potential
               }
 
               restricted.add(new int[]{pX, pY});
@@ -616,14 +616,14 @@ public class board {
                 board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
               } 
 
-                if (Turn) {
-                  board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
-                } else {
-                  board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
-                }
-                restriction.remove(i);
-                i--;
-               // set new Potential
+              if (Turn) {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
+              } else {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
+              }
+              restriction.remove(i);
+              i--;
+              // set new Potential
             }
 
             restricted.add(new int[]{pX, pY});
@@ -670,14 +670,14 @@ public class board {
                 board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
               } 
 
-                if (Turn) {
-                  board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
-                } else {
-                  board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
-                }
-                restriction.remove(i);
-                i--;
-               // set new Potential
+              if (Turn) {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
+              } else {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
+              }
+              restriction.remove(i);
+              i--;
+              // set new Potential
             }
             restricted.add(new int[]{pX, pY});
             board[pX][pY].piece.setPotential(restriction);
@@ -723,14 +723,14 @@ public class board {
               if (board[pX][pY].piece.isRoyal) {
                 board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
               } 
-                if (Turn) {
-                  board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
-                } else {
-                  board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
-                }
-                restriction.remove(i);
-                i--;
-               // set new Potential
+              if (Turn) {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
+              } else {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
+              }
+              restriction.remove(i);
+              i--;
+              // set new Potential
             }
             restricted.add(new int[]{pX, pY});
             board[pX][pY].piece.setPotential(restriction);
@@ -796,6 +796,59 @@ public class board {
       }
     }
   }
+  void rightBottomDiagonal(int ogX, int ogY) {
+    System.out.println("left ROW PREVENTION");
+    boolean look = true;
+    int x = ogX; 
+    int y = ogY;
+    ArrayList<Integer> protector = new ArrayList<Integer>(); 
+    // white king checking 
+    // check vertical
+    while (y < 8 && x < 8 && look) {
+      y+=1;
+      x+=1;
+      if (board[x][y].piece != null) {
+        if (protector.size() == 0 && board[x][y].piece.white == Turn) {
+          protector.add(x);
+          protector.add(y);
+          System.out.println("hitted and ally");
+        } else if (board[x][y].piece.white == Turn) {
+          System.out.println("hitted and ally and then hitted an ally");
+          look = false;
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
+          System.out.println("IN CHECK!");
+          look = false;
+        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
+          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
+          // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
+          int pX = protector.get(0); 
+          int pY = protector.get(1);
+          ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
+          for (int i = 0; i < restriction.size(); i++) { // REMEMBER TO i-- when removing
+            if (restriction.get(i)[1] - ogX != restriction.get(i)[0] - ogY) { // unthreaten then remove
+              if (board[pX][pY].piece.isRoyal) {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
+              } else {
+                if (Turn) {
+                  board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
+                } else {
+                  board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
+                }
+                restriction.remove(i);
+                i--;
+              } // set new Potential
+            }
+            restricted.add(new int[]{pX, pY});
+            board[pX][pY].piece.setPotential(restriction);
+            look = false;
+          }
+        } else {
+          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
+          look = false;
+        }
+      }
+    }
+  }
   void preventCheck() {
     int ogX; 
     int ogY;
@@ -812,6 +865,8 @@ public class board {
     leftRow(ogX, ogY);
     rightRow(ogX, ogY);
     rightTopDiagonal(ogX, ogY);
+    leftTopDiagonal(ogX, ogY);
+    rightBottomDiagonal(ogX, ogY);
   }
 
   void revertPreviousPreventCheck() {
