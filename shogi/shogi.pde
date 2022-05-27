@@ -115,19 +115,7 @@ void keyPressed() {
       InitialSelected.clear();
       Turn = !Turn;
       System.out.println("PROMOTE TURN");
-      if (Board.restricted.size() > 0) {
-        for (int i = 0; i < Board.restricted.size(); i++) {
-          System.out.println("BUGG: "+Board.restricted.get(i)[0] + " " + Board.restricted.get(i)[1] );
-          Board.unthreaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
-          if (Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.isRoyal) {
-            Board.royalPotential(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
-          } else {
-            Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.calcPotential(Board.restricted.get(i)[1], Board.restricted.get(i)[0]);
-          }
-          Board.threaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
-        }
-        Board.restricted.clear();
-      }
+      Board.revertPreviousPreventCheck();
       Board.preventCheck();
     }
   }
@@ -253,19 +241,7 @@ void mouseClicked() {
             InitialSelected.clear();
             Turn = !Turn;
             System.out.println("Love");
-            if (Board.restricted.size() > 0) {
-              for (int i = 0; i < Board.restricted.size(); i++) {
-                System.out.println("BUGG: "+Board.restricted.get(i)[0] + " " + Board.restricted.get(i)[1] );
-                Board.unthreaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
-                if (Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.isRoyal) {
-                  Board.royalPotential(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
-                } else {
-                  Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.calcPotential(Board.restricted.get(i)[1], Board.restricted.get(i)[0]);
-                }
-                Board.threaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
-              }
-              Board.restricted.clear();
-            }
+            Board.revertPreviousPreventCheck();
             Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
           }
         }
@@ -492,7 +468,7 @@ public class board {
   }
   // prevent check should be called at the beginning of a turn
   void topColumn(int ogX, int ogY) {
-    System.out.println("TOP COLUMN PREVENTION");
+    System.out.println("Top COLUMN PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -549,7 +525,7 @@ public class board {
     }
   }
   void bottomColumn(int ogX, int ogY) {
-    System.out.println("TOP COLUMN PREVENTION");
+    System.out.println("Bottom COLUMN PREVENTION");
     boolean look = true;
     int x = ogX; 
     int y = ogY;
@@ -606,6 +582,61 @@ public class board {
       }
     }
   }
+  void leftRow(int ogX, int ogY) {
+    System.out.println("left ROW PREVENTION");
+    boolean look = true;
+    int x = ogX; 
+    int y = ogY;
+    ArrayList<Integer> protector = new ArrayList<Integer>(); 
+    // white king checking 
+    // check vertical
+    while (y > 0 && look) {
+      y-=1;
+      if (board[x][y].piece != null) {
+        if (protector.size() == 0 && board[x][y].piece.white == Turn) {
+          protector.add(x);
+          protector.add(y);
+          System.out.println("hitted and ally");
+        } else if (board[x][y].piece.white == Turn) {
+          System.out.println("hitted and ally and then hitted an ally");
+          look = false;
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook"))) { // no ally hit and piece hit is not an ally 
+          System.out.println("IN CHECK!");
+          look = false;
+        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook")) {
+          System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
+
+          // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
+          int pX = protector.get(0); 
+          int pY = protector.get(1);
+          ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
+          for (int i = 0; i < restriction.size(); i++) { // REMEMBER TO i-- when removing
+            if (x != restriction.get(i)[1]) { // unthreaten then remove
+              if (board[pX][pY].piece.isRoyal) {
+                board[restriction.get(i)[1]][restriction.get(i)[0]].removeRoyalThreat(new int[]{pX, pY}); //LOOKY FOR BUG
+              } else {
+
+                if (Turn) {
+                  board[restriction.get(i)[1]][restriction.get(i)[0]].setWhiteThreats(-1);
+                } else {
+                  board[restriction.get(i)[1]][restriction.get(i)[0]].setBlackThreats(-1);
+                }
+                restriction.remove(i);
+                i--;
+              } // set new Potential
+            }
+
+            restricted.add(new int[]{pX, pY});
+            board[pX][pY].piece.setPotential(restriction);
+            look = false;
+          }
+        } else {
+          System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
+          look = false;
+        }
+      }
+    }
+  }
   void preventCheck() {
     int ogX; 
     int ogY;
@@ -618,5 +649,23 @@ public class board {
       ogY = blackKingLocation[1];
     }
     topColumn(ogX, ogY);
+    bottomColumn(ogX, ogY);
+    leftRow(ogX, ogY);
+  }
+
+  void revertPreviousPreventCheck() {
+    if (Board.restricted.size() > 0) {
+      for (int i = 0; i < Board.restricted.size(); i++) {
+        System.out.println("BUGG: "+Board.restricted.get(i)[0] + " " + Board.restricted.get(i)[1] );
+        Board.unthreaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
+        if (Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.isRoyal) {
+          Board.royalPotential(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
+        } else {
+          Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.calcPotential(Board.restricted.get(i)[1], Board.restricted.get(i)[0]);
+        }
+        Board.threaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
+      }
+      Board.restricted.clear();
+    }
   }
 }
