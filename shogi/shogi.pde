@@ -397,15 +397,15 @@ public class board {
   Tile[][] board = new Tile[9][9];
   public board() {
   }
-  boolean isCheckmate(boolean turn) {
-    if (turn){
-      ArrayList<int[]> kingLegals = legalMoves(whiteKingLocation[0], whiteKingLocation[1]);
-      for(int i = 0; i < kingLegals.size(); i++){
-        if (board[int)
-      }
-    }
-    return false;
-  }
+  //boolean isCheckmate(boolean turn) {
+  //  if (turn) {
+  //    ArrayList<int[]> kingLegals = legalMoves(whiteKingLocation[0], whiteKingLocation[1]);
+  //    for (int i = 0; i < kingLegals.size(); i++) {
+  //      if (board[int)
+  //      }
+  //    }
+  //    return false;
+  //}
   int restrictedIndex(int x, int y) {
     for (int i = 0; i < restricted.size(); i++) {
       if (restricted.get(i)[0] == x && restricted.get(i)[1] == y) {
@@ -613,12 +613,32 @@ public class board {
     ArrayList<int[]> ans = new ArrayList();
     Piece piece = board[x][y].piece;
     ans=(ArrayList)piece.potentialMoves.clone();
-    for (int i = 0; i < ans.size(); i++) {
-      Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
-      if (tile.piece != null) {
-        if ((tile.piece.white && piece.white) || (!tile.piece.white && !piece.white)) {
-          ans.remove(i);
-          i--;
+    if (piece.role.equals("king")) {
+      if (piece.white) {
+        for (int i = 0; i < ans.size(); i++) {
+          Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
+          if (tile.blackThreatened > 0 || (tile.piece != null && tile.piece.white)){
+            ans.remove(i);
+            i--;
+          }
+        }
+      } else {
+        for (int i = 0; i < ans.size(); i++) {
+          Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
+          if (tile.whiteThreatened > 0 || (tile.piece != null && !tile.piece.white)){
+            ans.remove(i);
+            i--;
+          }
+        }
+      }
+    } else {
+      for (int i = 0; i < ans.size(); i++) {
+        Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
+        if (tile.piece != null) {
+          if ((tile.piece.white && piece.white) || (!tile.piece.white && !piece.white)) {
+            ans.remove(i);
+            i--;
+          }
         }
       }
     }
