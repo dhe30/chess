@@ -398,8 +398,8 @@ public class board {
   ArrayList<Piece> whiteCaptured = new ArrayList();
   ArrayList<Piece> blackCaptured = new ArrayList();
   ArrayList<int[]> restricted = new  ArrayList<int[]>();
-  boolean whiteCheck = true;
-  boolean blackCheck = true;// distinguished for testing logic
+  boolean whiteCheck = false;
+  boolean blackCheck = false;// distinguished for testing logic
   ArrayList<int[]> blackCheckers = new ArrayList<int[]>(); // white pieces that check black king 
   ArrayList<int[]> whiteCheckers = new ArrayList<int[]>();
   ArrayList<int[]> supplementalThreats = new ArrayList<int[]>();
@@ -425,11 +425,17 @@ public class board {
     if (Turn) {
       x = whiteKingLocation[0];
       y = whiteKingLocation[1];
-      // King cannot threaten a black threatened square while in check, out of check, kings should in order to prevent a king checking a king 
-      for(int i = 0; i < board[x][y].piece.potentialMoves.size(); i++){
-        // may also need to remove from potential moves 
-        
+      // King cannot threaten a black threatened square while in check, out of check, kings should in order to prevent a king checking a king
+      ArrayList<int[]> newKing = (ArrayList)board[x][y].piece.potentialMoves.clone();
+      for (int i = 0; i < newKing.size(); i++) {
+        // may also need to remove from potential moves----- NEED TO REMOVE TO PREVENT DOUBLE UNTHREATEN 
+        if (board[newKing.get(i)[1]][newKing.get(i)[0]].blackThreatened > 0) {
+          board[newKing.get(i)[1]][newKing.get(i)[0]].setWhiteThreats(-1);
+          newKing.remove(i);
+          i--;
+        }
       }
+      board[x][y].piece.setPotential(newKing);
       // if cannot kill, nor block, then lastly check size of King's legal moves
       if (whiteCheckers.size() == 1) { // if there are two killers checking the king, your only choice is to move the king
         System.out.println("One killer checking");
@@ -437,7 +443,7 @@ public class board {
         if (board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].whiteThreatened > 0) {
           System.out.println("The killer can be killed!");
           saveTheKing.add(new int[]{whiteCheckers.get(0)[1], whiteCheckers.get(0)[0]}); // save the king is not in row major order 
-          block = true;
+          kill = true;
         }
         if (board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].piece.isRoyal) {// can only "block" pieces that move more than 2 spaces
           //loop through potential keeping track of 100s until you hit the king, nothing should be blocking it in theory, cut out and add that to saveking array
@@ -463,7 +469,9 @@ public class board {
           } else {
             System.out.println("TARGETS BEING PROCESSED");
             for (int i = oneHundred + 1; i < index; i++) { // not index + 1 because king's tile should not be processed 
+              System.out.println("PLEASE: " + targets.get(i)[1] + " " + targets.get(i)[0] + "WHITE THREATENED: " + board[targets.get(i)[1]][targets.get(i)[0]].whiteThreatened);
               if (board[targets.get(i)[1]][targets.get(i)[0]].whiteThreatened > 0) { // king still threatens tiles in front of it, fix king threaten
+
                 block = true;
                 saveTheKing.add(new int[]{targets.get(i)[0], targets.get(i)[1]});
               }
@@ -614,13 +622,16 @@ public class board {
     if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
       whiteKingLocation[0] = x1;
       whiteKingLocation[1] = y1;
+      whiteCheck = false; 
+      System.out.println("White King moved, not in check");
       saveTheKing.clear();
       whiteCheckers.clear(); // white should only be able to move in directions that are never threatened
     } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
       blackKingLocation[0] = x1;
       blackKingLocation[1] = y1;
+      blackCheck = false; 
+      System.out.println("Black King moved, not in check");
       saveTheKing.clear();
-
       blackCheckers.clear();
     }
     // check if enemy king is in check
@@ -719,6 +730,7 @@ public class board {
                 blackCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more black check");
+                board[blackKingLocation[0]][blackKingLocation[1]].piece.calcPotential(blackKingLocation[0], blackKingLocation[1]);
               }
             }
           }
@@ -742,6 +754,7 @@ public class board {
                 whiteCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more white check");
+                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[0], whiteKingLocation[1]);
               }
             }
           }
@@ -763,12 +776,6 @@ public class board {
             i--;
           }
         }
-        //if (whiteCheckers.size() > 0){
-        //  for(int a = 0; a < whiteCheckers.size(); a++){
-        //    // destroy illegal king moves that keep the king in check 
-        //    if()
-        //  }
-        //}
       } else {
         for (int i = 0; i < ans.size(); i++) {
           Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
@@ -776,6 +783,21 @@ public class board {
             ans.remove(i);
             i--;
           }
+        }
+      }
+    } else if (whiteCheck || blackCheck) {
+      System.out.println("SHOULD NOT BE ZERO, UNLESS CHECKMATED: " + saveTheKing.size());
+      System.out.println("white check: " + whiteCheck + " black check: " + blackCheck);
+      for (int i = 0; i < ans.size(); i++) {
+        boolean found = false;
+        for (int a = 0; a < saveTheKing.size() && !found; a++) {
+          if (ans.get(i)[1] == saveTheKing.get(a)[1] && ans.get(i)[0] == saveTheKing.get(a)[0]) {
+            found = true;
+          }
+        }
+        if (!found) {
+          ans.remove(i);
+          i--;
         }
       }
     } else {
@@ -1309,6 +1331,9 @@ public class board {
         System.out.println("WHITE KILLER: " + whiteCheckers.get(i)[0] + " " +  whiteCheckers.get(i)[1]);
       } 
       System.out.println("ANYTHING ABOVE?");
+    }
+    if (saveTheKing.size() > 0) {
+      saveTheKing.clear();
     }
     if (restricted.size() > 0) {
       for (int i = 0; i < restricted.size(); i++) {
