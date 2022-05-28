@@ -111,6 +111,9 @@ void keyPressed() {
 
       InitialSelected.clear();
       Turn=!Turn;
+      Board.revertPreviousPreventCheck();
+      Board.preventCheck();
+      Board.checkCheck();
     } else if (key == 'x' && piece.canPromote) {
       showPromote=false;
       InitialSelected.clear();
@@ -118,6 +121,7 @@ void keyPressed() {
       System.out.println("PROMOTE TURN");
       Board.revertPreviousPreventCheck();
       Board.preventCheck();
+      Board.checkCheck();
     }
   }
 }
@@ -245,6 +249,7 @@ void mouseClicked() {
             System.out.println("Love");
             Board.revertPreviousPreventCheck();
             Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
+            Board.checkCheck();
           }
         }
       } else if (InitialSelected.size()==1) {
@@ -257,6 +262,7 @@ void mouseClicked() {
           Turn=!Turn;
           Board.revertPreviousPreventCheck();
           Board.preventCheck();
+          Board.checkCheck();
         }
       }
     } else {
@@ -413,6 +419,9 @@ public class board {
     boolean block = false;
     int x; 
     int y;
+    if (saveTheKing.size() > 0) {
+      System.out.println("SOMETHING IS VERY VERY WRONG!!!!!");
+    }
     if (Turn) {
       x = whiteKingLocation[0];
       y = whiteKingLocation[1];
@@ -422,17 +431,50 @@ public class board {
         // check if killer can either be killed or blocked
         if (board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].whiteThreatened > 0) {
           System.out.println("The killer can be killed!");
-          saveTheKing.add(new int[]{whiteCheckers.get(0)[0], whiteCheckers.get(0)[1]});
+          saveTheKing.add(new int[]{whiteCheckers.get(0)[1], whiteCheckers.get(0)[0]}); // save the king is not in row major order 
           block = true;
         }
-        if(board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].piece.isRoyal){// can only "block" pieces that move more than 2 spaces
-        // loop through potential keeping track of 100s until you hit the king, nothing should be blocking it in theory, cut out and add that to saveking array
+        if (board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].piece.isRoyal) {// can only "block" pieces that move more than 2 spaces
+          //loop through potential keeping track of 100s until you hit the king, nothing should be blocking it in theory, cut out and add that to saveking array
+          board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].piece.calcPotential(whiteCheckers.get(0)[1],whiteCheckers.get(0)[0]);
+          ArrayList<int[]> targets = (ArrayList)board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].piece.potentialMoves.clone();
+          //for (int i = 0; i < targets.size(); i++) {
+          //  System.out.println("TARGETS: " + targets.get(i)[1] + " " + targets.get(i)[0]);
+          //}
+          royalPotential(whiteCheckers.get(0)[0],whiteCheckers.get(0)[1]);
+          int oneHundred = -1;
+          int index = -1;
+          boolean notFound = true;
+          for (int i = 0; i < targets.size() && notFound; i++) {
+            if (targets.get(i)[0] == 100) {
+              oneHundred = i;
+            } else if (targets.get(i)[1] == x && targets.get(i)[0] == y) {
+              index = i;
+              notFound = false;
+            }
+          }
+          if (index == -1) {
+            System.out.println("INDEX IS STILL -1");
+          } else {
+            System.out.println("TARGETS BEING PROCESSED");
+            for(int i = oneHundred + 1; i < index; i++){ // not index + 1 because king's tile should not be processed 
+              if(board[targets.get(i)[1]][targets.get(i)[0]].whiteThreatened > 0){ // king still threatens tiles in front of it, fix king threaten
+                block = true;
+                saveTheKing.add(new int[]{targets.get(i)[0], targets.get(i)[1]});
+              }
+            }
+          }
         }
         if (kill || block) {
+          System.out.println("KILL: " + kill + " BLOCK: " + block);
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            System.out.println("TARGETS: " + saveTheKing.get(i)[0] + " " + saveTheKing.get(i)[1]);
+          }
           return false;
         }
       }
       if (legalMoves(x, y).size() > 0) {
+        System.out.println("KING CAN STILL MOVE");
         return false;
       }
       return true;
