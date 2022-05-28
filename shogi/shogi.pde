@@ -811,7 +811,7 @@ public class board {
                 whiteCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more white check");
-                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[1], whiteKingLocation[0]);
+                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[1], whiteKingLocation[0]); // DO NEXT: UNTHREATEN AND THEN THREATEN 
               }
             }
           }
