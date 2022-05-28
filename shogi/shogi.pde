@@ -393,18 +393,52 @@ public class board {
   ArrayList<Piece> blackCaptured = new ArrayList();
   ArrayList<int[]> restricted = new  ArrayList<int[]>();
   boolean whiteCheck = true;
-  boolean blackCheck = true;
-  ArrayList<int[]> blackCheckers = new ArrayList();
-  ArrayList<int[]> whiteCheckers = new ArrayList();
-  ArrayList<int[]> supplementalThreats = new ArrayList();
-
+  boolean blackCheck = true;// distinguished for testing logic
+  ArrayList<int[]> blackCheckers = new ArrayList<int[]>(); // white pieces that check black king 
+  ArrayList<int[]> whiteCheckers = new ArrayList<int[]>();
+  ArrayList<int[]> supplementalThreats = new ArrayList<int[]>();
+  ArrayList<int[]> saveTheKing = new ArrayList<int[]>();
   Tile[][] board = new Tile[9][9];
   public board() {
   }
-  //boolean isCheckmate(boolean turn) {
-  //  
-  //    return false;
-  //}
+  void checkCheck() {
+    if (whiteCheck || blackCheck) {
+      if (isCheckmate()) {
+        System.out.println("You have been mated! (⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄");
+      }
+    }
+  }
+  boolean isCheckmate() {
+    boolean kill = false;
+    boolean block = false;
+    int x; 
+    int y;
+    if (Turn) {
+      x = whiteKingLocation[0];
+      y = whiteKingLocation[1];
+      // if cannot kill, nor block, then lastly check size of King's legal moves
+      if (whiteCheckers.size() == 1) { // if there are two killers checking the king, your only choice is to move the king
+        System.out.println("One killer checking");
+        // check if killer can either be killed or blocked
+        if (board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].whiteThreatened > 0) {
+          System.out.println("The killer can be killed!");
+          saveTheKing.add(new int[]{whiteCheckers.get(0)[0], whiteCheckers.get(0)[1]});
+          block = true;
+        }
+        if(board[whiteCheckers.get(0)[0]][whiteCheckers.get(0)[1]].piece.isRoyal){// can only "block" pieces that move more than 2 spaces
+        // loop through potential keeping track of 100s until you hit the king, nothing should be blocking it in theory, cut out and add that to saveking array
+        }
+        if (kill || block) {
+          return false;
+        }
+      }
+      if (legalMoves(x, y).size() > 0) {
+        return false;
+      }
+      return true;
+    }
+    return false; // default, change later
+  }
   int restrictedIndex(int x, int y) {
     for (int i = 0; i < restricted.size(); i++) {
       if (restricted.get(i)[0] == x && restricted.get(i)[1] == y) {
@@ -533,10 +567,13 @@ public class board {
     if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
       whiteKingLocation[0] = x1;
       whiteKingLocation[1] = y1;
+      saveTheKing.clear();
       whiteCheckers.clear(); // white should only be able to move in directions that are never threatened
     } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
       blackKingLocation[0] = x1;
       blackKingLocation[1] = y1;
+      saveTheKing.clear();
+
       blackCheckers.clear();
     }
     // check if enemy king is in check
@@ -632,6 +669,7 @@ public class board {
               blackCheckers.remove(index);
               if (blackCheckers.size() == 0) {
                 blackCheck = false;
+                saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more black check");
               }
             }
@@ -654,6 +692,7 @@ public class board {
               whiteCheckers.remove(index);
               if (whiteCheckers.size() == 0) {
                 whiteCheck = false;
+                saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more white check");
               }
             }
@@ -1217,10 +1256,11 @@ public class board {
   }
 
   void revertPreviousPreventCheck() {
-    if (Turn){
-    for (int i = 0; i < whiteCheckers.size(); i++){
-      System.out.println("WHITE KILLER: " + whiteCheckers.get(i)[0] + " " +  whiteCheckers.get(i)[1]);
-    } System.out.println("ANYTHING ABOVE?");
+    if (Turn) {
+      for (int i = 0; i < whiteCheckers.size(); i++) {
+        System.out.println("WHITE KILLER: " + whiteCheckers.get(i)[0] + " " +  whiteCheckers.get(i)[1]);
+      } 
+      System.out.println("ANYTHING ABOVE?");
     }
     if (restricted.size() > 0) {
       for (int i = 0; i < restricted.size(); i++) {
