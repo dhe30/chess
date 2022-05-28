@@ -133,6 +133,7 @@ void mouseClicked() {
     } else {    
       System.out.println("Null"  + " " + mouseY / 100 + " " + mouseX / 100);
     }
+    System.out.println("WHit threats:"  + " "+ Board.board[mouseY / 100][mouseX / 100].whiteThreatened + " Black threats: " + Board.board[mouseY / 100][mouseX / 100].blackThreatened);
   } else {
     if (mouseX < 900 && mouseY < 900) {
       // ex. mouse at (456,789) refers to tile (4,7)
@@ -786,7 +787,7 @@ public class board {
                 blackCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more black check");
-                board[blackKingLocation[0]][blackKingLocation[1]].piece.calcPotential(blackKingLocation[0], blackKingLocation[1]);
+                board[blackKingLocation[0]][blackKingLocation[1]].piece.calcPotential(blackKingLocation[1], blackKingLocation[0]);
               }
             }
           }
@@ -810,7 +811,7 @@ public class board {
                 whiteCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more white check");
-                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[0], whiteKingLocation[1]);
+                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[1], whiteKingLocation[0]);
               }
             }
           }
@@ -835,6 +836,8 @@ public class board {
       } else {
         for (int i = 0; i < ans.size(); i++) {
           Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
+          System.out.println("King at: " + x + " " + y + " Move " + i + ": " + ans.get(i)[1] + " " + ans.get(i)[0] + " white threats: " + board[ans.get(i)[1]][ans.get(i)[0]].whiteThreatened );
+          System.out.println(tile.whiteThreatened);
           if (tile.whiteThreatened > 0 || (tile.piece != null && !tile.piece.white)) {
             ans.remove(i);
             i--;
