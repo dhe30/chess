@@ -729,16 +729,16 @@ public class board {
           System.out.println("IN CHECK!");
           // DO QUICK: THREATEN tile below the king in the same row based on TURN , add to supplement threats, REMOVE IN revert method opposite of turn 
           // because revert happens after the turn changes 
-          if (x + 1 <= 8) {
+          if (ogX + 1 <= 8) {
             if (Turn) {
-              System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
+              //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
 
               board[ogX+1][ogY].setBlackThreats(1);
             } else {
               board[ogX+1][ogY].setWhiteThreats(1);
             }
             supplementalThreats.add(new int[]{ogX+1, ogY});
-            System.out.println("SUPPLEMENTAL");
+            //System.out.println("SUPPLEMENTAL");
           }
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
@@ -796,6 +796,17 @@ public class board {
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
           //   System.out.println("IN CHECK!");
+          if (ogX - 1 >=0) {
+            if (Turn) {
+              //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
+
+              board[ogX-1][ogY].setBlackThreats(1);
+            } else {
+              board[ogX-1][ogY].setWhiteThreats(1);
+            }
+            supplementalThreats.add(new int[]{ogX-1, ogY});
+            //System.out.println("SUPPLEMENTAL");
+          }
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
           //  System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
