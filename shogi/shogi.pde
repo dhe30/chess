@@ -402,12 +402,7 @@ public class board {
   public board() {
   }
   //boolean isCheckmate(boolean turn) {
-  //  if (turn) {
-  //    ArrayList<int[]> kingLegals = legalMoves(whiteKingLocation[0], whiteKingLocation[1]);
-  //    for (int i = 0; i < kingLegals.size(); i++) {
-  //      if (board[int)
-  //      }
-  //    }
+  //  
   //    return false;
   //}
   int restrictedIndex(int x, int y) {
@@ -538,9 +533,11 @@ public class board {
     if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
       whiteKingLocation[0] = x1;
       whiteKingLocation[1] = y1;
+      whiteCheckers.clear(); // white should only be able to move in directions that are never threatened
     } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
       blackKingLocation[0] = x1;
       blackKingLocation[1] = y1;
+      blackCheckers.clear();
     }
     // check if enemy king is in check
     //if (Turn) {
