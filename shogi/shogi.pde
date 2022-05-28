@@ -927,6 +927,17 @@ public class board {
         } else if (board[x][y].piece.white == Turn) {
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook"))) { // no ally hit and piece hit is not an ally 
+          if (ogY - 1 >= 0) {
+            if (Turn) {
+              //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
+
+              board[ogX][ogY -1].setBlackThreats(1);
+            } else {
+              board[ogX][ogY -1].setWhiteThreats(1);
+            }
+            supplementalThreats.add(new int[]{ogX, ogY -1});
+            //System.out.println("SUPPLEMENTAL");
+          }
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook")) {
           int pX = protector.get(0); 
@@ -974,6 +985,17 @@ public class board {
         } else if (board[x][y].piece.white == Turn) {
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
+          if (ogY - 1 >= 0 && ogX +1 <= 8) {
+            if (Turn) {
+              //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
+
+              board[ogX + 1][ogY -1].setBlackThreats(1);
+            } else {
+              board[ogX + 1][ogY -1].setWhiteThreats(1);
+            }
+            supplementalThreats.add(new int[]{ogX + 1, ogY -1});
+            //System.out.println("SUPPLEMENTAL");
+          }
           look = false;
         } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
           int pX = protector.get(0); 
