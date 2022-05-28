@@ -865,6 +865,17 @@ public class board {
           look = false;
         } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook"))) { // no ally hit and piece hit is not an ally 
           //   System.out.println("IN CHECK!");
+          if (ogY + 1 <=8) {
+            if (Turn) {
+              //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
+
+              board[ogX][ogY +1].setBlackThreats(1);
+            } else {
+              board[ogX][ogY +1].setWhiteThreats(1);
+            }
+            supplementalThreats.add(new int[]{ogX, ogY +1});
+            //System.out.println("SUPPLEMENTAL");
+          }
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook")) {
           //   System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
