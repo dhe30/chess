@@ -643,7 +643,7 @@ public class board {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].setWhiteThreats(-1);
       } else {
         if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece != null) {
-          if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.role.equals("king") && !board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.white) {
+          if (board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.role.equals("king") && board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].piece.white) {
             int index = -1;
             for (int a = 0; a < whiteCheckers.size(); a++) {
               if (x == whiteCheckers.get(a)[0] && y == whiteCheckers.get(a)[1]) {
@@ -653,6 +653,7 @@ public class board {
             if (index == -1) { 
               System.out.println("PLEASE FIX!");
             } else {
+              System.out.println("REMOVE FROM WHITE CHECKERS");
               whiteCheckers.remove(index);
               if (whiteCheckers.size() == 0) {
                 whiteCheck = false;
@@ -728,6 +729,17 @@ public class board {
           System.out.println("IN CHECK!");
           // DO QUICK: THREATEN tile below the king in the same row based on TURN , add to supplement threats, REMOVE IN revert method opposite of turn 
           // because revert happens after the turn changes 
+          if (x + 1 <= 8) {
+            if (Turn) {
+              System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
+
+              board[ogX+1][ogY].setBlackThreats(1);
+            } else {
+              board[ogX+1][ogY].setWhiteThreats(1);
+            }
+            supplementalThreats.add(new int[]{ogX+1, ogY});
+            System.out.println("SUPPLEMENTAL");
+          }
           look = false;
         } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
           //  System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
@@ -1131,18 +1143,34 @@ public class board {
   }
 
   void revertPreviousPreventCheck() {
-    if (Board.restricted.size() > 0) {
-      for (int i = 0; i < Board.restricted.size(); i++) {
-        System.out.println("BUGG: "+Board.restricted.get(i)[0] + " " + Board.restricted.get(i)[1] );
-        Board.unthreaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
-        if (Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.isRoyal) {
-          Board.royalPotential(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
+    if (Turn){
+    for (int i = 0; i < whiteCheckers.size(); i++){
+      System.out.println("WHITE KILLER: " + whiteCheckers.get(i)[0] + " " +  whiteCheckers.get(i)[1]);
+    } System.out.println("ANYTHING ABOVE?");
+    }
+    if (restricted.size() > 0) {
+      for (int i = 0; i < restricted.size(); i++) {
+        System.out.println("BUGG: "+restricted.get(i)[0] + " " + restricted.get(i)[1] );
+        unthreaten(restricted.get(i)[0], restricted.get(i)[1]);
+        if (board[restricted.get(i)[0]][restricted.get(i)[1]].piece.isRoyal) {
+          royalPotential(restricted.get(i)[0], restricted.get(i)[1]);
         } else {
-          Board.board[Board.restricted.get(i)[0]][Board.restricted.get(i)[1]].piece.calcPotential(Board.restricted.get(i)[1], Board.restricted.get(i)[0]);
+          board[restricted.get(i)[0]][restricted.get(i)[1]].piece.calcPotential(restricted.get(i)[1], restricted.get(i)[0]);
         }
-        Board.threaten(Board.restricted.get(i)[0], Board.restricted.get(i)[1]);
+        threaten(restricted.get(i)[0], restricted.get(i)[1]);
       }
-      Board.restricted.clear();
+      restricted.clear();
+    }
+    if (supplementalThreats.size() > 0) {
+      for (int i = 0; i < supplementalThreats.size(); i++) {
+        System.out.println(Turn + " Supplements in threat: " + supplementalThreats.get(i)[0] + " " + supplementalThreats.get(i)[1]);
+        if (Turn) {
+          board[supplementalThreats.get(i)[0]][supplementalThreats.get(i)[1]].setWhiteThreats(-1);
+        } else {
+          board[supplementalThreats.get(i)[0]][supplementalThreats.get(i)[1]].setBlackThreats(-1);
+        }
+      }
+      supplementalThreats.clear();
     }
   }
 
