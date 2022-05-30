@@ -6,6 +6,8 @@ boolean showPromote = false;
 boolean selected = false;
 boolean sameRow=false;
 boolean canDrop=true;
+boolean Tutorial=false;
+boolean showTutorial=true;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -122,6 +124,7 @@ void keyPressed() {
   }
 }
 void mouseClicked() {
+  showTutorial=false;
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
   if (Test) {
     if (Board.board[mouseY / 100][mouseX / 100].piece != null) {
@@ -284,111 +287,119 @@ void mouseClicked() {
   }
 }
 void draw() {
-  fill(252, 204, 156);
-  rect(0, 0, 900, 900);
-  strokeWeight(1);
-  stroke(0);
-  for (int i = 0; i <=9; i++) {
-    line(100*i, 0, 100*i, 900);
-    line(0, 100*i, 900, 100*i);
-  }
-  strokeWeight(0);
-  stroke(255, 0);
-  textSize(12);
-  fill(255);
-  /*
-  rect(1000, 50, 200, 200);
-   fill(0);
-   text(xcoor + "", 1100, 100);
-   text(ycoor + "", 1150, 100);
-   fill(255);
-   */
-  for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 9; j++) {
-      if (Board.board[i][j].piece!=null) {
-        if (Board.board[i][j].piece.white==true) {
-          rect(j*100+20, i*100+40, 60, 50);
-          triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
-          fill(0);
-          text(Board.board[i][j].piece.role, j*100+30, i*100+55);
-          fill(255);
-        } else {
-          rect(j*100+20, i*100+10, 60, 50);
-          triangle(j*100+20, i*100+60, j*100+80, i*100+60, j*100+50, i*100+90);
-          fill(0);
-          text(Board.board[i][j].piece.role, j*100+30, i*100+45);
-          fill(255);
+  if(!Tutorial){
+    fill(252, 204, 156);
+    rect(0, 0, 900, 900);
+    strokeWeight(1);
+    stroke(0);
+    for (int i = 0; i <=9; i++) {
+      line(100*i, 0, 100*i, 900);
+      line(0, 100*i, 900, 100*i);
+    }
+    strokeWeight(0);
+    stroke(255, 0);
+    textSize(12);
+    fill(255);
+    /*
+    rect(1000, 50, 200, 200);
+     fill(0);
+     text(xcoor + "", 1100, 100);
+     text(ycoor + "", 1150, 100);
+     fill(255);
+     */
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        if (Board.board[i][j].piece!=null) {
+          if (Board.board[i][j].piece.white==true) {
+            rect(j*100+20, i*100+40, 60, 50);
+            triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
+            fill(0);
+            text(Board.board[i][j].piece.role, j*100+30, i*100+55);
+            fill(255);
+          } else {
+            rect(j*100+20, i*100+10, 60, 50);
+            triangle(j*100+20, i*100+60, j*100+80, i*100+60, j*100+50, i*100+90);
+            fill(0);
+            text(Board.board[i][j].piece.role, j*100+30, i*100+45);
+            fill(255);
+          }
         }
       }
     }
-  }
-  fill(180);
-  rect(900, 0, 1500, 900);
-  fill(0);
-  textSize(20);
-  if (Turn) {
-    text("white's turn", 950, 50);
-  } else {
-    text("black's turn", 950, 50);
-  }
-  if (showPromote) {
-    fill(13, 178, 46, 150);
-    rect(950, 100, 160, 150);
+    fill(180);
+    rect(900, 0, 1500, 900);
     fill(0);
-    text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
-  }
-  if (InitialSelected.size() > 1) {
-    ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
-    fill(20, 50);
-    for (int i = 0; i < list.size(); i++) {
-      int x = list.get(i)[0];
-      int y = list.get(i)[1];
-      circle(x*100 + 50, y*100+50, 30);
+    textSize(20);
+    if (Turn) {
+      text("white's turn", 950, 50);
+    } else {
+      text("black's turn", 950, 50);
     }
-    fill(50, 20);
-    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
-  }
-  textSize(12);
-  int x=0;
-  for (int i = 0; i < Board.whiteCaptured.size(); i++) {
-    if (x==8) {
-      x=0;
+    if(showTutorial){
+      fill(#5981a6);
+      rect(950, 100, 160, 100);
+      fill(0);
+      text("press 'T'  to \r\nshow tutorial \r\nlast chance", 960, 120);
     }
-    int j=i/8;
-    fill(255);
-    rect(x*100+950, j*100+340, 60, 50);
-    triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
-    Board.whiteCaptured.get(i).x=x*100+950;
-    Board.whiteCaptured.get(i).y=j*100+340;
-    fill(0);
-    text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
-    x++;
-  }
-  x=0;
-  for (int i = 0; i < Board.blackCaptured.size(); i++) {
-    if (x==8) {
-      x=0;
+    if (showPromote) {
+      fill(13, 178, 46, 150);
+      rect(950, 100, 160, 150);
+      fill(0);
+      text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
     }
-    int j=i/8;
-    fill(255);
-    rect(x*100+950, j*100+610, 60, 50);
-    triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
-    Board.blackCaptured.get(i).x=x*100+950;
-    Board.blackCaptured.get(i).y=j*100+610;
-    fill(0);
-    text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
-    x++;
-  }
-  if(InitialSelected.size()==1){
-    if(Turn){
-      text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
+    if (InitialSelected.size() > 1) {
+      ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
+      fill(20, 50);
+      for (int i = 0; i < list.size(); i++) {
+        int x = list.get(i)[0];
+        int y = list.get(i)[1];
+        circle(x*100 + 50, y*100+50, 30);
+      }
+      fill(50, 20);
+      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     }
-    else{
-      text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
+    textSize(12);
+    int x=0;
+    for (int i = 0; i < Board.whiteCaptured.size(); i++) {
+      if (x==8) {
+        x=0;
+      }
+      int j=i/8;
+      fill(255);
+      rect(x*100+950, j*100+340, 60, 50);
+      triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
+      Board.whiteCaptured.get(i).x=x*100+950;
+      Board.whiteCaptured.get(i).y=j*100+340;
+      fill(0);
+      text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
+      x++;
     }
-  }
-  if(!canDrop){
-    text("can't drop piece there", 950, 100);
+    x=0;
+    for (int i = 0; i < Board.blackCaptured.size(); i++) {
+      if (x==8) {
+        x=0;
+      }
+      int j=i/8;
+      fill(255);
+      rect(x*100+950, j*100+610, 60, 50);
+      triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
+      Board.blackCaptured.get(i).x=x*100+950;
+      Board.blackCaptured.get(i).y=j*100+610;
+      fill(0);
+      text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
+      x++;
+    }
+    if(InitialSelected.size()==1){
+      if(Turn){
+        text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
+      }
+      else{
+        text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
+      }
+    }
+    if(!canDrop){
+      text("can't drop piece there", 950, 100);
+    }
   }
 }
 public class board {
