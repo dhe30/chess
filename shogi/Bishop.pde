@@ -14,6 +14,7 @@ public class Bishop extends Piece{
       int[] move = {x, y};
       ans.add(move);
     }
+    ans.add(new int[]{100,100});
     x=ogX;
     y=ogY;
     while(x>0 && y<8){
@@ -22,6 +23,7 @@ public class Bishop extends Piece{
       int[] move = {x, y};
       ans.add(move);
     }
+    ans.add(new int[]{100,100});
     x=ogX;
     y=ogY;
     while(x<8 && y>0){
@@ -30,6 +32,7 @@ public class Bishop extends Piece{
       int[] move = {x, y};
       ans.add(move);
     }
+    ans.add(new int[]{100,100});
     x=ogX;
     y=ogY;
     while(x<8 && y<8){
@@ -38,6 +41,7 @@ public class Bishop extends Piece{
       int[] move = {x, y};
       ans.add(move);
     }
+    ans.add(new int[]{100,100});
     if(promoted){
       if(ogX!=8){
         int[] right = {ogX +1, ogY};
@@ -56,6 +60,11 @@ public class Bishop extends Piece{
         ans.add(down);
       }
     }
+    String answ ="";
+      for(int i = 0; i < ans.size(); i++){
+        answ += "[" + ans.get(i)[0] + "," + ans.get(i)[1] + "], ";
+      }
+      System.out.println("NORM" + answ);
     potentialMoves=(ArrayList)ans.clone();
   }
 }

@@ -24,3 +24,5 @@ May 22, 2022
 May 23, 2022
 
     Samuel:added highlighting. discussed with Daniel about how to deal with royal pieces, blocking, and checks. 
+
+    Daniel: added royalPotential and necessary fields/ methods to make it work. Threaten and unthreaten methods are deployed but only work for royals. 
