@@ -6,6 +6,9 @@ boolean showPromote = false;
 boolean selected = false;
 boolean sameRow=false;
 boolean canDrop=true;
+boolean Tutorial=false;
+boolean showTutorial=true;
+int tutorialIndex=0;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -91,6 +94,18 @@ void setup() {
   }
 }
 void keyPressed() {
+  if(Tutorial){
+    if(key== '2'){
+      tutorialIndex++;
+    }
+    if(key== '1'){
+      tutorialIndex--;
+    }
+  }
+  if(key=='t'){
+    Tutorial=true;
+    showTutorial=false;
+  }
   if (key == ' ') {
     Test = !Test;
   }
@@ -126,6 +141,7 @@ void keyPressed() {
   }
 }
 void mouseClicked() {
+  showTutorial=false;
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
   if (Test) {
     if (Board.board[mouseY / 100][mouseX / 100].piece != null) {
@@ -170,6 +186,9 @@ void mouseClicked() {
             if (Board.board[0][i].piece!=null) {
               if (Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))) {
                 Board.board[0][i].piece.promote();
+                if(Board.board[0][i].piece.canPromote){
+                  Board.board[0][i].piece.canPromote();
+                }
               }
               if (Board.board[0][i].piece.white && !Board.board[0][i].piece.promoted && !Board.board[0][i].piece.canPromote && (Board.board[0][i].piece.role.equals("silver\nGeneral") || Board.board[0][i].piece.role.equals("rook") || Board.board[0][i].piece.role.equals("bishop"))) {
                 Board.board[0][i].piece.canPromote();
@@ -193,6 +212,9 @@ void mouseClicked() {
             if (Board.board[8][i].piece!=null) {
               if (!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))) {
                 Board.board[8][i].piece.promote();
+                if(Board.board[8][i].piece.canPromote){
+                  Board.board[8][i].piece.canPromote();
+                }
               }
               if (!Board.board[8][i].piece.white && !Board.board[8][i].piece.promoted && !Board.board[8][i].piece.canPromote && (Board.board[8][i].piece.role.equals("silver\nGeneral")|| Board.board[8][i].piece.role.equals("rook") || Board.board[8][i].piece.role.equals("bishop"))) {
                 Board.board[8][i].piece.canPromote();
@@ -289,40 +311,42 @@ void mouseClicked() {
   }
 }
 void draw() {
-  fill(252, 204, 156);
-  rect(0, 0, 900, 900);
-  strokeWeight(1);
-  stroke(0);
-  for (int i = 0; i <=9; i++) {
-    line(100*i, 0, 100*i, 900);
-    line(0, 100*i, 900, 100*i);
-  }
-  strokeWeight(0);
-  stroke(255, 0);
-  textSize(12);
-  fill(255);
-  /*
-  rect(1000, 50, 200, 200);
-   fill(0);
-   text(xcoor + "", 1100, 100);
-   text(ycoor + "", 1150, 100);
-   fill(255);
-   */
-  for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 9; j++) {
-      if (Board.board[i][j].piece!=null) {
-        if (Board.board[i][j].piece.white==true) {
-          rect(j*100+20, i*100+40, 60, 50);
-          triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
-          fill(0);
-          text(Board.board[i][j].piece.role, j*100+30, i*100+55);
-          fill(255);
-        } else {
-          rect(j*100+20, i*100+10, 60, 50);
-          triangle(j*100+20, i*100+60, j*100+80, i*100+60, j*100+50, i*100+90);
-          fill(0);
-          text(Board.board[i][j].piece.role, j*100+30, i*100+45);
-          fill(255);
+  if(!Tutorial){
+    fill(252, 204, 156);
+    rect(0, 0, 900, 900);
+    strokeWeight(1);
+    stroke(0);
+    for (int i = 0; i <=9; i++) {
+      line(100*i, 0, 100*i, 900);
+      line(0, 100*i, 900, 100*i);
+    }
+    strokeWeight(0);
+    stroke(255, 0);
+    textSize(12);
+    fill(255);
+    /*
+    rect(1000, 50, 200, 200);
+     fill(0);
+     text(xcoor + "", 1100, 100);
+     text(ycoor + "", 1150, 100);
+     fill(255);
+     */
+     for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        if (Board.board[i][j].piece!=null) {
+          if (Board.board[i][j].piece.white==true) {
+            rect(j*100+20, i*100+40, 60, 50);
+            triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
+            fill(0);
+            text(Board.board[i][j].piece.role, j*100+30, i*100+55);
+            fill(255);
+          } else {
+            rect(j*100+20, i*100+10, 60, 50);
+            triangle(j*100+20, i*100+60, j*100+80, i*100+60, j*100+50, i*100+90);
+            fill(0);
+            text(Board.board[i][j].piece.role, j*100+30, i*100+45);
+            fill(255);
+          }
         }
       }
     }
@@ -331,10 +355,12 @@ void draw() {
   rect(900, 0, 1500, 900);
   fill(0);
   textSize(20);
-  if (Turn) {
-    text("white's turn", 950, 50);
-  } else {
-    text("black's turn", 950, 50);
+  if(!Tutorial){
+    if (Turn) {
+      text("white's turn", 950, 50);
+    } else {
+      text("black's turn", 950, 50);
+    }
   }
   if (Board.checkmate) {
     text("YOU HAVE BEEN MATED!", 950, 75);
@@ -343,7 +369,19 @@ void draw() {
     fill(13, 178, 46, 150);
     rect(950, 100, 160, 150);
     fill(0);
+    textSize(20);
+    if (Turn) {
+      text("white's turn", 950, 50);
+    } else {
+      text("black's turn", 950, 50);
     text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
+    }
+  }
+  if(showTutorial){
+    fill(3, 186, 252, 150);
+    rect(950, 100, 160, 70);
+    fill(0);
+    text("Press 'T' \n for tutorial", 960, 120);
   }
   if (InitialSelected.size() > 1) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
@@ -352,50 +390,134 @@ void draw() {
       int x = list.get(i)[0];
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
+      fill(50, 20);
+      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     }
-    fill(50, 20);
-    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
-  }
-  textSize(12);
-  int x=0;
-  for (int i = 0; i < Board.whiteCaptured.size(); i++) {
-    if (x==8) {
-      x=0;
+    textSize(12);
+    int x=0;
+    for (int i = 0; i < Board.whiteCaptured.size(); i++) {
+      if (x==8) {
+        x=0;
+      }
+      int j=i/8;
+      fill(255);
+      rect(x*100+950, j*100+340, 60, 50);
+      triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
+      Board.whiteCaptured.get(i).x=x*100+950;
+      Board.whiteCaptured.get(i).y=j*100+340;
+      fill(0);
+      text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
+      x++;
     }
-    int j=i/8;
-    fill(255);
-    rect(x*100+950, j*100+340, 60, 50);
-    triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
-    Board.whiteCaptured.get(i).x=x*100+950;
-    Board.whiteCaptured.get(i).y=j*100+340;
-    fill(0);
-    text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
-    x++;
-  }
-  x=0;
-  for (int i = 0; i < Board.blackCaptured.size(); i++) {
-    if (x==8) {
-      x=0;
+    x=0;
+    for (int i = 0; i < Board.blackCaptured.size(); i++) {
+      if (x==8) {
+        x=0;
+      }
+      int j=i/8;
+      fill(255);
+      rect(x*100+950, j*100+610, 60, 50);
+      triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
+      Board.blackCaptured.get(i).x=x*100+950;
+      Board.blackCaptured.get(i).y=j*100+610;
+      fill(0);
+      text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
+      x++;
     }
-    int j=i/8;
-    fill(255);
-    rect(x*100+950, j*100+610, 60, 50);
-    triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
-    Board.blackCaptured.get(i).x=x*100+950;
-    Board.blackCaptured.get(i).y=j*100+610;
-    fill(0);
-    text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
-    x++;
-  }
-  if(InitialSelected.size()==1){
-    if(Turn){
-      text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
-    } else {
-      text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
+    if(InitialSelected.size()==1){
+      if(Turn){
+        text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
+      }
+      else{
+        text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
+      }
+    }
+    if(!canDrop){
+      text("can't drop piece there", 950, 100);
     }
   }
-  if (!canDrop) {
-    text("can't drop piece there", 950, 100);
+  textSize(30);
+  if(Tutorial){
+    switch(tutorialIndex){
+      case 0:
+        PImage pawn = loadImage("pawn.jpg");
+        image(pawn, 0, 0, 900, 900); 
+        text("pawns move like normal pawns \nbut can't move two spaces on the first move \nand can't capture diagonally. \nThey can only capture what is right in front of them", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 1: 
+        PImage rook = loadImage("rook.jpg");
+        image(rook, 0, 0, 900, 900);
+        text("rook moves like a rook...not much else to say", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 2:
+        PImage bishop = loadImage("bishop.jpg");
+        image(bishop, 0, 0, 900, 900);
+        text("bishop moves like a bishop...what a surprise", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 3:
+        PImage lance = loadImage("lance.jpg");
+        image(lance, 0, 0, 900, 900);
+        text("lance moves like a rook \nbut only forwards", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 4:
+        PImage knight = loadImage("knight.jpg");
+        image(knight, 0, 0, 900, 900);
+        text("knight moves similar to a normal knight \nbut only forwards", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 5:
+        PImage silverGeneral = loadImage("silverGeneral.jpg");
+        image(silverGeneral, 0, 0, 900, 900);
+        text("silver general can move diagonally forwards one space, \nforward one space, \nor diagonally backward once space", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 6:
+        PImage goldGeneral = loadImage("goldGeneral.jpg");
+        image(goldGeneral, 0, 0, 900, 900);
+        text("gold generals can move diagonally forwards one space, \nforwards one space, \nsideways one space, \nor backwards one space", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 7:
+        PImage king = loadImage("king.jpg");
+        image(king, 0, 0, 900, 900);
+        text("king is a king", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 8:
+        PImage promotedPawn = loadImage("promotedPawn.jpg");
+        image(promotedPawn, 0, 0, 450, 450);
+        PImage promotedLance = loadImage("promotedLance.jpg");
+        image(promotedLance, 450, 0, 450, 450);
+        PImage promotedKnight = loadImage("promotedKnight.jpg");
+        image(promotedKnight, 0, 450, 450, 450);
+        PImage promotedSilverGeneral = loadImage("promotedSilverGeneral.jpg");
+        image(promotedSilverGeneral, 450, 450, 450, 450);
+        text("promoted pawn, lance, knight, and silver general \nall move like a gold general", 950, 50);
+        textSize(14);
+        text("yes i know they're not in line screenshotting is hard ok", 950, 400);
+        textSize(30);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 9: 
+        PImage promotedRook = loadImage("promotedRook.jpg");
+        image(promotedRook, 0, 0, 900, 900);
+        text("promoted rook moves like a normal rook \nbut can also move in any diagonal direction one space", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 10:
+        PImage promotedBishop = loadImage("promotedBishop.jpg");
+        image(promotedBishop, 0, 0, 900, 900);
+        text("Similar to promoted rook, \npromoted bishop can move like a normal bishop \nbut can also move up, down, left, or right one space", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 11:
+        Tutorial=false;
+        break;
+    }
   }
 }
 public class board {
