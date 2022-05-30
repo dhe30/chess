@@ -170,6 +170,9 @@ void mouseClicked() {
             if (Board.board[0][i].piece!=null) {
               if (Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))) {
                 Board.board[0][i].piece.promote();
+                if(Board.board[0][i].piece.canPromote){
+                  Board.board[0][i].piece.canPromote();
+                }
               }
               if (Board.board[0][i].piece.white && !Board.board[0][i].piece.promoted && !Board.board[0][i].piece.canPromote && (Board.board[0][i].piece.role.equals("silver\nGeneral") || Board.board[0][i].piece.role.equals("rook") || Board.board[0][i].piece.role.equals("bishop"))) {
                 Board.board[0][i].piece.canPromote();
@@ -193,6 +196,9 @@ void mouseClicked() {
             if (Board.board[8][i].piece!=null) {
               if (!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))) {
                 Board.board[8][i].piece.promote();
+                if(Board.board[8][i].piece.canPromote){
+                  Board.board[8][i].piece.canPromote();
+                }
               }
               if (!Board.board[8][i].piece.white && !Board.board[8][i].piece.promoted && !Board.board[8][i].piece.canPromote && (Board.board[8][i].piece.role.equals("silver\nGeneral")|| Board.board[8][i].piece.role.equals("rook") || Board.board[8][i].piece.role.equals("bishop"))) {
                 Board.board[8][i].piece.canPromote();
