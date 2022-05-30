@@ -253,7 +253,8 @@ void mouseClicked() {
             Board.checkCheck();
           }
         }
-      } else if (InitialSelected.size()==1) {
+      }
+      else if(InitialSelected.size()==1){
         canDrop=true;
         if (Board.drop(InitialSelected.get(0), mouseX/100, mouseY/100)==false) {
           canDrop=false;
@@ -268,7 +269,7 @@ void mouseClicked() {
       }
     } else {
       canDrop=true;
-      if (InitialSelected.size() == 1) {
+      if(InitialSelected.size() == 1){
         InitialSelected.clear();
       } else {
         for (int i = 0; i < Board.whiteCaptured.size(); i++) {
@@ -352,6 +353,8 @@ void draw() {
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
     }
+    fill(50, 20);
+    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
   }
   textSize(12);
   int x=0;
@@ -384,9 +387,8 @@ void draw() {
     text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
     x++;
   }
-
-  if (InitialSelected.size()==1) {
-    if (Turn) {
+  if(InitialSelected.size()==1){
+    if(Turn){
       text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
     } else {
       text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
@@ -565,9 +567,9 @@ public class board {
       return false;
     } else {
       if (Turn) {
-        for (int i = 0; i < 9; i++) {
-          if (board[i][x1].piece!=null) {
-            if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
+        for(int i = 0; i < 9; i++){
+          if(board[i][x1].piece!=null){
+            if(board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white){
               return false;
             }
           }
@@ -590,10 +592,11 @@ public class board {
           }
         }
         return true;
-      } else {
-        for (int i = 0; i < 9; i++) {
-          if (board[i][x1].piece!=null) {
-            if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
+      }
+      else{
+        for(int i = 0; i < 9; i++){
+          if(board[i][x1].piece!=null){
+            if(board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white){
               return false;
             }
           }
@@ -1437,10 +1440,4 @@ public class board {
       supplementalThreats.clear();
     }
   }
-
-  //boolean drop(int x, int x1, int y1){
-  //  if(Turn){
-
-  //  }
-  //}
 }
