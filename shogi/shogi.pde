@@ -554,6 +554,7 @@ public class board {
   int restrictedIndex(int x, int y) {
     for (int i = 0; i < restricted.size(); i++) {
       if (restricted.get(i)[0] == x && restricted.get(i)[1] == y) {
+        System.out.println("YOU MOVED: " + restricted.get(i)[0] + " " + restricted.get(i)[1]);
         return i;
       }
     }
@@ -626,6 +627,11 @@ public class board {
       if (index != -1) {
         restricted.remove(index);
         restricted.add(new int[]{x1, y1});
+        String answ ="";
+      for(int i = 0; i < restricted.size(); i++){
+        answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
+      }
+      System.out.println("NEW RESTRICTED" + answ);
       }
     }
     // if there is a piece on other tile, move to Captured array 
@@ -765,7 +771,8 @@ public class board {
       }
     }
   }
-  void unthreaten(int x, int y) {  
+  void unthreaten(int x, int y) {
+    
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       if (board[x][y].piece.isRoyal) {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
@@ -998,10 +1005,11 @@ public class board {
                 // set new Potential
               }
 
-              restricted.add(new int[]{pX, pY});
+              
+            }
+            restricted.add(new int[]{pX, pY});
               board[pX][pY].piece.setPotential(restriction);
               look = false;
-            }
           }
         } else {
           //  System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
@@ -1065,10 +1073,11 @@ public class board {
               // set new Potential
             }
 
-            restricted.add(new int[]{pX, pY});
+           
+          }
+           restricted.add(new int[]{pX, pY});
             board[pX][pY].piece.setPotential(restriction);
             look = false;
-          }
         } else {
           //  System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
@@ -1123,10 +1132,11 @@ public class board {
               i--;
               // set new Potential
             }
-            restricted.add(new int[]{pX, pY});
+           
+          }
+           restricted.add(new int[]{pX, pY});
             board[pX][pY].piece.setPotential(restriction);
             look = false;
-          }
         } else {
           look = false;
         }
@@ -1180,10 +1190,11 @@ public class board {
               i--;
               // set new Potential
             }
-            restricted.add(new int[]{pX, pY});
+           
+          }
+           restricted.add(new int[]{pX, pY});
             board[pX][pY].piece.setPotential(restriction);
             look = false;
-          }
         } else {
           look = false;
         }
@@ -1237,10 +1248,11 @@ public class board {
               i--;
               // set new Potential
             }
-            restricted.add(new int[]{pX, pY});
+            
+          }
+          restricted.add(new int[]{pX, pY});
             board[pX][pY].piece.setPotential(restriction);
             look = false;
-          }
         } else {
           look = false;
         }
@@ -1295,10 +1307,11 @@ public class board {
               i--;
               // set new Potential
             }
-            restricted.add(new int[]{pX, pY});
+            
+          }
+          restricted.add(new int[]{pX, pY});
             board[pX][pY].piece.setPotential(restriction);
             look = false;
-          }
         } else {
           look = false;
         }
@@ -1353,10 +1366,10 @@ public class board {
               i--;
               // set new Potential
             }
-            restricted.add(new int[]{pX, pY});
+          }
+          restricted.add(new int[]{pX, pY});
             board[pX][pY].piece.setPotential(restriction);
             look = false;
-          }
         } else {
           look = false;
         }
@@ -1395,6 +1408,11 @@ public class board {
       saveTheKing.clear();
     }
     if (restricted.size() > 0) {
+      String answ ="";
+      for(int i = 0; i < restricted.size(); i++){
+        answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
+      }
+      System.out.println("RESTRICTED BEING PROCESSED: " + answ);
       for (int i = 0; i < restricted.size(); i++) {
         System.out.println("BUGG: "+restricted.get(i)[0] + " " + restricted.get(i)[1] );
         unthreaten(restricted.get(i)[0], restricted.get(i)[1]);
