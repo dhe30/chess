@@ -93,6 +93,10 @@ void setup() {
   }
 }
 void keyPressed() {
+  if(key=='t'){
+    Tutorial=true;
+    showTutorial=false;
+  }
   if (key == ' ') {
     Test = !Test;
   }
@@ -130,6 +134,7 @@ void keyPressed() {
 void mouseClicked() {
   showTutorial=false;
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
+  showTutorial=false;
   if (Test) {
     if (Board.board[mouseY / 100][mouseX / 100].piece != null) {
       System.out.println("notNull" + " " + mouseY / 100 + " " + mouseX / 100);
@@ -359,6 +364,24 @@ void draw() {
       text("white's turn", 950, 50);
     } else {
       text("black's turn", 950, 50);
+    text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
+    }
+  }
+  if(showTutorial){
+    fill(3, 186, 252, 150);
+    rect(950, 100, 160, 70);
+    fill(0);
+    text("Press 'T' \n for tutorial", 960, 120);
+  }
+  if (InitialSelected.size() > 1) {
+    ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
+    fill(20, 50);
+    for (int i = 0; i < list.size(); i++) {
+      int x = list.get(i)[0];
+      int y = list.get(i)[1];
+      circle(x*100 + 50, y*100+50, 30);
+      fill(50, 20);
+      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     }
     if(showTutorial){
       fill(#5981a6);
@@ -371,17 +394,6 @@ void draw() {
       rect(950, 100, 160, 150);
       fill(0);
       text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
-    }
-    if (InitialSelected.size() > 1) {
-      ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
-      fill(20, 50);
-      for (int i = 0; i < list.size(); i++) {
-        int x = list.get(i)[0];
-        int y = list.get(i)[1];
-        circle(x*100 + 50, y*100+50, 30);
-      }
-      fill(50, 20);
-      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     }
     textSize(12);
     int x=0;
