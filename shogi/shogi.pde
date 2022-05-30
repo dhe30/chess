@@ -6,6 +6,8 @@ boolean showPromote = false;
 boolean selected = false;
 boolean sameRow=false;
 boolean canDrop=true;
+boolean Tutorial=false;
+boolean showTutorial=true;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -91,6 +93,10 @@ void setup() {
   }
 }
 void keyPressed() {
+  if(key=='t'){
+    Tutorial=true;
+    showTutorial=false;
+  }
   if (key == ' ') {
     Test = !Test;
   }
@@ -123,6 +129,7 @@ void keyPressed() {
 }
 void mouseClicked() {
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
+  showTutorial=false;
   if (Test) {
     if (Board.board[mouseY / 100][mouseX / 100].piece != null) {
       System.out.println("notNull" + " " + mouseY / 100 + " " + mouseX / 100);
@@ -336,6 +343,12 @@ void draw() {
     rect(950, 100, 160, 150);
     fill(0);
     text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
+  }
+  if(showTutorial){
+    fill(3, 186, 252, 150);
+    rect(950, 100, 160, 70);
+    fill(0);
+    text("Press 'T' \n for tutorial", 960, 120);
   }
   if (InitialSelected.size() > 1) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
