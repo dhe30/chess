@@ -100,6 +100,9 @@ void keyPressed() {
     }
     if(key== '1'){
       tutorialIndex--;
+      if(tutorialIndex<0){
+        tutorialIndex=0;
+      }
     }
   }
   if(key=='t'){
