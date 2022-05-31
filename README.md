@@ -21,11 +21,7 @@ May 22, 2022
     Daniel : added clicking to move pieces and turns (can move anywhere for now). fixed NullPointer and OutOfBounds edge cases.
      
     Samuel: created the basic setup as well as all the chess pieces. added calcPotential to all the pieces. Had the board and pieces drawn in processing. 
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> main
 May 23, 2022 
 
     Daniel: added royalPotential and necessary fields/ methods to make it work. Threaten and unthreaten methods are deployed but only work for royals. 
@@ -54,6 +50,12 @@ May 27:
 
     Daniel: Finished some other cases of illegal moves and began the framework for checkmate
 
+    Samuel: made it so it is easier to tell which piece is selected
+
 May 28: 
 
-    Daniel: finished checkmate and illegal move prevention during check 
+    Daniel: finished checkmate and illegal move prevention during check  
+    
+May 30:
+    
+    Samuel: added a tutorial
