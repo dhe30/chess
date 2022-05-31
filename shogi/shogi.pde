@@ -373,12 +373,7 @@ void draw() {
     rect(950, 100, 160, 150);
     fill(0);
     textSize(20);
-    if (Turn) {
-      text("white's turn", 950, 50);
-    } else {
-      text("black's turn", 950, 50);
     text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
-    }
   }
   if(showTutorial){
     fill(3, 186, 252, 150);
