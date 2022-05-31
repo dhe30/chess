@@ -393,8 +393,8 @@ void draw() {
       int x = list.get(i)[0];
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
-      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     }
+    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     textSize(12);
     int x=0;
     for (int i = 0; i < Board.whiteCaptured.size(); i++) {
