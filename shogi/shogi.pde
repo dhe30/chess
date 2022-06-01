@@ -10,6 +10,8 @@ boolean sameRow=false;
 boolean canDrop=true;
 boolean Tutorial=false;
 boolean showTutorial=true;
+boolean onePlayer=false;
+boolean showOnePlayer=true;
 int tutorialIndex=0;
 ArrayList<int[]> moves = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
@@ -113,6 +115,10 @@ void keyPressed() {
     Tutorial=true;
     showTutorial=false;
   }
+  if(key=='l'){
+    onePlayer=true;
+    showOnePlayer=false;
+  }
   if (key == ' ') {
     Test = !Test;
   }
@@ -149,6 +155,7 @@ void keyPressed() {
 }
 void mouseClicked() {
   showTutorial=false;
+  showOnePlayer=false;
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
   if (Test) {
     if (Board.board[mouseY / 100][mouseX / 100].piece != null) {
@@ -181,7 +188,7 @@ void mouseClicked() {
           stroke(0);
           rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
           // array logic
-          Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+          boolean didMove = Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
           if (InitialSelected.get(1)==mouseY/100) {
             sameRow=true;
           }
@@ -275,7 +282,9 @@ void mouseClicked() {
           rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
           if (!piece.canPromote) {
             InitialSelected.clear();
-            Turn = !Turn;
+            if(didMove){
+              Turn = !Turn;
+            }
             System.out.println("Love");
             Board.revertPreviousPreventCheck();
             Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
@@ -387,7 +396,13 @@ void draw() {
     fill(3, 186, 252, 150);
     rect(950, 100, 160, 70);
     fill(0);
-    text("Press 'T' \n for tutorial", 960, 120);
+    text("Press 'T' for \ntutorial", 960, 120);
+  }
+  if(showOnePlayer){
+    fill(#6e2ad5, 150);
+    rect(950, 180, 160, 100);
+    fill(0);
+    text("Press 'L' \nfor one \nplayer mode", 960, 200);
   }
   if (InitialSelected.size() > 1) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
@@ -440,6 +455,12 @@ void draw() {
   }
   if(!canDrop){
     text("can't drop piece there", 950, 100);
+  }
+  if(onePlayer && !Turn){
+    
+    
+    
+    
   }
   fill(#b27e4d);
   rect(1200, 5, 430, 302);
@@ -778,7 +799,7 @@ public class board {
       }
     }
   }
-  void move(int x, int y, int x1, int y1) {
+  boolean move(int x, int y, int x1, int y1) {
     // update restricted if x y is found inside 
     // MOVE this if statement when x1 and y1 are passed through unchecked and are potentially illegal
     if (restricted.size() > 0) {
@@ -793,80 +814,94 @@ public class board {
       System.out.println("NEW RESTRICTED" + answ);
       }
     }
-    // if there is a piece on other tile, move to Captured array 
-    if (board[x1][y1].piece!=null) {
-      if (board[x1][y1].piece.white==true) {
-        board[x1][y1].piece.demote();
-        blackCaptured.add(board[x1][y1].piece);
-      } else {
-        board[x1][y1].piece.demote();
-        whiteCaptured.add(board[x1][y1].piece);
+    boolean isLegal=false;
+    ArrayList<int[]> lMoves = legalMoves(x, y);
+    for(int i = 0; i < lMoves.size(); i++){
+      int[] abc = {x1, y1};
+      if(Arrays.equals(lMoves.get(i), abc)){
+        isLegal=true;
       }
     }
-    // UNTHREATEN BOTH 
-    // NEED TO UNTHREATEN other tile
-    unthreaten(x, y);
-    if (board[x1][y1].piece != null) {
-
-      unthreaten(x1, y1);
-    }
-    // move current piece to other tile, set current tile's piece to null
-    board[x1][y1].setPiece(board[x][y].piece);
-    board[x][y].setPiece(null);
-    int[] move = {x1, y1};
-    moves.add(move);
-    if(board[x1][y1].piece.white){
-      String r = board[x1][y1].piece.role.replace("\n", " ");
-      pieceMoved.add("white " + r);
+    if(isLegal){
+      // if there is a piece on other tile, move to Captured array 
+      if (board[x1][y1].piece!=null) {
+        if (board[x1][y1].piece.white==true) {
+          board[x1][y1].piece.demote();
+          blackCaptured.add(board[x1][y1].piece);
+        } else {
+          board[x1][y1].piece.demote();
+          whiteCaptured.add(board[x1][y1].piece);
+        }
+      }
+      // UNTHREATEN BOTH 
+      // NEED TO UNTHREATEN other tile
+      unthreaten(x, y);
+      if (board[x1][y1].piece != null) {
+  
+        unthreaten(x1, y1);
+      }
+      // move current piece to other tile, set current tile's piece to null
+      board[x1][y1].setPiece(board[x][y].piece);
+      board[x][y].setPiece(null);
+      int[] move = {x1, y1};
+      moves.add(move);
+      if(board[x1][y1].piece.white){
+        String r = board[x1][y1].piece.role.replace("\n", " ");
+        pieceMoved.add("white " + r);
+      }
+      else{
+        String r = board[x1][y1].piece.role.replace("\n", " ");
+        pieceMoved.add("black " + r);
+      }
+      // recalculate royal pieces' moves only if current piece had been blocking them 
+      if (board[x][y].royalThreats.size() > 0) {
+        ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
+        for (int i = 0; i < temp.size(); i++) {
+  
+          unthreaten(temp.get(i)[0], temp.get(i)[1]);
+          royalPotential(temp.get(i)[0], temp.get(i)[1]);
+          threaten(temp.get(i)[0], temp.get(i)[1]);
+        }
+      }
+      // if current is royal, recalculate moves
+      if (board[x1][y1].piece.isRoyal) {
+        royalPotential(x1, y1); // x then y because move parameters are given in row major order
+        // MOVE OUT OF IF STATEMENT when threaten is generalized
+      } else {
+        board[x1][y1].piece.calcPotential(y1, x1);
+      }
+      threaten(x1, y1);
+      // current is now moved and may be blocking royals, recalculate royals' moves if so  
+      if (board[x1][y1].royalThreats.size() > 0) {
+        ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
+        for (int i = 0; i < temp.size(); i++) {
+          //coordinate pair [0],[1] because r.T is in RMO
+  
+          unthreaten(temp.get(i)[0], temp.get(i)[1]);
+          royalPotential(temp.get(i)[0], temp.get(i)[1]);
+          threaten(temp.get(i)[0], temp.get(i)[1]);
+        }
+      }
+      // check if orginal coors were king's Location 
+      if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
+        whiteKingLocation[0] = x1;
+        whiteKingLocation[1] = y1;
+        whiteCheck = false; 
+        System.out.println("White King moved, not in check");
+        saveTheKing.clear();
+        whiteCheckers.clear(); // white should only be able to move in directions that are never threatened
+      } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
+        blackKingLocation[0] = x1;
+        blackKingLocation[1] = y1;
+        blackCheck = false; 
+        System.out.println("Black King moved, not in check");
+        saveTheKing.clear();
+        blackCheckers.clear();
+      }
+      return true;
     }
     else{
-      String r = board[x1][y1].piece.role.replace("\n", " ");
-      pieceMoved.add("black " + r);
-    }
-    // recalculate royal pieces' moves only if current piece had been blocking them 
-    if (board[x][y].royalThreats.size() > 0) {
-      ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
-      for (int i = 0; i < temp.size(); i++) {
-
-        unthreaten(temp.get(i)[0], temp.get(i)[1]);
-        royalPotential(temp.get(i)[0], temp.get(i)[1]);
-        threaten(temp.get(i)[0], temp.get(i)[1]);
-      }
-    }
-    // if current is royal, recalculate moves
-    if (board[x1][y1].piece.isRoyal) {
-      royalPotential(x1, y1); // x then y because move parameters are given in row major order
-      // MOVE OUT OF IF STATEMENT when threaten is generalized
-    } else {
-      board[x1][y1].piece.calcPotential(y1, x1);
-    }
-    threaten(x1, y1);
-    // current is now moved and may be blocking royals, recalculate royals' moves if so  
-    if (board[x1][y1].royalThreats.size() > 0) {
-      ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
-      for (int i = 0; i < temp.size(); i++) {
-        //coordinate pair [0],[1] because r.T is in RMO
-
-        unthreaten(temp.get(i)[0], temp.get(i)[1]);
-        royalPotential(temp.get(i)[0], temp.get(i)[1]);
-        threaten(temp.get(i)[0], temp.get(i)[1]);
-      }
-    }
-    // check if orginal coors were king's Location 
-    if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
-      whiteKingLocation[0] = x1;
-      whiteKingLocation[1] = y1;
-      whiteCheck = false; 
-      System.out.println("White King moved, not in check");
-      saveTheKing.clear();
-      whiteCheckers.clear(); // white should only be able to move in directions that are never threatened
-    } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
-      blackKingLocation[0] = x1;
-      blackKingLocation[1] = y1;
-      blackCheck = false; 
-      System.out.println("Black King moved, not in check");
-      saveTheKing.clear();
-      blackCheckers.clear();
+      return false;
     }
     // check if enemy king is in check
     //if (Turn) {
