@@ -23,6 +23,9 @@ public class Piece {
   void promote() {
     promoted=true;
   }
+  void demote(){
+    promoted=false;
+  }
   void setPotential(ArrayList<int[]> newMoves) {
     potentialMoves = newMoves;
   }
