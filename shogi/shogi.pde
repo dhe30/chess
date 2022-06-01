@@ -15,6 +15,7 @@ boolean showOnePlayer=true;
 int tutorialIndex=0;
 ArrayList<int[]> moves = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
+int count = 0;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -118,6 +119,7 @@ void keyPressed() {
   if(key=='l'){
     onePlayer=true;
     showOnePlayer=false;
+    showTutorial=false;
   }
   if (key == ' ') {
     Test = !Test;
@@ -457,10 +459,13 @@ void draw() {
     text("can't drop piece there", 950, 100);
   }
   if(onePlayer && !Turn){
-    
-    
-    
-    
+    count++;
+    System.out.println(count);
+     botMove();
+     Turn=true;
+  }
+  if(Turn){
+    count=0;
   }
   fill(#b27e4d);
   rect(1200, 5, 430, 302);
@@ -565,6 +570,27 @@ void draw() {
         Tutorial=false;
         break;
     }
+  }
+}
+boolean botMove(){
+  int xCor = (int)(Math.random()*9);
+  int yCor = (int)(Math.random()*9);
+  if(Board.board[yCor][xCor].piece!=null){
+    if(!Board.board[yCor][xCor].piece.white){
+      if(Board.legalMoves(yCor, xCor).size() > 0){
+        int r = (int)(Math.random() * Board.legalMoves(yCor, xCor).size());
+        return Board.move(yCor, xCor, Board.legalMoves(yCor, xCor).get(r)[1], Board.legalMoves(yCor, xCor).get(r)[0]); 
+      }
+      else{
+        return botMove();
+      }
+    }
+    else{
+      return botMove();
+    }
+  }
+  else{
+    return botMove();
   }
 }
 public class board {
@@ -817,7 +843,7 @@ public class board {
     boolean isLegal=false;
     ArrayList<int[]> lMoves = legalMoves(x, y);
     for(int i = 0; i < lMoves.size(); i++){
-      int[] abc = {x1, y1};
+      int[] abc = {y1, x1};
       if(Arrays.equals(lMoves.get(i), abc)){
         isLegal=true;
       }
