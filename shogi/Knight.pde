@@ -1,7 +1,10 @@
 public class Knight extends Piece{
+
   public Knight(String x){
     super(x);
     role="knight";
+        display = "horse.txt";
+
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
@@ -87,4 +90,5 @@ public class Knight extends Piece{
     promoted=!promoted;
     role="promoted \n knight";
   }
+  
 }

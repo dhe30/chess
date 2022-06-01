@@ -3,6 +3,8 @@ public class Bishop extends Piece{
     super(x);
     role="bishop";
     isRoyal=true;
+        display = "bishop.txt";
+
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();

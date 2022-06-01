@@ -1,8 +1,11 @@
 public class Lance extends Piece {
+
   public Lance(String x) {
     super(x);
     role="lance";
     isRoyal=true;
+        display = "lance.txt";
+
   }
   void calcPotential(int x, int y) {
     ArrayList<int[]> ans = new ArrayList();
@@ -87,4 +90,5 @@ public class Lance extends Piece {
     isRoyal = !isRoyal;
     role="promoted \n lance";
   }
+
 }

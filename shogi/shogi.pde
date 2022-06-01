@@ -94,18 +94,18 @@ void setup() {
   }
 }
 void keyPressed() {
-  if(Tutorial){
-    if(key== '2'){
+  if (Tutorial) {
+    if (key== '2') {
       tutorialIndex++;
     }
-    if(key== '1'){
+    if (key== '1') {
       tutorialIndex--;
-      if(tutorialIndex<0){
+      if (tutorialIndex<0) {
         tutorialIndex=0;
       }
     }
   }
-  if(key=='t'){
+  if (key=='t') {
     Tutorial=true;
     showTutorial=false;
   }
@@ -189,7 +189,7 @@ void mouseClicked() {
             if (Board.board[0][i].piece!=null) {
               if (Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))) {
                 Board.board[0][i].piece.promote();
-                if(Board.board[0][i].piece.canPromote){
+                if (Board.board[0][i].piece.canPromote) {
                   Board.board[0][i].piece.canPromote();
                 }
               }
@@ -215,7 +215,7 @@ void mouseClicked() {
             if (Board.board[8][i].piece!=null) {
               if (!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))) {
                 Board.board[8][i].piece.promote();
-                if(Board.board[8][i].piece.canPromote){
+                if (Board.board[8][i].piece.canPromote) {
                   Board.board[8][i].piece.canPromote();
                 }
               }
@@ -278,8 +278,7 @@ void mouseClicked() {
             Board.checkCheck();
           }
         }
-      }
-      else if(InitialSelected.size()==1){
+      } else if (InitialSelected.size()==1) {
         canDrop=true;
         if (Board.drop(InitialSelected.get(0), mouseX/100, mouseY/100)==false) {
           canDrop=false;
@@ -294,7 +293,7 @@ void mouseClicked() {
       }
     } else {
       canDrop=true;
-      if(InitialSelected.size() == 1){
+      if (InitialSelected.size() == 1) {
         InitialSelected.clear();
       } else {
         for (int i = 0; i < Board.whiteCaptured.size(); i++) {
@@ -313,8 +312,45 @@ void mouseClicked() {
     }
   }
 }
+void displayRook(int x, int y, boolean white) {
+  String[] lines = loadStrings("rook.txt");
+  if (white) {
+    for (int i = 1; i < lines.length; i++) {
+      for (int a = 0; a < lines[i].length(); a++) {
+        if (lines[i].charAt(a)=='1') {
+          fill(0);
+          rect(x + (a*2.5), y+(i*2.2), 3.2, 3.2);
+        }
+      }
+    }
+  } else {
+    int newRow = 0;
+    String store1 = "";
+    String store2= "";
+    for (int i = 1; i <= lines.length / 2; i++) {
+      newRow = lines.length - i;
+      for (int a = lines[i].length() - 1; a >= 0; a--) {
+        store1 += lines[i].substring(a, a+1);
+        store2 += lines[newRow].substring(a, a+1);
+      }
+      lines[i] = store2;
+      lines[newRow] = store1;
+      store1="";
+      store2="";
+    }
+
+    for (int i = 1; i < lines.length; i++) {
+      for (int a = 0; a < lines[i].length(); a++) {
+        if (lines[i].charAt(a)=='1') {
+          fill(0);
+          rect(x + (a*2.5), y+(i*2.2), 3.2, 3.2);
+        }
+      }
+    }
+  }
+}
 void draw() {
-  if(!Tutorial){
+  if (!Tutorial) {
     fill(252, 204, 156);
     rect(0, 0, 900, 900);
     strokeWeight(1);
@@ -327,28 +363,13 @@ void draw() {
     stroke(255, 0);
     textSize(12);
     fill(255);
-    /*
-    rect(1000, 50, 200, 200);
-     fill(0);
-     text(xcoor + "", 1100, 100);
-     text(ycoor + "", 1150, 100);
-     fill(255);
-     */
-     for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (Board.board[i][j].piece!=null) {
           if (Board.board[i][j].piece.white==true) {
-            rect(j*100+20, i*100+40, 60, 50);
-            triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
-            fill(0);
-            text(Board.board[i][j].piece.role, j*100+30, i*100+55);
-            fill(255);
+            Board.board[i][j].piece.displayPiece(j,i,true,Board.board[i][j].piece.display);
           } else {
-            rect(j*100+20, i*100+10, 60, 50);
-            triangle(j*100+20, i*100+60, j*100+80, i*100+60, j*100+50, i*100+90);
-            fill(0);
-            text(Board.board[i][j].piece.role, j*100+30, i*100+45);
-            fill(255);
+            Board.board[i][j].piece.displayPiece(j,i,false,Board.board[i][j].piece.display);
           }
         }
       }
@@ -358,7 +379,7 @@ void draw() {
   rect(900, 0, 1500, 900);
   fill(0);
   textSize(20);
-  if(!Tutorial){
+  if (!Tutorial) {
     if (Turn) {
       text("white's turn", 950, 50);
     } else {
@@ -375,13 +396,13 @@ void draw() {
     textSize(20);
     text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
   }
-  if(showTutorial){
+  if (showTutorial) {
     fill(3, 186, 252, 150);
     rect(950, 100, 160, 70);
     fill(0);
     text("Press 'T' \n for tutorial", 960, 120);
   }
-  if (InitialSelected.size() > 1) {
+  if (InitialSelected.size() > 1 && selected) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
     for (int i = 0; i < list.size(); i++) {
@@ -390,132 +411,137 @@ void draw() {
       circle(x*100 + 50, y*100+50, 30);
     }
     rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+  } else if (showPromote) {
+    fill(20, 50);
+    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
   }
   textSize(12);
-    int x=0;
-    for (int i = 0; i < Board.whiteCaptured.size(); i++) {
-      if (x==8) {
-        x=0;
-      }
-      int j=i/8;
-      fill(255);
-      rect(x*100+950, j*100+340, 60, 50);
-      triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
-      Board.whiteCaptured.get(i).x=x*100+950;
-      Board.whiteCaptured.get(i).y=j*100+340;
-      fill(0);
-      text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
-      x++;
+  int x=0;
+  for (int i = 0; i < Board.whiteCaptured.size(); i++) {
+    if (x==8) {
+      x=0;
     }
-    x=0;
-    for (int i = 0; i < Board.blackCaptured.size(); i++) {
-      if (x==8) {
-        x=0;
-      }
-      int j=i/8;
-      fill(255);
-      rect(x*100+950, j*100+610, 60, 50);
-      triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
-      Board.blackCaptured.get(i).x=x*100+950;
-      Board.blackCaptured.get(i).y=j*100+610;
-      fill(0);
-      text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
-      x++;
+    int j=i/8;
+    fill(255);
+    rect(x*100+950, j*100+340, 60, 50);
+    triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
+    Board.whiteCaptured.get(i).x=x*100+950;
+    Board.whiteCaptured.get(i).y=j*100+340;
+    fill(0);
+    text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
+    x++;
+  }
+  x=0;
+  for (int i = 0; i < Board.blackCaptured.size(); i++) {
+    if (x==8) {
+      x=0;
     }
-    if(InitialSelected.size()==1){
-      if(Turn){
-        text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
-      }
-      else{
-        text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
-      }
-    }
-    if(!canDrop){
-      text("can't drop piece there", 950, 100);
-    }
-  textSize(30);
-  if(Tutorial){
-    switch(tutorialIndex){
-      case 0:
-        PImage pawn = loadImage("pawn.jpg");
-        image(pawn, 0, 0, 900, 900); 
-        text("pawns move like normal pawns \nbut can't move two spaces on the first move \nand can't capture diagonally. \nThey can only capture what is right in front of them", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 1: 
-        PImage rook = loadImage("rook.jpg");
-        image(rook, 0, 0, 900, 900);
-        text("rook moves like a rook...not much else to say", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 2:
-        PImage bishop = loadImage("bishop.jpg");
-        image(bishop, 0, 0, 900, 900);
-        text("bishop moves like a bishop...what a surprise", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 3:
-        PImage lance = loadImage("lance.jpg");
-        image(lance, 0, 0, 900, 900);
-        text("lance moves like a rook \nbut only forwards", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 4:
-        PImage knight = loadImage("knight.jpg");
-        image(knight, 0, 0, 900, 900);
-        text("knight moves similar to a normal knight \nbut only forwards", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 5:
-        PImage silverGeneral = loadImage("silverGeneral.jpg");
-        image(silverGeneral, 0, 0, 900, 900);
-        text("silver general can move diagonally forwards one space, \nforward one space, \nor diagonally backward once space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 6:
-        PImage goldGeneral = loadImage("goldGeneral.jpg");
-        image(goldGeneral, 0, 0, 900, 900);
-        text("gold generals can move diagonally forwards one space, \nforwards one space, \nsideways one space, \nor backwards one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 7:
-        PImage king = loadImage("king.jpg");
-        image(king, 0, 0, 900, 900);
-        text("king is a king", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 8:
-        PImage promotedPawn = loadImage("promotedPawn.jpg");
-        image(promotedPawn, 0, 0, 450, 450);
-        PImage promotedLance = loadImage("promotedLance.jpg");
-        image(promotedLance, 450, 0, 450, 450);
-        PImage promotedKnight = loadImage("promotedKnight.jpg");
-        image(promotedKnight, 0, 450, 450, 450);
-        PImage promotedSilverGeneral = loadImage("promotedSilverGeneral.jpg");
-        image(promotedSilverGeneral, 450, 450, 450, 450);
-        text("promoted pawn, lance, knight, and silver general \nall move like a gold general", 950, 50);
-        textSize(14);
-        text("yes i know they're not in line screenshotting is hard ok", 950, 400);
-        textSize(30);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 9: 
-        PImage promotedRook = loadImage("promotedRook.jpg");
-        image(promotedRook, 0, 0, 900, 900);
-        text("promoted rook moves like a normal rook \nbut can also move in any diagonal direction one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 10:
-        PImage promotedBishop = loadImage("promotedBishop.jpg");
-        image(promotedBishop, 0, 0, 900, 900);
-        text("Similar to promoted rook, \npromoted bishop can move like a normal bishop \nbut can also move up, down, left, or right one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 11:
-        Tutorial=false;
-        break;
+    int j=i/8;
+    fill(255);
+    rect(x*100+950, j*100+610, 60, 50);
+    triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
+    Board.blackCaptured.get(i).x=x*100+950;
+    Board.blackCaptured.get(i).y=j*100+610;
+    fill(0);
+    text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
+    x++;
+  }
+  if (InitialSelected.size()==1) {
+    if (Turn) {
+      text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
+    } else {
+      text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
     }
   }
+  if (!canDrop) {
+    text("can't drop piece there", 950, 100);
+  }
+  textSize(30);
+  if (Tutorial) {
+    switch(tutorialIndex) {
+    case 0:
+      PImage pawn = loadImage("pawn.jpg");
+      image(pawn, 0, 0, 900, 900); 
+      text("pawns move like normal pawns \nbut can't move two spaces on the first move \nand can't capture diagonally. \nThey can only capture what is right in front of them", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 1: 
+      PImage rook = loadImage("rook.jpg");
+      image(rook, 0, 0, 900, 900);
+      text("rook moves like a rook...not much else to say", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 2:
+      PImage bishop = loadImage("bishop.jpg");
+      image(bishop, 0, 0, 900, 900);
+      text("bishop moves like a bishop...what a surprise", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 3:
+      PImage lance = loadImage("lance.jpg");
+      image(lance, 0, 0, 900, 900);
+      text("lance moves like a rook \nbut only forwards", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 4:
+      PImage knight = loadImage("knight.jpg");
+      image(knight, 0, 0, 900, 900);
+      text("knight moves similar to a normal knight \nbut only forwards", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 5:
+      PImage silverGeneral = loadImage("silverGeneral.jpg");
+      image(silverGeneral, 0, 0, 900, 900);
+      text("silver general can move diagonally forwards one space, \nforward one space, \nor diagonally backward once space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 6:
+      PImage goldGeneral = loadImage("goldGeneral.jpg");
+      image(goldGeneral, 0, 0, 900, 900);
+      text("gold generals can move diagonally forwards one space, \nforwards one space, \nsideways one space, \nor backwards one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 7:
+      PImage king = loadImage("king.jpg");
+      image(king, 0, 0, 900, 900);
+      text("king is a king", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 8:
+      PImage promotedPawn = loadImage("promotedPawn.jpg");
+      image(promotedPawn, 0, 0, 450, 450);
+      PImage promotedLance = loadImage("promotedLance.jpg");
+      image(promotedLance, 450, 0, 450, 450);
+      PImage promotedKnight = loadImage("promotedKnight.jpg");
+      image(promotedKnight, 0, 450, 450, 450);
+      PImage promotedSilverGeneral = loadImage("promotedSilverGeneral.jpg");
+      image(promotedSilverGeneral, 450, 450, 450, 450);
+      text("promoted pawn, lance, knight, and silver general \nall move like a gold general", 950, 50);
+      textSize(14);
+      text("yes i know they're not in line screenshotting is hard ok", 950, 400);
+      textSize(30);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 9: 
+      PImage promotedRook = loadImage("promotedRook.jpg");
+      image(promotedRook, 0, 0, 900, 900);
+      text("promoted rook moves like a normal rook \nbut can also move in any diagonal direction one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 10:
+      PImage promotedBishop = loadImage("promotedBishop.jpg");
+      image(promotedBishop, 0, 0, 900, 900);
+      text("Similar to promoted rook, \npromoted bishop can move like a normal bishop \nbut can also move up, down, left, or right one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 11:
+      Tutorial=false;
+      break;
+    }
+  }
+  fill(255);
+  rect(1000, 100, 3, 3);
+  fill(0);
 }
 public class board {
   boolean checkmate = false;
@@ -686,9 +712,9 @@ public class board {
       return false;
     } else {
       if (Turn) {
-        for(int i = 0; i < 9; i++){
-          if(board[i][x1].piece!=null){
-            if(board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white){
+        for (int i = 0; i < 9; i++) {
+          if (board[i][x1].piece!=null) {
+            if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
               return false;
             }
           }
@@ -711,11 +737,10 @@ public class board {
           }
         }
         return true;
-      }
-      else{
-        for(int i = 0; i < 9; i++){
-          if(board[i][x1].piece!=null){
-            if(board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white){
+      } else {
+        for (int i = 0; i < 9; i++) {
+          if (board[i][x1].piece!=null) {
+            if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
               return false;
             }
           }
@@ -750,10 +775,10 @@ public class board {
         restricted.remove(index);
         restricted.add(new int[]{x1, y1});
         String answ ="";
-      for(int i = 0; i < restricted.size(); i++){
-        answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
-      }
-      System.out.println("NEW RESTRICTED" + answ);
+        for (int i = 0; i < restricted.size(); i++) {
+          answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
+        }
+        System.out.println("NEW RESTRICTED" + answ);
       }
     }
     // if there is a piece on other tile, move to Captured array 
@@ -894,7 +919,7 @@ public class board {
     }
   }
   void unthreaten(int x, int y) {
-    
+
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       if (board[x][y].piece.isRoyal) {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
@@ -940,7 +965,7 @@ public class board {
                 whiteCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more white check");
-                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[1], whiteKingLocation[0]); // DO NEXT: UNTHREATEN AND THEN THREATEN 
+                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[1], whiteKingLocation[0]); // DO NEXT: UNTHREATEN AND THEN THREATEN
               }
             }
           }
@@ -1126,12 +1151,10 @@ public class board {
                 i--;
                 // set new Potential
               }
-
-              
             }
             restricted.add(new int[]{pX, pY});
-              board[pX][pY].piece.setPotential(restriction);
-              look = false;
+            board[pX][pY].piece.setPotential(restriction);
+            look = false;
           }
         } else {
           //  System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
@@ -1194,12 +1217,10 @@ public class board {
               i--;
               // set new Potential
             }
-
-           
           }
-           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          restricted.add(new int[]{pX, pY});
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           //  System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
@@ -1254,11 +1275,10 @@ public class board {
               i--;
               // set new Potential
             }
-           
           }
-           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          restricted.add(new int[]{pX, pY});
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1312,11 +1332,10 @@ public class board {
               i--;
               // set new Potential
             }
-           
           }
-           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          restricted.add(new int[]{pX, pY});
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1370,11 +1389,10 @@ public class board {
               i--;
               // set new Potential
             }
-            
           }
           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1429,11 +1447,10 @@ public class board {
               i--;
               // set new Potential
             }
-            
           }
           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1490,8 +1507,8 @@ public class board {
             }
           }
           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1531,7 +1548,7 @@ public class board {
     }
     if (restricted.size() > 0) {
       String answ ="";
-      for(int i = 0; i < restricted.size(); i++){
+      for (int i = 0; i < restricted.size(); i++) {
         answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
       }
       System.out.println("RESTRICTED BEING PROCESSED: " + answ);
