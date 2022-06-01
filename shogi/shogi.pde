@@ -381,7 +381,7 @@ void draw() {
     fill(0);
     text("Press 'T' \n for tutorial", 960, 120);
   }
-  if (InitialSelected.size() > 1) {
+  if (InitialSelected.size() > 1 && selected) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
     for (int i = 0; i < list.size(); i++) {
@@ -390,6 +390,10 @@ void draw() {
       circle(x*100 + 50, y*100+50, 30);
     }
     rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+  } else if(showPromote){
+     fill(20, 50);
+    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+
   }
   textSize(12);
     int x=0;
