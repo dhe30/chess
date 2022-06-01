@@ -76,7 +76,11 @@ public class Pawn extends Piece{
     potentialMoves=(ArrayList)ans.clone();
   }
   void promote(){
-    promoted=!promoted;
+    promoted=true;
     role="promoted \n pawn";
+  }
+  void demote(){
+    promoted=false;
+    role="pawn";
   }
 }

@@ -83,8 +83,13 @@ public class Lance extends Piece {
     potentialMoves=(ArrayList)ans.clone();
   }
   void promote() {
-    promoted=!promoted;
-    isRoyal = !isRoyal;
+    promoted=true;
+    isRoyal = true;
     role="promoted \n lance";
+  }
+  void demote(){
+    promoted=false;
+    isRoyal=true;
+    role="lance";
   }
 }
