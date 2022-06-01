@@ -313,6 +313,17 @@ void mouseClicked() {
     }
   }
 }
+void displayRook(int x, int y){
+    String[] lines = loadStrings("rook.txt");
+    for(int i = 0; i < lines.length; i++){
+      for(int a = 0; a < lines[i].length(); a++){
+        if(lines[i].charAt(a)=='1'){
+          fill(0);
+          rect(x + (a*2.5), y+(i*2.2), 3.2, 3.2);
+        }
+      }
+    }
+  }
 void draw() {
   if(!Tutorial){
     fill(252, 204, 156);
@@ -341,7 +352,9 @@ void draw() {
             rect(j*100+20, i*100+40, 60, 50);
             triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
             fill(0);
-            text(Board.board[i][j].piece.role, j*100+30, i*100+55);
+            //rect(j*100+27, i*100+40, 45, 45);
+            displayRook(j*100+29, i*100+37);
+            //text(Board.board[i][j].piece.role, j*100+30, i*100+55);
             fill(255);
           } else {
             rect(j*100+20, i*100+10, 60, 50);
@@ -520,6 +533,9 @@ void draw() {
         break;
     }
   }
+  fill(255);
+  rect(1000,100,3,3);
+  fill(0);
 }
 public class board {
   boolean checkmate = false;
