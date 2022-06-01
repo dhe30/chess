@@ -3,7 +3,7 @@ public class Bishop extends Piece{
     super(x);
     role="bishop";
     isRoyal=true;
-        display = "pawn.txt";
+        display = "bishop.txt";
 
   }
   void calcPotential(int x, int y){

@@ -4,8 +4,7 @@ public class Rook extends Piece {
     super(x);
     role="rook";
     isRoyal=true;
-        display = "rook.txt";
-
+    display = "rook.txt";
   }
   void calcPotential(int x, int y) {
     ArrayList<int[]> ans = new ArrayList();
@@ -75,5 +74,58 @@ public class Rook extends Piece {
   void promote() {
     promoted=!promoted;
     role="promoted \n rook";
+  }
+  void displayPiece(int x, int y, boolean white, String line) {
+    String[] lines = loadStrings(line);
+    if (white) {
+      fill(255);
+      rect(x*100+20, y*100+36, 60, 50);
+      triangle(x*100+20, y*100+36, x*100+80, y*100+36, x*100+50, y*100+6);
+      fill(0);
+       if(promoted){
+        fill(211,4,4);
+      }
+      x=x*100+31;
+      y=y*100+30;
+      for (int i = 1; i < lines.length; i++) {
+        for (int a = 0; a < lines[i].length(); a++) {
+          if (lines[i].charAt(a)=='1') {
+            rect(x + (a*2.8), y+(i*2.4), 2.8, 3.6);
+          }
+        }
+      }
+    } else {
+      fill(255);
+      rect(x*100+20, y*100+14, 60, 50);
+      triangle(x*100+20, y*100+64, x*100+80, y*100+64, x*100+50, y*100+94);
+      fill(0);
+      if(promoted){
+        fill(211,4,4);
+      }
+      x=x*100+28;
+      y=y*100+29;
+      int newRow = 0;
+      String store1 = "";
+      String store2= "";
+      for (int i = 1; i <= lines.length / 2; i++) {
+        newRow = lines.length - i;
+        for (int a = lines[i].length() - 1; a >= 0; a--) {
+          store1 += lines[i].substring(a, a+1);
+          store2 += lines[newRow].substring(a, a+1);
+        }
+        lines[i] = store2;
+        lines[newRow] = store1;
+        store1="";
+        store2="";
+      }
+
+      for (int i = 1; i < lines.length; i++) {
+        for (int a = 0; a < lines[i].length(); a++) {
+          if (lines[i].charAt(a)=='1') {
+            rect(x + (a*2.8), y+(i*2.4), 2.8, 3.6);
+          }
+        }
+      }
+    }
   }
 }

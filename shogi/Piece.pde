@@ -34,28 +34,34 @@ public class Piece {
     String[] lines = loadStrings(line);
     if (white) {
       fill(255);
-      rect(x*100+20, y*100+40, 60, 50);
-      triangle(x*100+20, y*100+40, x*100+80, y*100+40, x*100+50, y*100+10);
+      rect(x*100+20, y*100+36, 60, 50);
+      triangle(x*100+20, y*100+36, x*100+80, y*100+36, x*100+50, y*100+6);
       fill(0);
+      if(promoted){
+        fill(211,4,4);
+      }
       x=x*100+32;
-      y=y*100+37;
+      y=y*100+33;
       for (int i = 1; i < lines.length; i++) {
         for (int a = 0; a < lines[i].length(); a++) {
           if (lines[i].charAt(a)=='1') {
-            fill(0);
-            rect(x + (a*2.5), y+(i*2.55), 3, 4);
+            
+            rect(x + (a*2.5), y+(i*2.55), 2.6, 3.6);
+          
           }
         }
       }
     } else {
-      fill(225);
+      fill(255);
 
-      rect(x*100+20, y*100+10, 60, 50);
-      triangle(x*100+20, y*100+60, x*100+80, y*100+60, x*100+50, y*100+90);
+      rect(x*100+20, y*100+14, 60, 50);
+      triangle(x*100+20, y*100+64, x*100+80, y*100+64, x*100+50, y*100+94);
       fill(0);
-
-      x=x*100+30;
-      y=y*100+30;
+if(promoted){
+        fill(211,4,4);
+      }
+      x=x*100+32;
+      y=y*100+27;
       int newRow = 0;
       String store1 = "";
       String store2= "";
@@ -70,12 +76,10 @@ public class Piece {
         store1="";
         store2="";
       }
-
       for (int i = 1; i < lines.length; i++) {
         for (int a = 0; a < lines[i].length(); a++) {
-          if (lines[i].charAt(a)=='1') {
-            fill(0);
-            rect(x + (a*2.5), y+(i*2.2), 3.2, 3.2);
+          if (lines[i].charAt(a)=='1') {       
+            rect(x + (a*2.5), y+(i*2.55), 2.6, 3.6);
           }
         }
       }

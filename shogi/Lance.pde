@@ -4,7 +4,7 @@ public class Lance extends Piece {
     super(x);
     role="lance";
     isRoyal=true;
-        display = "pawn.txt";
+        display = "lance.txt";
 
   }
   void calcPotential(int x, int y) {

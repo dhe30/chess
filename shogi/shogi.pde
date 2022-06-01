@@ -363,21 +363,13 @@ void draw() {
     stroke(255, 0);
     textSize(12);
     fill(255);
-    /*
-    rect(1000, 50, 200, 200);
-     fill(0);
-     text(xcoor + "", 1100, 100);
-     text(ycoor + "", 1150, 100);
-     fill(255);
-     */
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (Board.board[i][j].piece!=null) {
           if (Board.board[i][j].piece.white==true) {
             Board.board[i][j].piece.displayPiece(j,i,true,Board.board[i][j].piece.display);
           } else {
-                        Board.board[i][j].piece.displayPiece(j,i,false,Board.board[i][j].piece.display);
-
+            Board.board[i][j].piece.displayPiece(j,i,false,Board.board[i][j].piece.display);
           }
         }
       }

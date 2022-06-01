@@ -2,7 +2,7 @@ public class SilverGeneral extends Piece{
   public SilverGeneral(String x){
     super(x);
     role="silver\nGeneral";
-    display = "pawn.txt";
+    display = "silver.txt";
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
