@@ -759,8 +759,10 @@ public class board {
     // if there is a piece on other tile, move to Captured array 
     if (board[x1][y1].piece!=null) {
       if (board[x1][y1].piece.white==true) {
+        board[x1][y1].piece.demote();
         blackCaptured.add(board[x1][y1].piece);
       } else {
+        board[x1][y1].piece.demote();
         whiteCaptured.add(board[x1][y1].piece);
       }
     }
