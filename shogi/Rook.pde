@@ -63,7 +63,11 @@ public class Rook extends Piece{
     potentialMoves=(ArrayList)ans.clone();
   }
   void promote(){
-    promoted=!promoted;
-    role="promoted \n rook";
+    promoted=true;
+    role="promoted\nrook";
+  }
+  void demote(){
+    promoted=false;
+    role="rook";
   }
 }
