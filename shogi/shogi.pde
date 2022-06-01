@@ -399,12 +399,12 @@ void draw() {
       }
       int j=i/8;
       fill(255);
-      rect(x*100+950, j*100+340, 60, 50);
-      triangle(x*100+950, j*100+340, x*100+1010, j*100+340, x*100+980, j*100+310);
+      rect(x*100+950, j*100+640, 60, 50);
+      triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
       Board.whiteCaptured.get(i).x=x*100+950;
-      Board.whiteCaptured.get(i).y=j*100+340;
+      Board.whiteCaptured.get(i).y=j*100+640;
       fill(0);
-      text(Board.whiteCaptured.get(i).role, x*100+960, j*100+355);
+      text(Board.whiteCaptured.get(i).role, x*100+960, j*100+655);
       x++;
     }
     x=0;
@@ -414,12 +414,12 @@ void draw() {
       }
       int j=i/8;
       fill(255);
-      rect(x*100+950, j*100+610, 60, 50);
-      triangle(x*100+950, j*100+660, x*100+1010, j*100+660, x*100+980, j*100+690);
+      rect(x*100+950, j*100+310, 60, 50);
+      triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
       Board.blackCaptured.get(i).x=x*100+950;
-      Board.blackCaptured.get(i).y=j*100+610;
+      Board.blackCaptured.get(i).y=j*100+310;
       fill(0);
-      text(Board.blackCaptured.get(i).role, x*100+960, j*100+645);
+      text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
       x++;
     }
     if(InitialSelected.size()==1){
