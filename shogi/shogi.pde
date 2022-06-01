@@ -373,12 +373,7 @@ void draw() {
     rect(950, 100, 160, 150);
     fill(0);
     textSize(20);
-    if (Turn) {
-      text("white's turn", 950, 50);
-    } else {
-      text("black's turn", 950, 50);
     text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
-    }
   }
   if(showTutorial){
     fill(3, 186, 252, 150);
@@ -393,9 +388,10 @@ void draw() {
       int x = list.get(i)[0];
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
-      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     }
-    textSize(12);
+    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+  }
+  textSize(12);
     int x=0;
     for (int i = 0; i < Board.whiteCaptured.size(); i++) {
       if (x==8) {
@@ -437,7 +433,6 @@ void draw() {
     if(!canDrop){
       text("can't drop piece there", 950, 100);
     }
-  }
   textSize(30);
   if(Tutorial){
     switch(tutorialIndex){
