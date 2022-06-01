@@ -1,8 +1,10 @@
 public class King extends Piece {
- 
+
   public King(String x) {
     super(x);
     role="king";
+        display = "pawn.txt";
+
   }
   void calcPotential(int x, int y) {
     ArrayList<int[]> ans = new ArrayList();
@@ -40,4 +42,5 @@ public class King extends Piece {
     }
     potentialMoves=(ArrayList)ans.clone();
   }
+ 
 }
