@@ -85,7 +85,7 @@ public class Knight extends Piece{
   }
   void promote(){
     promoted=true;
-    role="promoted \n knight";
+    role="promoted\nknight";
   }
   void demote(){
     promoted=false;

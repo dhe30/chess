@@ -73,7 +73,7 @@ public class Bishop extends Piece{
   }
   void promote(){
     promoted=true;
-    role="promoted \n bishop";
+    role="promoted\nbishop";
   }
   void demote(){
     promoted=false;

@@ -85,7 +85,7 @@ public class Lance extends Piece {
   void promote() {
     promoted=true;
     isRoyal = true;
-    role="promoted \n lance";
+    role="promoted\nlance";
   }
   void demote(){
     promoted=false;

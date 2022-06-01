@@ -77,7 +77,7 @@ public class Pawn extends Piece{
   }
   void promote(){
     promoted=true;
-    role="promoted \n pawn";
+    role="promoted\npawn";
   }
   void demote(){
     promoted=false;

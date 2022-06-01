@@ -64,7 +64,7 @@ public class Rook extends Piece{
   }
   void promote(){
     promoted=true;
-    role="promoted \n rook";
+    role="promoted\nrook";
   }
   void demote(){
     promoted=false;
