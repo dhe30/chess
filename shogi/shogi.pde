@@ -301,16 +301,20 @@ void mouseClicked() {
       if(InitialSelected.size() == 1){
         InitialSelected.clear();
       } else {
-        for (int i = 0; i < Board.whiteCaptured.size(); i++) {
-          Piece piece = Board.whiteCaptured.get(i);
-          if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
-            InitialSelected.add(i);
+        if(Turn){
+          for (int i = 0; i < Board.whiteCaptured.size(); i++) {
+            Piece piece = Board.whiteCaptured.get(i);
+            if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
+              InitialSelected.add(i);
+            }
           }
         }
-        for (int i = 0; i < Board.blackCaptured.size(); i++) {
-          Piece piece = Board.blackCaptured.get(i);
-          if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
-            InitialSelected.add(i);
+        else{
+          for (int i = 0; i < Board.blackCaptured.size(); i++) {
+            Piece piece = Board.blackCaptured.get(i);
+            if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
+              InitialSelected.add(i);
+            }
           }
         }
       }
