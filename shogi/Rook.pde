@@ -119,11 +119,7 @@ public class Rook extends Piece {
       rect(x +20, y +14, 60, 50);
       triangle(x +20, y +64, x +80, y +64, x +50, y +94);
       fill(0);
-      if (promoted) {
-        fill(211, 4, 4);
-      }
-      x=x +35;
-      y=y +30;
+ 
       //int newRow = 0;
       //String store1 = "";
       //String store2= "";
@@ -139,10 +135,25 @@ public class Rook extends Piece {
       //  store2="";
       //}
 
-      for (int i = 1; i < lines.length; i++) {
-        for (int a = 0; a < lines[i].length(); a++) {
-          if (lines[i].charAt(a)=='1') {
-            rect(x + (a*2.2), y+(i*1.9), 2.2, 3.6);
+      if (promoted) {
+        fill(211, 4, 4);
+        x=x +30;
+        y=y +27;
+        for (int i = 1; i < lines.length; i++) {
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='1') {
+              rect(x + (a*2.6), y+(i*2.4), 2.6, 2.5);
+            }
+          }
+        }
+      } else {
+      x=x +35;
+      y=y +30;
+        for (int i = 1; i < lines.length; i++) {
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='1') {
+              rect(x + (a*2.2), y+(i*1.9), 2.2, 3.6);
+            }
           }
         }
       }
