@@ -75,10 +75,14 @@ public class Rook extends Piece {
   void promote(){
     promoted=true;
     role="promoted\nrook";
+        display = "promRook.txt";
+
   }
   void demote(){
     promoted=false;
     role="rook";
+        display = "rook.txt";
+
   }
   void displayPiece(int x, int y, boolean white, String line) {
     String[] lines = loadStrings(line);
