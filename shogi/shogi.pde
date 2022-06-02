@@ -459,13 +459,17 @@ void draw() {
     text("can't drop piece there", 950, 100);
   }
   if(onePlayer && !Turn){
-    count++;
-    System.out.println(count);
-     botMove();
-     Turn=true;
-  }
-  if(Turn){
-    count=0;
+    if(Board.blackCaptured.size()>2){
+      if(oneDrop()){
+        Turn=!Turn;
+      }
+      else{
+        botMove();
+        Turn=true;
+      }
+    }
+      botMove();
+      Turn=true;
   }
   fill(#b27e4d);
   rect(1200, 5, 430, 302);
@@ -572,6 +576,20 @@ void draw() {
     }
   }
 }
+boolean oneDrop(){
+  int index = (int)(Math.random()*Board.blackCaptured.size()-1);
+  for(int i = 0; i < 9; i++){
+    for(int j = 0; j < 9; j++){
+      if(Board.board[i][j].piece==null){
+        int rand = (int)(Math.random()*10);
+        if(Board.drop(index, i, j) && rand%2==0){
+          return true;
+         }
+      }
+    }
+  }
+  return false;
+}
 boolean botMove(){
   int xCor = (int)(Math.random()*9);
   int yCor = (int)(Math.random()*9);
@@ -581,11 +599,23 @@ boolean botMove(){
         ArrayList<int[]> lMoves = Board.legalMoves(yCor, xCor);
         for(int i = 0; i < lMoves.size(); i++){
           if(Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece!=null){
-            return Board.move(yCor, xCor, lMoves.get(i)[1], lMoves.get(i)[0]);
+            Board.move(yCor, xCor, lMoves.get(i)[1], lMoves.get(i)[0]);
+            if(lMoves.get(i)[1]>=6 && (Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("rook") || Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("bishop") || 
+            Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("pawn") || Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("lance") || 
+            Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("silver\ngeneral") || Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("knight"))){
+              Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.promote();
+            }
+            return true;
           }
         }
         int r = (int)(Math.random() * lMoves.size());
-        return Board.move(yCor, xCor, lMoves.get(r)[1], lMoves.get(r)[0]); 
+        Board.move(yCor, xCor, lMoves.get(r)[1], lMoves.get(r)[0]); 
+        if(lMoves.get(r)[1]>=6 && (Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("rook") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("bishop") || 
+            Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("pawn") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("lance") || 
+            Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("silver\ngeneral") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("knight"))){
+              Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.promote();
+            }
+        return true;
       }
       else{
         return botMove();
