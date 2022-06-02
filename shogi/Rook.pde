@@ -72,50 +72,58 @@ public class Rook extends Piece {
     potentialMoves=(ArrayList)ans.clone();
   }
 
-  void promote(){
+  void promote() {
     promoted=true;
     role="promoted\nrook";
-        display = "promRook.txt";
-
+    display = "promRook.txt";
   }
-  void demote(){
+  void demote() {
     promoted=false;
     role="rook";
-        display = "rook.txt";
-
+    display = "rook.txt";
   }
   void displayPiece(int x, int y, boolean white, String line) {
     String[] lines = loadStrings(line);
     if (white) {
-      fill(173,168,164);
-    rect(x*100+17, y*100+44, 60, 50);
-      triangle(x*100+17, y*100+44, x*100+77, y*100+44, x*100+47, y*100+14);
+      fill(173, 168, 164);
+      rect(x +17, y +44, 60, 50);
+      triangle(x +17, y +44, x +77, y +44, x +47, y +14);
       fill(255);
-      rect(x*100+20, y*100+40, 60, 50);
-      triangle(x*100+20, y*100+40, x*100+80, y*100+40, x*100+50, y*100+10);
+      rect(x +20, y +40, 60, 50);
+      triangle(x +20, y +40, x +80, y +40, x +50, y +10);
       fill(0);
-       if(promoted){
-        fill(211,4,4);
-      }
-      x=x*100+35;
-      y=y*100+38;
-      for (int i = 1; i < lines.length; i++) {
-        for (int a = 0; a < lines[i].length(); a++) {
-          if (lines[i].charAt(a)=='1') {
-            rect(x + (a*2.2), y+(i*1.9), 2.2, 3.6);
+      if (promoted) {
+        fill(211, 4, 4);
+        x=x +30;
+        y=y +38;
+        for (int i = 1; i < lines.length; i++) {
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='1') {
+              rect(x + (a*2.6), y+(i*2.4), 2.6, 2.5);
+            }
+          }
+        }
+      } else {
+        x=x +35;
+        y=y +38;
+        for (int i = 1; i < lines.length; i++) {
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='1') {
+              rect(x + (a*2.2), y+(i*1.9), 2.2, 3.6);
+            }
           }
         }
       }
     } else {
       fill(255);
-      rect(x*100+20, y*100+14, 60, 50);
-      triangle(x*100+20, y*100+64, x*100+80, y*100+64, x*100+50, y*100+94);
+      rect(x +20, y +14, 60, 50);
+      triangle(x +20, y +64, x +80, y +64, x +50, y +94);
       fill(0);
-      if(promoted){
-        fill(211,4,4);
+      if (promoted) {
+        fill(211, 4, 4);
       }
-      x=x*100+35;
-      y=y*100+30;
+      x=x +35;
+      y=y +30;
       //int newRow = 0;
       //String store1 = "";
       //String store2= "";

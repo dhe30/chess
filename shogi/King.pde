@@ -45,13 +45,13 @@ public class King extends Piece {
     String[] lines = loadStrings(line);
     if (white) {
       fill(173,168,164);
-   rect(x*100+17, y*100+44, 60, 50);
-      triangle(x*100+17, y*100+44, x*100+77, y*100+44, x*100+47, y*100+14);
+   rect(x +17, y +44, 60, 50);
+      triangle(x +17, y +44, x +77, y +44, x +47, y +14);
       fill(255);
-      rect(x*100+20, y*100+40, 60, 50);
-      triangle(x*100+20, y*100+40, x*100+80, y*100+40, x*100+50, y*100+10);
-      x=x*100+34;
-      y=y*100+40;
+      rect(x +20, y +40, 60, 50);
+      triangle(x +20, y +40, x +80, y +40, x +50, y +10);
+      x=x +34;
+      y=y +40;
       fill(0);
 
       for (int i = 1; i < lines.length; i++) {
@@ -63,10 +63,10 @@ public class King extends Piece {
       }
     } else {
       fill(255);
-      rect(x*100+20, y*100+10, 60, 50);
-      triangle(x*100+20, y*100+60, x*100+80, y*100+60, x*100+50, y*100+90);
-      x=x*100+35;
-      y=y*100+27;
+      rect(x +20, y +10, 60, 50);
+      triangle(x +20, y +60, x +80, y +60, x +50, y +90);
+      x=x +35;
+      y=y +27;
       //int newRow = 0;
       //String store1 = "";
       //String store2= "";

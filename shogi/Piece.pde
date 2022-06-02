@@ -38,15 +38,15 @@ public class Piece {
     String[] lines = loadStrings(line);
     if (white) {
       fill(173,168,164);
-    rect(x*100+17, y*100+44, 60, 50);
-      triangle(x*100+17, y*100+44, x*100+77, y*100+44, x*100+47, y*100+14);
+    rect(x+17, y+44, 60, 50);
+      triangle(x +17, y +44, x +77, y +44, x +47, y +14);
       fill(255);
-      rect(x*100+20, y*100+40, 60, 50);
-      triangle(x*100+20, y*100+40, x*100+80, y*100+40, x*100+50, y*100+10);
+      rect(x +20, y +40, 60, 50);
+      triangle(x +20, y +40, x +80, y +40, x +50, y +10);
       //strokeWeight(3);
       //stroke(144,142,140);
-      //line(x*100+21, y*100+40, x*100+21, y*100+90);
-      //      line(x*100+21, y*100+90, x*100+79, y*100+90);
+      //line(x +21, y +40, x +21, y +90);
+      //      line(x +21, y +90, x +79, y +90);
 
       //strokeWeight(0);
       //stroke(255, 0);
@@ -54,8 +54,8 @@ public class Piece {
       if (promoted) {
         fill(211, 4, 4);
       }
-      x=x*100+35;
-      y=y*100+38;
+      x=x +35;
+      y=y +38;
       for (int i = 1; i < lines.length; i++) {
         for (int a = 0; a < lines[i].length(); a++) {
           if (lines[i].charAt(a)=='1') {
@@ -67,14 +67,14 @@ public class Piece {
     } else {
       fill(255);
 
-      rect(x*100+20, y*100+10, 60, 50);
-      triangle(x*100+20, y*100+60, x*100+80, y*100+60, x*100+50, y*100+90);
+      rect(x +20, y +10, 60, 50);
+      triangle(x +20, y +60, x +80, y +60, x +50, y +90);
       fill(0);
       if (promoted) {
         fill(211, 4, 4);
       }
-      x=x*100+35;
-      y=y*100+26;
+      x=x +35;
+      y=y +26;
       // TO FLIP THE IMAGES
       //int newRow = 0;
       //String store1 = "";
