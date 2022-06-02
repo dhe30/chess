@@ -63,3 +63,9 @@ May 30:
 May 31:
 
     Samuel: fixed many aesthetic and minor issues
+
+    Daniel: added some kanji 
+
+June 1:
+
+    Daniel: added some more kanji and fixed their position, added threaten/ unthreaten to bot
