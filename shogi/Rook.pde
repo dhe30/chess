@@ -71,9 +71,14 @@ public class Rook extends Piece {
     }
     potentialMoves=(ArrayList)ans.clone();
   }
-  void promote() {
-    promoted=!promoted;
-    role="promoted \n rook";
+
+  void promote(){
+    promoted=true;
+    role="promoted\nrook";
+  }
+  void demote(){
+    promoted=false;
+    role="rook";
   }
   void displayPiece(int x, int y, boolean white, String line) {
     String[] lines = loadStrings(line);

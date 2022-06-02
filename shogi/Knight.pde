@@ -87,8 +87,12 @@ public class Knight extends Piece{
     potentialMoves=(ArrayList)ans.clone();
   }
   void promote(){
-    promoted=!promoted;
-    role="promoted \n knight";
+    promoted=true;
+    role="promoted\nknight";
+  }
+  void demote(){
+    promoted=false;
+    role="knight";
   }
   
 }

@@ -74,7 +74,11 @@ public class Bishop extends Piece{
     potentialMoves=(ArrayList)ans.clone();
   }
   void promote(){
-    promoted=!promoted;
-    role="promoted \n bishop";
+    promoted=true;
+    role="promoted\nbishop";
+  }
+  void demote(){
+    promoted=false;
+    role="bishop";
   }
 }

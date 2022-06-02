@@ -109,8 +109,12 @@ public class SilverGeneral extends Piece{
     potentialMoves=(ArrayList)ans.clone();
   }
   void promote(){
-    promoted=!promoted;
-    role="promoted \n silver \n general";
+    promoted=true;
+    role="promoted\nsilver\ngeneral";
   }
 
+  void demote(){
+    promoted=false;
+    role="silver \ngeneral";
+  }
 }
