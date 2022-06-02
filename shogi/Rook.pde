@@ -90,8 +90,8 @@ public class Rook extends Piece {
        if(promoted){
         fill(211,4,4);
       }
-      x=x*100+31;
-      y=y*100+30;
+      x=x*100+33;
+      y=y*100+33;
       for (int i = 1; i < lines.length; i++) {
         for (int a = 0; a < lines[i].length(); a++) {
           if (lines[i].charAt(a)=='1') {

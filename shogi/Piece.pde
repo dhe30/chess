@@ -65,6 +65,7 @@ if(promoted){
       }
       x=x*100+32;
       y=y*100+27;
+      // TO FLIP THE IMAGES
       //int newRow = 0;
       //String store1 = "";
       //String store2= "";
