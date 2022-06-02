@@ -59,3 +59,7 @@ May 28:
 May 30:
     
     Samuel: added a tutorial
+
+May 31:
+
+    Samuel: fixed many aesthetic and minor issues
