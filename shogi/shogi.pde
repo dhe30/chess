@@ -330,43 +330,7 @@ void mouseClicked() {
     }
   }
 }
-void displayRook(int x, int y, boolean white) {
-  String[] lines = loadStrings("rook.txt");
-  if (white) {
-    for (int i = 1; i < lines.length; i++) {
-      for (int a = 0; a < lines[i].length(); a++) {
-        if (lines[i].charAt(a)=='1') {
-          fill(0);
-          rect(x + (a*2.5), y+(i*2.2), 3.2, 3.2);
-        }
-      }
-    }
-  } else {
-    int newRow = 0;
-    String store1 = "";
-    String store2= "";
-    for (int i = 1; i <= lines.length / 2; i++) {
-      newRow = lines.length - i;
-      for (int a = lines[i].length() - 1; a >= 0; a--) {
-        store1 += lines[i].substring(a, a+1);
-        store2 += lines[newRow].substring(a, a+1);
-      }
-      lines[i] = store2;
-      lines[newRow] = store1;
-      store1="";
-      store2="";
-    }
 
-    for (int i = 1; i < lines.length; i++) {
-      for (int a = 0; a < lines[i].length(); a++) {
-        if (lines[i].charAt(a)=='1') {
-          fill(0);
-          rect(x + (a*2.5), y+(i*2.2), 3.2, 3.2);
-        }
-      }
-    }
-  }
-}
 void draw() {
   if (!Tutorial) {
     fill(252, 204, 156);
@@ -395,10 +359,10 @@ void draw() {
       }
     }
     fill(0);
-            ellipse(300,300,6,6);
-                        ellipse(300,600,6,6);
-            ellipse(600,300,6,6);
-                        ellipse(600,600,6,6);
+     ellipse(300,300,6,6);
+     ellipse(300,600,6,6);
+     ellipse(600,300,6,6);
+     ellipse(600,600,6,6);
 
 
 
@@ -700,7 +664,7 @@ public class board {
   ArrayList<int[]> blackCheckers = new ArrayList<int[]>(); // white pieces that check black king 
   ArrayList<int[]> whiteCheckers = new ArrayList<int[]>();
   ArrayList<int[]> supplementalThreats = new ArrayList<int[]>(); // king cannot move in a way that keeps it in check 
-  ArrayList<int[]> saveTheKing = new ArrayList<int[]>(); // tiles that can block check 
+  ArrayList<int[]> saveTheKing = new ArrayList<int[]>(); // tiles that can block check or kill 
   Tile[][] board = new Tile[9][9];
   public board() {
   }
