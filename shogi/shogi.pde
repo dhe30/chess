@@ -371,8 +371,8 @@ void draw() {
   if (!Tutorial) {
     fill(252, 204, 156);
     rect(0, 0, 900, 900);
-    strokeWeight(1);
-    stroke(0);
+    strokeWeight(3);
+    stroke(216, 185, 155);
     for (int i = 0; i <=9; i++) {
       line(100*i, 0, 100*i, 900);
       line(0, 100*i, 900, 100*i);
@@ -383,6 +383,8 @@ void draw() {
     fill(255);
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
+        fill(234, 193, 159);
+        rect(j*100+5, i*100+5, 90, 90);
         if (Board.board[i][j].piece!=null) {
           if (Board.board[i][j].piece.white==true) {
             Board.board[i][j].piece.displayPiece(j, i, true, Board.board[i][j].piece.display);
@@ -486,21 +488,21 @@ void draw() {
       if (oneDrop()) {
         Turn=!Turn;
         Board.revertPreviousPreventCheck();
-          Board.preventCheck();
-          Board.checkCheck();
+        Board.preventCheck();
+        Board.checkCheck();
       } else {
         botMove();
         Turn=true;
         Board.revertPreviousPreventCheck();
-          Board.preventCheck();
-          Board.checkCheck();
+        Board.preventCheck();
+        Board.checkCheck();
       }
     }
     botMove();
     Turn=true;
     Board.revertPreviousPreventCheck();
-          Board.preventCheck();
-          Board.checkCheck();
+    Board.preventCheck();
+    Board.checkCheck();
   }
   fill(#b27e4d);
   rect(1200, 5, 430, 302);
@@ -654,15 +656,15 @@ boolean botMove() {
         if (lMoves.get(r)[1]>=6 && (Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("rook") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("bishop") || 
           Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("pawn") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("lance") || 
           Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("silver\ngeneral") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("knight"))) {
-                        Board.unthreaten(lMoves.get(r)[1], lMoves.get(r)[0]);
+          Board.unthreaten(lMoves.get(r)[1], lMoves.get(r)[0]);
 
-            Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.promote();
+          Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.promote();
           if (Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.isRoyal) {
-                Board.royalPotential(lMoves.get(r)[1], lMoves.get(r)[0]);
-              } else {
-                Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.calcPotential(lMoves.get(r)[0], lMoves.get(r)[1]);
-              }
-              Board.threaten(lMoves.get(r)[1], lMoves.get(r)[0]);
+            Board.royalPotential(lMoves.get(r)[1], lMoves.get(r)[0]);
+          } else {
+            Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.calcPotential(lMoves.get(r)[0], lMoves.get(r)[1]);
+          }
+          Board.threaten(lMoves.get(r)[1], lMoves.get(r)[0]);
         }
         return true;
       } else {
@@ -1105,11 +1107,10 @@ public class board {
                 blackCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more black check");
-                                unthreaten(blackKingLocation[0],blackKingLocation[1]);
+                unthreaten(blackKingLocation[0], blackKingLocation[1]);
 
                 board[blackKingLocation[0]][blackKingLocation[1]].piece.calcPotential(blackKingLocation[1], blackKingLocation[0]);
-                                                threaten(blackKingLocation[0],blackKingLocation[1]);
-
+                threaten(blackKingLocation[0], blackKingLocation[1]);
               }
             }
           }
@@ -1133,10 +1134,9 @@ public class board {
                 whiteCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more white check");
-                unthreaten(whiteKingLocation[0],whiteKingLocation[1]);
+                unthreaten(whiteKingLocation[0], whiteKingLocation[1]);
                 board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[1], whiteKingLocation[0]); // DO NEXT: UNTHREATEN AND THEN THREATEN
-                                threaten(whiteKingLocation[0],whiteKingLocation[1]);
-
+                threaten(whiteKingLocation[0], whiteKingLocation[1]);
               }
             }
           }
