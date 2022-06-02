@@ -50,7 +50,7 @@ public class Piece {
 
       //strokeWeight(0);
       //stroke(255, 0);
-      fill(52, 51, 50);
+      fill(0);
       if (promoted) {
         fill(211, 4, 4);
       }

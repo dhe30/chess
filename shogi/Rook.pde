@@ -89,7 +89,7 @@ public class Rook extends Piece {
       fill(255);
       rect(x*100+20, y*100+40, 60, 50);
       triangle(x*100+20, y*100+40, x*100+80, y*100+40, x*100+50, y*100+10);
-      fill(52, 51, 50);
+      fill(0);
        if(promoted){
         fill(211,4,4);
       }
