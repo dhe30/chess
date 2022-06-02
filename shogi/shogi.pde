@@ -578,8 +578,14 @@ boolean botMove(){
   if(Board.board[yCor][xCor].piece!=null){
     if(!Board.board[yCor][xCor].piece.white){
       if(Board.legalMoves(yCor, xCor).size() > 0){
-        int r = (int)(Math.random() * Board.legalMoves(yCor, xCor).size());
-        return Board.move(yCor, xCor, Board.legalMoves(yCor, xCor).get(r)[1], Board.legalMoves(yCor, xCor).get(r)[0]); 
+        ArrayList<int[]> lMoves = Board.legalMoves(yCor, xCor);
+        for(int i = 0; i < lMoves.size(); i++){
+          if(Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece!=null){
+            return Board.move(yCor, xCor, lMoves.get(i)[1], lMoves.get(i)[0]);
+          }
+        }
+        int r = (int)(Math.random() * lMoves.size());
+        return Board.move(yCor, xCor, lMoves.get(r)[1], lMoves.get(r)[0]); 
       }
       else{
         return botMove();
