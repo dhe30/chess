@@ -330,7 +330,33 @@ void mouseClicked() {
     }
   }
 }
-
+void prayer(int x, int y){
+  String[] lines = loadStrings("lava.txt");
+  for (int i = 1; i < lines.length; i++) {
+        for (int a = 0; a < lines[i].length(); a++) {
+          if (lines[i].charAt(a)=='1') {  
+            fill(148,40,40);
+            rect(x + (a*3), y+(i*3), 3, 3);
+          } else if (lines[i].charAt(a)=='2') {  
+            fill(62,39,35);
+            rect(x + (a*3), y+(i*3), 3, 3);
+          }else if (lines[i].charAt(a)=='3') {  
+            fill(229,56,53);
+            rect(x + (a*3), y+(i*3), 3, 3);
+          }else if (lines[i].charAt(a)=='4') {  
+            fill(255,86,34);
+            rect(x + (a*3), y+(i*3), 3, 3);
+          }else if (lines[i].charAt(a)=='5') {  
+            fill(255,153,0);
+            rect(x + (a*3), y+(i*3), 3, 3);
+          }
+          else if (lines[i].charAt(a)=='6') {  
+            fill(191,54,12);
+            rect(x + (a*3), y+(i*3), 3, 3);
+          }
+        }
+      }
+}
 void draw() {
   if (!Tutorial) {
     fill(252, 204, 156);
