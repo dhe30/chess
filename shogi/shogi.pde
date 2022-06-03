@@ -14,6 +14,7 @@ boolean onePlayer=false;
 boolean showOnePlayer=true;
 int tutorialIndex=0;
 ArrayList<int[]> moves = new ArrayList<int[]>();
+ArrayList<int[]> blackCoors = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
 int count = 0;
 void setup() {
@@ -89,6 +90,10 @@ void setup() {
   for (int i = 0; i < Board.board.length; i++) {
     for (int a = 0; a < Board.board[i].length; a++) {
       if (Board.board[i][a].piece != null) {
+        if(!Board.board[i][a].piece.white){
+          int[] coor = {i, a};
+          blackCoors.add(coor);
+        }
         if (Board.board[i][a].piece.isRoyal) {
 
           Board.royalPotential(i, a);
@@ -98,6 +103,9 @@ void setup() {
         Board.threaten(i, a);
       }
     }
+  }
+  for(int i = 0; i < blackCoors.size(); i++){
+    System.out.println(Arrays.toString(blackCoors.get(i)));
   }
 }
 void keyPressed() {
@@ -400,7 +408,7 @@ void draw() {
     fill(0);
     text("Press 'T' for \ntutorial", 960, 120);
   }
-  if(showOnePlayer){
+  if(showOnePlayer && !Tutorial){
     fill(#6e2ad5, 150);
     rect(950, 180, 160, 100);
     fill(0);
@@ -459,26 +467,53 @@ void draw() {
     text("can't drop piece there", 950, 100);
   }
   if(onePlayer && !Turn){
-    if(Board.blackCaptured.size()>2){
-      if(oneDrop()){
-        Turn=!Turn;
-      }
-      else{
-        botMove();
-        Turn=true;
-      }
+    int highestVal=0;
+    int lMovesIndex=-1;
+    int blackCoorsIndex=-1;
+    for(int i = 0; i < blackCoors.size(); i++){
+       System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
+       ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
+       for(int j = 0; j < lMoves.size(); j++){
+         if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
+           if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value>highestVal){
+             highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
+             lMovesIndex=j;
+             blackCoorsIndex=i;
+           }
+         }
+       }
     }
+    if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
+      ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[1], blackCoors.get(blackCoorsIndex)[0]);
+      Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
+      Turn=!Turn;
+    }
+    else{
       botMove();
-      Turn=true;
+      Turn=!Turn;
+    }
+    //if(Board.blackCaptured.size()>2){
+    //  if(oneDrop()){
+    //    Turn=!Turn;
+    //  }
+    //  else{
+    //    botMove();
+    //    Turn=true;
+    //  }
+    //}
+    //botMove();
+    //Turn=true;
   }
-  fill(#b27e4d);
-  rect(1200, 5, 430, 302);
-  stroke(0);
-  strokeWeight(1);
-  line(1420, 5, 1420, 305);
-  line(1520, 5, 1520, 305);
-  for(int i = 0; i < 9; i++){
-    line(1200, i*30+35, 1630, i*30+35);
+  if(!Tutorial){
+    fill(#b27e4d);
+    rect(1200, 5, 430, 302);
+    stroke(0);
+    strokeWeight(1);
+    line(1420, 5, 1420, 305);
+    line(1520, 5, 1520, 305);
+    for(int i = 0; i < 9; i++){
+      line(1200, i*30+35, 1630, i*30+35);
+    }
   }
   if(moves.size()>10){
     moves.remove(0);
@@ -768,9 +803,9 @@ public class board {
       }
     }
     if (kill || block) {
-      System.out.println("KILL: " + kill + " BLOCK: " + block);
+     // System.out.println("KILL: " + kill + " BLOCK: " + block);
       for (int i = 0; i < saveTheKing.size(); i++) {
-        System.out.println("TARGETS: " + saveTheKing.get(i)[0] + " " + saveTheKing.get(i)[1]);
+      //  System.out.println("TARGETS: " + saveTheKing.get(i)[0] + " " + saveTheKing.get(i)[1]);
       }
       return false;
     }
@@ -787,7 +822,7 @@ public class board {
   int restrictedIndex(int x, int y) {
     for (int i = 0; i < restricted.size(); i++) {
       if (restricted.get(i)[0] == x && restricted.get(i)[1] == y) {
-        System.out.println("YOU MOVED: " + restricted.get(i)[0] + " " + restricted.get(i)[1]);
+        //System.out.println("YOU MOVED: " + restricted.get(i)[0] + " " + restricted.get(i)[1]);
         return i;
       }
     }
@@ -873,7 +908,7 @@ public class board {
       for(int i = 0; i < restricted.size(); i++){
         answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
       }
-      System.out.println("NEW RESTRICTED" + answ);
+      //System.out.println("NEW RESTRICTED" + answ);
       }
     }
     boolean isLegal=false;
@@ -1111,7 +1146,7 @@ public class board {
       } else {
         for (int i = 0; i < ans.size(); i++) {
           Tile tile = board[ans.get(i)[1]][ans.get(i)[0]];
-          System.out.println("King at: " + x + " " + y + " Move " + i + ": " + ans.get(i)[1] + " " + ans.get(i)[0] + " white threats: " + board[ans.get(i)[1]][ans.get(i)[0]].whiteThreatened );
+         // System.out.println("King at: " + x + " " + y + " Move " + i + ": " + ans.get(i)[1] + " " + ans.get(i)[0] + " white threats: " + board[ans.get(i)[1]][ans.get(i)[0]].whiteThreatened );
           System.out.println(tile.whiteThreatened);
           if (tile.whiteThreatened > 0 || (tile.piece != null && !tile.piece.white)) {
             ans.remove(i);
