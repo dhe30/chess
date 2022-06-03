@@ -484,7 +484,7 @@ void draw() {
        }
     }
     if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
-      ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[1], blackCoors.get(blackCoorsIndex)[0]);
+      ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
       Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
       Turn=!Turn;
     }
@@ -503,6 +503,17 @@ void draw() {
     //}
     //botMove();
     //Turn=true;
+  }
+  blackCoors.clear();
+  for (int i = 0; i < Board.board.length; i++) {
+    for (int a = 0; a < Board.board[i].length; a++) {
+      if (Board.board[i][a].piece != null) {
+        if(!Board.board[i][a].piece.white){
+          int[] coor = {i, a};
+          blackCoors.add(coor);
+        }
+      }
+    }
   }
   if(!Tutorial){
     fill(#b27e4d);
