@@ -40,7 +40,11 @@ public class Piece {
       fill(173,168,164);
     rect(x+17, y+44, 60, 50);
       triangle(x +17, y +44, x +77, y +44, x +47, y +14);
-      fill(255);
+            fill(255);
+
+      if(Theme.equals("Hell")){
+        fill(255,225,214);
+      }
       rect(x +20, y +40, 60, 50);
       triangle(x +20, y +40, x +80, y +40, x +50, y +10);
       //strokeWeight(3);
@@ -69,7 +73,9 @@ public class Piece {
       rect(x +17, y +13, 60, 50);
       triangle(x +17, y +63, x +77, y +63, x +47, y +93);
       fill(255);
-
+if(Theme.equals("Hell")){
+        fill(255,225,214);
+      }
       rect(x +20, y +10, 60, 50);
       triangle(x +20, y +60, x +80, y +60, x +50, y +90);
       fill(0);

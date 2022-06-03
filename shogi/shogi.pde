@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 board Board;
+String Theme = "Traditional";
 boolean Test = false;
 ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
 boolean Turn = true;
@@ -101,6 +102,13 @@ void setup() {
   }
 }
 void keyPressed() {
+  if (key == 'u') {
+    if (Theme.equals("Traditional")) {
+      Theme = "Hell";
+    } else if (Theme.equals("Hell")) {
+      Theme = "Traditional";
+    }
+  }
   if (Tutorial) {
     if (key== '2') {
       tutorialIndex++;
@@ -188,7 +196,7 @@ void mouseClicked() {
           fill(252, 204, 156);
           strokeWeight(1);
           stroke(0);
-          rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
+          //rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
           // array logic
           boolean didMove = Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
           if (InitialSelected.get(1)==mouseY/100) {
@@ -281,7 +289,7 @@ void mouseClicked() {
           fill(252, 204, 156);
           strokeWeight(1);
           stroke(0);
-          rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+          //rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
           if (!piece.canPromote) {
             InitialSelected.clear();
             if (didMove) {
@@ -330,42 +338,53 @@ void mouseClicked() {
     }
   }
 }
-void prayer(int x, int y){
+void prayer(int x, int y, int weight) {
   String[] lines = loadStrings("lava.txt");
   for (int i = 1; i < lines.length; i++) {
-        for (int a = 0; a < lines[i].length(); a++) {
-          if (lines[i].charAt(a)=='1') {  
-            fill(148,40,40);
-            rect(x + (a*3), y+(i*3), 3, 3);
-          } else if (lines[i].charAt(a)=='2') {  
-            fill(62,39,35);
-            rect(x + (a*3), y+(i*3), 3, 3);
-          }else if (lines[i].charAt(a)=='3') {  
-            fill(229,56,53);
-            rect(x + (a*3), y+(i*3), 3, 3);
-          }else if (lines[i].charAt(a)=='4') {  
-            fill(255,86,34);
-            rect(x + (a*3), y+(i*3), 3, 3);
-          }else if (lines[i].charAt(a)=='5') {  
-            fill(255,153,0);
-            rect(x + (a*3), y+(i*3), 3, 3);
-          }
-          else if (lines[i].charAt(a)=='6') {  
-            fill(191,54,12);
-            rect(x + (a*3), y+(i*3), 3, 3);
-          }
-        }
+    for (int a = 0; a < lines[i].length(); a++) {
+      if (lines[i].charAt(a)=='1') {  
+        fill(148, 40, 40);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='2') {  
+        fill(62, 39, 35);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='3') {  
+        fill(229, 56, 53);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='4') {  
+        fill(255, 86, 34);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='5') {  
+        fill(255, 153, 0);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='6') {  
+        fill(191, 54, 12);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
       }
+    }
+  }
 }
 void draw() {
   if (!Tutorial) {
-    fill(252, 204, 156);
+    if (Theme.equals("Traditional")) {
+      fill(252, 204, 156);
+      rect(0, 0, 900, 900);
+    } else if (Theme.equals("Hell")) {
+      fill(0);
     rect(0, 0, 900, 900);
+    }
+    
     strokeWeight(3);
     stroke(216, 185, 155);
     for (int i = 0; i <=9; i++) {
-      line(100*i, 0, 100*i, 900);
-      line(0, 100*i, 900, 100*i);
+      if (Theme.equals("Traditional")) {
+        line(100*i, 0, 100*i, 900);
+        line(0, 100*i, 900, 100*i);
+      } else if (Theme.equals("Hell")) {
+        stroke(130, 138, 131);
+        line(100*i, 0, 100*i, 900);
+        line(0, 100*i, 900, 100*i);
+      }
     }
     strokeWeight(0);
     stroke(255, 0);
@@ -373,8 +392,14 @@ void draw() {
     fill(255);
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
-        fill(234, 193, 159);
-        rect(j*100+5, i*100+5, 90, 90);
+        if (Theme.equals("Traditional")) {
+          fill(234, 193, 159);
+          rect(j*100+5, i*100+5, 90, 90);
+        } else         if (Theme.equals("Hell")) {
+          prayer(j*100+3, i*100, 5);
+        }
+
+
         if (Board.board[i][j].piece!=null) {
           if (Board.board[i][j].piece.white==true) {
             Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
@@ -385,13 +410,10 @@ void draw() {
       }
     }
     fill(0);
-     ellipse(300,300,6,6);
-     ellipse(300,600,6,6);
-     ellipse(600,300,6,6);
-     ellipse(600,600,6,6);
-
-
-
+    ellipse(300, 300, 6, 6);
+    ellipse(300, 600, 6, 6);
+    ellipse(600, 300, 6, 6);
+    ellipse(600, 600, 6, 6);
   }
   fill(180);
   rect(900, 0, 1500, 900);
@@ -429,11 +451,17 @@ void draw() {
   if (InitialSelected.size() > 1 && selected) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
+    if (Theme.equals("Hell")){
+      fill(0);
+      fill(222,217,215,150);
+    }
     for (int i = 0; i < list.size(); i++) {
       int x = list.get(i)[0];
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
     }
+        fill(20, 50);
+
     rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
   } else if (showPromote) {
     fill(20, 50);
@@ -450,7 +478,7 @@ void draw() {
 
     //rect(x*100+950, j*100+640, 60, 50);
     //triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
-    Board.whiteCaptured.get(i).displayPiece(x*100+950 -17,j*100+640 -44,true, Board.whiteCaptured.get(i).display);
+    Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -44, true, Board.whiteCaptured.get(i).display);
     Board.whiteCaptured.get(i).x=x*100+950;
     Board.whiteCaptured.get(i).y=j*100+640;
     //fill(0);
@@ -466,7 +494,7 @@ void draw() {
     //fill(255);
     //rect(x*100+950, j*100+310, 60, 50);
     //triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
-        Board.blackCaptured.get(i).displayPiece(x*100+950 -20,j*100+310 -10,false, Board.blackCaptured.get(i).display);
+    Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
 
     Board.blackCaptured.get(i).x=x*100+950;
     Board.blackCaptured.get(i).y=j*100+310;
@@ -609,8 +637,10 @@ void draw() {
       break;
     }
   }
+  strokeWeight(0);
+  stroke(255, 0);
   fill(255);
-  rect(1000, 100, 3, 3);
+  prayer(1000, 100, 5);  
   fill(0);
 }
 boolean oneDrop() {
