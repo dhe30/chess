@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 board Board;
+String Theme = "Traditional";
 boolean Test = false;
 ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
 boolean Turn = true;
@@ -10,9 +11,12 @@ boolean sameRow=false;
 boolean canDrop=true;
 boolean Tutorial=false;
 boolean showTutorial=true;
+boolean onePlayer=false;
+boolean showOnePlayer=true;
 int tutorialIndex=0;
 ArrayList<int[]> moves = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
+int count = 0;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -98,19 +102,31 @@ void setup() {
   }
 }
 void keyPressed() {
-  if(Tutorial){
-    if(key== '2'){
+  if (key == 'u') {
+    if (Theme.equals("Traditional")) {
+      Theme = "Hell";
+    } else if (Theme.equals("Hell")) {
+      Theme = "Traditional";
+    }
+  }
+  if (Tutorial) {
+    if (key== '2') {
       tutorialIndex++;
     }
-    if(key== '1'){
+    if (key== '1') {
       tutorialIndex--;
-      if(tutorialIndex<0){
+      if (tutorialIndex<0) {
         tutorialIndex=0;
       }
     }
   }
-  if(key=='t'){
+  if (key=='t') {
     Tutorial=true;
+    showTutorial=false;
+  }
+  if (key=='l') {
+    onePlayer=true;
+    showOnePlayer=false;
     showTutorial=false;
   }
   if (key == ' ') {
@@ -149,6 +165,7 @@ void keyPressed() {
 }
 void mouseClicked() {
   showTutorial=false;
+  showOnePlayer=false;
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
   if (Test) {
     if (Board.board[mouseY / 100][mouseX / 100].piece != null) {
@@ -179,9 +196,9 @@ void mouseClicked() {
           fill(252, 204, 156);
           strokeWeight(1);
           stroke(0);
-          rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
+          //rect(mouseX / 100*100, mouseY / 100*100, 100, 100);
           // array logic
-          Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
+          boolean didMove = Board.move(InitialSelected.get(1), InitialSelected.get(0), mouseY / 100, mouseX / 100);
           if (InitialSelected.get(1)==mouseY/100) {
             sameRow=true;
           }
@@ -193,7 +210,7 @@ void mouseClicked() {
             if (Board.board[0][i].piece!=null) {
               if (Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))) {
                 Board.board[0][i].piece.promote();
-                if(Board.board[0][i].piece.canPromote){
+                if (Board.board[0][i].piece.canPromote) {
                   Board.board[0][i].piece.canPromote();
                 }
               }
@@ -219,7 +236,7 @@ void mouseClicked() {
             if (Board.board[8][i].piece!=null) {
               if (!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))) {
                 Board.board[8][i].piece.promote();
-                if(Board.board[8][i].piece.canPromote){
+                if (Board.board[8][i].piece.canPromote) {
                   Board.board[8][i].piece.canPromote();
                 }
               }
@@ -272,18 +289,19 @@ void mouseClicked() {
           fill(252, 204, 156);
           strokeWeight(1);
           stroke(0);
-          rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+          //rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
           if (!piece.canPromote) {
             InitialSelected.clear();
-            Turn = !Turn;
+            if (didMove) {
+              Turn = !Turn;
+            }
             System.out.println("Love");
             Board.revertPreviousPreventCheck();
             Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
             Board.checkCheck();
           }
         }
-      }
-      else if(InitialSelected.size()==1){
+      } else if (InitialSelected.size()==1) {
         canDrop=true;
         if (Board.drop(InitialSelected.get(0), mouseX/100, mouseY/100)==false) {
           canDrop=false;
@@ -298,18 +316,17 @@ void mouseClicked() {
       }
     } else {
       canDrop=true;
-      if(InitialSelected.size() == 1){
+      if (InitialSelected.size() == 1) {
         InitialSelected.clear();
       } else {
-        if(Turn){
+        if (Turn) {
           for (int i = 0; i < Board.whiteCaptured.size(); i++) {
             Piece piece = Board.whiteCaptured.get(i);
             if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
               InitialSelected.add(i);
             }
           }
-        }
-        else{
+        } else {
           for (int i = 0; i < Board.blackCaptured.size(); i++) {
             Piece piece = Board.blackCaptured.get(i);
             if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
@@ -321,52 +338,88 @@ void mouseClicked() {
     }
   }
 }
+void prayer(int x, int y, int weight) {
+  String[] lines = loadStrings("lava.txt");
+  for (int i = 1; i < lines.length; i++) {
+    for (int a = 0; a < lines[i].length(); a++) {
+      if (lines[i].charAt(a)=='1') {  
+        fill(148, 40, 40);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='2') {  
+        fill(62, 39, 35);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='3') {  
+        fill(229, 56, 53);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='4') {  
+        fill(255, 86, 34);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='5') {  
+        fill(255, 153, 0);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      } else if (lines[i].charAt(a)=='6') {  
+        fill(191, 54, 12);
+        rect(x + (a*weight + 3.5), y+(i*weight), weight + 3.5, weight + 0.5);
+      }
+    }
+  }
+}
 void draw() {
-  if(!Tutorial){
-    fill(252, 204, 156);
+  if (!Tutorial) {
+    if (Theme.equals("Traditional")) {
+      fill(252, 204, 156);
+      rect(0, 0, 900, 900);
+    } else if (Theme.equals("Hell")) {
+      fill(0);
     rect(0, 0, 900, 900);
-    strokeWeight(1);
-    stroke(0);
+    }
+    
+    strokeWeight(3);
+    stroke(216, 185, 155);
     for (int i = 0; i <=9; i++) {
-      line(100*i, 0, 100*i, 900);
-      line(0, 100*i, 900, 100*i);
+      if (Theme.equals("Traditional")) {
+        line(100*i, 0, 100*i, 900);
+        line(0, 100*i, 900, 100*i);
+      } else if (Theme.equals("Hell")) {
+        stroke(130, 138, 131);
+        line(100*i, 0, 100*i, 900);
+        line(0, 100*i, 900, 100*i);
+      }
     }
     strokeWeight(0);
     stroke(255, 0);
     textSize(12);
     fill(255);
-    /*
-    rect(1000, 50, 200, 200);
-     fill(0);
-     text(xcoor + "", 1100, 100);
-     text(ycoor + "", 1150, 100);
-     fill(255);
-     */
-     for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
+        if (Theme.equals("Traditional")) {
+          fill(234, 193, 159);
+          rect(j*100+5, i*100+5, 90, 90);
+        } else         if (Theme.equals("Hell")) {
+          prayer(j*100+3, i*100, 5);
+        }
+
+
         if (Board.board[i][j].piece!=null) {
           if (Board.board[i][j].piece.white==true) {
-            rect(j*100+20, i*100+40, 60, 50);
-            triangle(j*100+20, i*100+40, j*100+80, i*100+40, j*100+50, i*100+10);
-            fill(0);
-            text(Board.board[i][j].piece.role, j*100+30, i*100+55);
-            fill(255);
+            Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
           } else {
-            rect(j*100+20, i*100+10, 60, 50);
-            triangle(j*100+20, i*100+60, j*100+80, i*100+60, j*100+50, i*100+90);
-            fill(0);
-            text(Board.board[i][j].piece.role, j*100+30, i*100+45);
-            fill(255);
+            Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
           }
         }
       }
     }
+    fill(0);
+    ellipse(300, 300, 6, 6);
+    ellipse(300, 600, 6, 6);
+    ellipse(600, 300, 6, 6);
+    ellipse(600, 600, 6, 6);
   }
   fill(180);
   rect(900, 0, 1500, 900);
   fill(0);
   textSize(20);
-  if(!Tutorial){
+  if (!Tutorial) {
     if (Turn) {
       text("white's turn", 950, 50);
     } else {
@@ -383,20 +436,35 @@ void draw() {
     textSize(20);
     text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
   }
-  if(showTutorial){
+  if (showTutorial) {
     fill(3, 186, 252, 150);
     rect(950, 100, 160, 70);
     fill(0);
-    text("Press 'T' \n for tutorial", 960, 120);
+    text("Press 'T' for \ntutorial", 960, 120);
   }
-  if (InitialSelected.size() > 1) {
+  if (showOnePlayer) {
+    fill(#6e2ad5, 150);
+    rect(950, 180, 160, 100);
+    fill(0);
+    text("Press 'L' \nfor one \nplayer mode", 960, 200);
+  }
+  if (InitialSelected.size() > 1 && selected) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
+    if (Theme.equals("Hell")){
+      fill(0);
+      fill(222,217,215,150);
+    }
     for (int i = 0; i < list.size(); i++) {
       int x = list.get(i)[0];
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
     }
+        fill(20, 50);
+
+    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+  } else if (showPromote) {
+    fill(20, 50);
     rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
   }
   textSize(12);
@@ -407,12 +475,14 @@ void draw() {
     }
     int j=i/8;
     fill(255);
-    rect(x*100+950, j*100+640, 60, 50);
-    triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
+
+    //rect(x*100+950, j*100+640, 60, 50);
+    //triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
+    Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -44, true, Board.whiteCaptured.get(i).display);
     Board.whiteCaptured.get(i).x=x*100+950;
     Board.whiteCaptured.get(i).y=j*100+640;
-    fill(0);
-    text(Board.whiteCaptured.get(i).role, x*100+960, j*100+655);
+    //fill(0);
+    //text(Board.whiteCaptured.get(i).role, x*100+960, j*100+655);
     x++;
   }
   x=0;
@@ -421,25 +491,47 @@ void draw() {
       x=0;
     }
     int j=i/8;
-    fill(255);
-    rect(x*100+950, j*100+310, 60, 50);
-    triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
+    //fill(255);
+    //rect(x*100+950, j*100+310, 60, 50);
+    //triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
+    Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
+
     Board.blackCaptured.get(i).x=x*100+950;
     Board.blackCaptured.get(i).y=j*100+310;
-    fill(0);
-    text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
+    //fill(0);
+    //text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
     x++;
   }
-  if(InitialSelected.size()==1){
-    if(Turn){
+  if (InitialSelected.size()==1) {
+    if (Turn) {
       text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
-    }
-    else{
+    } else {
       text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
     }
   }
-  if(!canDrop){
+  if (!canDrop) {
     text("can't drop piece there", 950, 100);
+  }
+  if (onePlayer && !Turn) {
+    if (Board.blackCaptured.size()>2) {
+      if (oneDrop()) {
+        Turn=!Turn;
+        Board.revertPreviousPreventCheck();
+        Board.preventCheck();
+        Board.checkCheck();
+      } else {
+        botMove();
+        Turn=true;
+        Board.revertPreviousPreventCheck();
+        Board.preventCheck();
+        Board.checkCheck();
+      }
+    }
+    botMove();
+    Turn=true;
+    Board.revertPreviousPreventCheck();
+    Board.preventCheck();
+    Board.checkCheck();
   }
   fill(#b27e4d);
   rect(1200, 5, 430, 302);
@@ -447,103 +539,173 @@ void draw() {
   strokeWeight(1);
   line(1420, 5, 1420, 305);
   line(1520, 5, 1520, 305);
-  for(int i = 0; i < 9; i++){
+  for (int i = 0; i < 9; i++) {
     line(1200, i*30+35, 1630, i*30+35);
   }
-  if(moves.size()>10){
+  if (moves.size()>10) {
     moves.remove(0);
   }
-  if(pieceMoved.size()>10){
+  if (pieceMoved.size()>10) {
     pieceMoved.remove(0);
   }
-  for(int i = moves.size()-1; i >= 0; i--){
+  for (int i = moves.size()-1; i >= 0; i--) {
     fill(0);
     text(pieceMoved.get(i), 1210, i*30+35);
     text(moves.get(i)[0], 1430, i*30+35);
     text(moves.get(i)[1], 1530, i*30+35);
   }
   textSize(30);
-  if(Tutorial){
-    switch(tutorialIndex){
-      case 0:
-        PImage pawn = loadImage("pawn.jpg");
-        image(pawn, 0, 0, 900, 900); 
-        text("pawns move like normal pawns \nbut can't move two spaces on the first move \nand can't capture diagonally. \nThey can only capture what is right in front of them", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 1: 
-        PImage rook = loadImage("rook.jpg");
-        image(rook, 0, 0, 900, 900);
-        text("rook moves like a rook...not much else to say", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 2:
-        PImage bishop = loadImage("bishop.jpg");
-        image(bishop, 0, 0, 900, 900);
-        text("bishop moves like a bishop...what a surprise", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 3:
-        PImage lance = loadImage("lance.jpg");
-        image(lance, 0, 0, 900, 900);
-        text("lance moves like a rook \nbut only forwards", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 4:
-        PImage knight = loadImage("knight.jpg");
-        image(knight, 0, 0, 900, 900);
-        text("knight moves similar to a normal knight \nbut only forwards", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 5:
-        PImage silverGeneral = loadImage("silverGeneral.jpg");
-        image(silverGeneral, 0, 0, 900, 900);
-        text("silver general can move diagonally forwards one space, \nforward one space, \nor diagonally backward once space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 6:
-        PImage goldGeneral = loadImage("goldGeneral.jpg");
-        image(goldGeneral, 0, 0, 900, 900);
-        text("gold generals can move diagonally forwards one space, \nforwards one space, \nsideways one space, \nor backwards one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 7:
-        PImage king = loadImage("king.jpg");
-        image(king, 0, 0, 900, 900);
-        text("king is a king", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 8:
-        PImage promotedPawn = loadImage("promotedPawn.jpg");
-        image(promotedPawn, 0, 0, 450, 450);
-        PImage promotedLance = loadImage("promotedLance.jpg");
-        image(promotedLance, 450, 0, 450, 450);
-        PImage promotedKnight = loadImage("promotedKnight.jpg");
-        image(promotedKnight, 0, 450, 450, 450);
-        PImage promotedSilverGeneral = loadImage("promotedSilverGeneral.jpg");
-        image(promotedSilverGeneral, 450, 450, 450, 450);
-        text("promoted pawn, lance, knight, and silver general \nall move like a gold general", 950, 50);
-        textSize(14);
-        text("yes i know they're not in line screenshotting is hard ok", 950, 400);
-        textSize(30);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 9: 
-        PImage promotedRook = loadImage("promotedRook.jpg");
-        image(promotedRook, 0, 0, 900, 900);
-        text("promoted rook moves like a normal rook \nbut can also move in any diagonal direction one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 10:
-        PImage promotedBishop = loadImage("promotedBishop.jpg");
-        image(promotedBishop, 0, 0, 900, 900);
-        text("Similar to promoted rook, \npromoted bishop can move like a normal bishop \nbut can also move up, down, left, or right one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 11:
-        Tutorial=false;
-        break;
+  if (Tutorial) {
+    switch(tutorialIndex) {
+    case 0:
+      PImage pawn = loadImage("pawn.jpg");
+      image(pawn, 0, 0, 900, 900); 
+      text("pawns move like normal pawns \nbut can't move two spaces on the first move \nand can't capture diagonally. \nThey can only capture what is right in front of them", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 1: 
+      PImage rook = loadImage("rook.jpg");
+      image(rook, 0, 0, 900, 900);
+      text("rook moves like a rook...not much else to say", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 2:
+      PImage bishop = loadImage("bishop.jpg");
+      image(bishop, 0, 0, 900, 900);
+      text("bishop moves like a bishop...what a surprise", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 3:
+      PImage lance = loadImage("lance.jpg");
+      image(lance, 0, 0, 900, 900);
+      text("lance moves like a rook \nbut only forwards", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 4:
+      PImage knight = loadImage("knight.jpg");
+      image(knight, 0, 0, 900, 900);
+      text("knight moves similar to a normal knight \nbut only forwards", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 5:
+      PImage silverGeneral = loadImage("silverGeneral.jpg");
+      image(silverGeneral, 0, 0, 900, 900);
+      text("silver general can move diagonally forwards one space, \nforward one space, \nor diagonally backward once space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 6:
+      PImage goldGeneral = loadImage("goldGeneral.jpg");
+      image(goldGeneral, 0, 0, 900, 900);
+      text("gold generals can move diagonally forwards one space, \nforwards one space, \nsideways one space, \nor backwards one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 7:
+      PImage king = loadImage("king.jpg");
+      image(king, 0, 0, 900, 900);
+      text("king is a king", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 8:
+      PImage promotedPawn = loadImage("promotedPawn.jpg");
+      image(promotedPawn, 0, 0, 450, 450);
+      PImage promotedLance = loadImage("promotedLance.jpg");
+      image(promotedLance, 450, 0, 450, 450);
+      PImage promotedKnight = loadImage("promotedKnight.jpg");
+      image(promotedKnight, 0, 450, 450, 450);
+      PImage promotedSilverGeneral = loadImage("promotedSilverGeneral.jpg");
+      image(promotedSilverGeneral, 450, 450, 450, 450);
+      text("promoted pawn, lance, knight, and silver general \nall move like a gold general", 950, 50);
+      textSize(14);
+      text("yes i know they're not in line screenshotting is hard ok", 950, 400);
+      textSize(30);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 9: 
+      PImage promotedRook = loadImage("promotedRook.jpg");
+      image(promotedRook, 0, 0, 900, 900);
+      text("promoted rook moves like a normal rook \nbut can also move in any diagonal direction one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 10:
+      PImage promotedBishop = loadImage("promotedBishop.jpg");
+      image(promotedBishop, 0, 0, 900, 900);
+      text("Similar to promoted rook, \npromoted bishop can move like a normal bishop \nbut can also move up, down, left, or right one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 11:
+      Tutorial=false;
+      break;
     }
+  }
+  strokeWeight(0);
+  stroke(255, 0);
+  fill(255);
+  prayer(1000, 100, 5);  
+  fill(0);
+}
+boolean oneDrop() {
+  int index = (int)(Math.random()*Board.blackCaptured.size()-1);
+  for (int i = 0; i < 9; i++) {
+    for (int j = 0; j < 9; j++) {
+      if (Board.board[i][j].piece==null) {
+        int rand = (int)(Math.random()*10);
+        if (Board.drop(index, i, j) && rand%2==0) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+boolean botMove() {
+  int xCor = (int)(Math.random()*9);
+  int yCor = (int)(Math.random()*9);
+  if (Board.board[yCor][xCor].piece!=null) {
+    if (!Board.board[yCor][xCor].piece.white) {
+      if (Board.legalMoves(yCor, xCor).size() > 0) {
+        ArrayList<int[]> lMoves = Board.legalMoves(yCor, xCor);
+        for (int i = 0; i < lMoves.size(); i++) {
+          if (Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece!=null) {
+            Board.move(yCor, xCor, lMoves.get(i)[1], lMoves.get(i)[0]);
+            if (lMoves.get(i)[1]>=6 && (Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("rook") || Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("bishop") || 
+              Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("pawn") || Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("lance") || 
+              Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("silver\ngeneral") || Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.role.equals("knight"))) {
+              Board.unthreaten(lMoves.get(i)[1], lMoves.get(i)[0]);
+              Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.promote();
+              if (Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.isRoyal) {
+                Board.royalPotential(lMoves.get(i)[1], lMoves.get(i)[0]);
+              } else {
+                Board.board[lMoves.get(i)[1]][lMoves.get(i)[0]].piece.calcPotential(lMoves.get(i)[0], lMoves.get(i)[1]);
+              }
+              Board.threaten(lMoves.get(i)[1], lMoves.get(i)[0]);
+            }
+            return true;
+          }
+        }
+        int r = (int)(Math.random() * lMoves.size());
+        Board.move(yCor, xCor, lMoves.get(r)[1], lMoves.get(r)[0]); 
+        if (lMoves.get(r)[1]>=6 && (Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("rook") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("bishop") || 
+          Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("pawn") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("lance") || 
+          Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("silver\ngeneral") || Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.role.equals("knight"))) {
+          Board.unthreaten(lMoves.get(r)[1], lMoves.get(r)[0]);
+
+          Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.promote();
+          if (Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.isRoyal) {
+            Board.royalPotential(lMoves.get(r)[1], lMoves.get(r)[0]);
+          } else {
+            Board.board[lMoves.get(r)[1]][lMoves.get(r)[0]].piece.calcPotential(lMoves.get(r)[0], lMoves.get(r)[1]);
+          }
+          Board.threaten(lMoves.get(r)[1], lMoves.get(r)[0]);
+        }
+        return true;
+      } else {
+        return botMove();
+      }
+    } else {
+      return botMove();
+    }
+  } else {
+    return botMove();
   }
 }
 public class board {
@@ -558,7 +720,7 @@ public class board {
   ArrayList<int[]> blackCheckers = new ArrayList<int[]>(); // white pieces that check black king 
   ArrayList<int[]> whiteCheckers = new ArrayList<int[]>();
   ArrayList<int[]> supplementalThreats = new ArrayList<int[]>(); // king cannot move in a way that keeps it in check 
-  ArrayList<int[]> saveTheKing = new ArrayList<int[]>(); // tiles that can block check 
+  ArrayList<int[]> saveTheKing = new ArrayList<int[]>(); // tiles that can block check or kill 
   Tile[][] board = new Tile[9][9];
   public board() {
   }
@@ -715,9 +877,9 @@ public class board {
       return false;
     } else {
       if (Turn) {
-        for(int i = 0; i < 9; i++){
-          if(board[i][x1].piece!=null){
-            if(board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white){
+        for (int i = 0; i < 9; i++) {
+          if (board[i][x1].piece!=null) {
+            if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
               return false;
             }
           }
@@ -744,11 +906,10 @@ public class board {
           }
         }  
         return true;
-      }
-      else{
-        for(int i = 0; i < 9; i++){
-          if(board[i][x1].piece!=null){
-            if(board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white){
+      } else {
+        for (int i = 0; i < 9; i++) {
+          if (board[i][x1].piece!=null) {
+            if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
               return false;
             }
           }
@@ -778,7 +939,7 @@ public class board {
       }
     }
   }
-  void move(int x, int y, int x1, int y1) {
+  boolean move(int x, int y, int x1, int y1) {
     // update restricted if x y is found inside 
     // MOVE this if statement when x1 and y1 are passed through unchecked and are potentially illegal
     if (restricted.size() > 0) {
@@ -787,86 +948,98 @@ public class board {
         restricted.remove(index);
         restricted.add(new int[]{x1, y1});
         String answ ="";
-      for(int i = 0; i < restricted.size(); i++){
-        answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
-      }
-      System.out.println("NEW RESTRICTED" + answ);
+        for (int i = 0; i < restricted.size(); i++) {
+          answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
+        }
+        System.out.println("NEW RESTRICTED" + answ);
       }
     }
-    // if there is a piece on other tile, move to Captured array 
-    if (board[x1][y1].piece!=null) {
-      if (board[x1][y1].piece.white==true) {
-        board[x1][y1].piece.demote();
-        blackCaptured.add(board[x1][y1].piece);
+    boolean isLegal=false;
+    ArrayList<int[]> lMoves = legalMoves(x, y);
+    for (int i = 0; i < lMoves.size(); i++) {
+      int[] abc = {y1, x1};
+      if (Arrays.equals(lMoves.get(i), abc)) {
+        isLegal=true;
+      }
+    }
+    if (isLegal) {
+      // if there is a piece on other tile, move to Captured array 
+      if (board[x1][y1].piece!=null) {
+        if (board[x1][y1].piece.white==true) {
+          board[x1][y1].piece.demote();
+          blackCaptured.add(board[x1][y1].piece);
+        } else {
+          board[x1][y1].piece.demote();
+          whiteCaptured.add(board[x1][y1].piece);
+        }
+      }
+      // UNTHREATEN BOTH 
+      // NEED TO UNTHREATEN other tile
+      unthreaten(x, y);
+      if (board[x1][y1].piece != null) {
+
+        unthreaten(x1, y1);
+      }
+      // move current piece to other tile, set current tile's piece to null
+      board[x1][y1].setPiece(board[x][y].piece);
+      board[x][y].setPiece(null);
+      int[] move = {x1, y1};
+      moves.add(move);
+      if (board[x1][y1].piece.white) {
+        String r = board[x1][y1].piece.role.replace("\n", " ");
+        pieceMoved.add("white " + r);
       } else {
-        board[x1][y1].piece.demote();
-        whiteCaptured.add(board[x1][y1].piece);
+        String r = board[x1][y1].piece.role.replace("\n", " ");
+        pieceMoved.add("black " + r);
       }
-    }
-    // UNTHREATEN BOTH 
-    // NEED TO UNTHREATEN other tile
-    unthreaten(x, y);
-    if (board[x1][y1].piece != null) {
+      // recalculate royal pieces' moves only if current piece had been blocking them 
+      if (board[x][y].royalThreats.size() > 0) {
+        ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
+        for (int i = 0; i < temp.size(); i++) {
 
-      unthreaten(x1, y1);
-    }
-    // move current piece to other tile, set current tile's piece to null
-    board[x1][y1].setPiece(board[x][y].piece);
-    board[x][y].setPiece(null);
-    int[] move = {x1, y1};
-    moves.add(move);
-    if(board[x1][y1].piece.white){
-      String r = board[x1][y1].piece.role.replace("\n", " ");
-      pieceMoved.add("white " + r);
-    }
-    else{
-      String r = board[x1][y1].piece.role.replace("\n", " ");
-      pieceMoved.add("black " + r);
-    }
-    // recalculate royal pieces' moves only if current piece had been blocking them 
-    if (board[x][y].royalThreats.size() > 0) {
-      ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
-      for (int i = 0; i < temp.size(); i++) {
-
-        unthreaten(temp.get(i)[0], temp.get(i)[1]);
-        royalPotential(temp.get(i)[0], temp.get(i)[1]);
-        threaten(temp.get(i)[0], temp.get(i)[1]);
+          unthreaten(temp.get(i)[0], temp.get(i)[1]);
+          royalPotential(temp.get(i)[0], temp.get(i)[1]);
+          threaten(temp.get(i)[0], temp.get(i)[1]);
+        }
       }
-    }
-    // if current is royal, recalculate moves
-    if (board[x1][y1].piece.isRoyal) {
-      royalPotential(x1, y1); // x then y because move parameters are given in row major order
-      // MOVE OUT OF IF STATEMENT when threaten is generalized
+      // if current is royal, recalculate moves
+      if (board[x1][y1].piece.isRoyal) {
+        royalPotential(x1, y1); // x then y because move parameters are given in row major order
+        // MOVE OUT OF IF STATEMENT when threaten is generalized
+      } else {
+        board[x1][y1].piece.calcPotential(y1, x1);
+      }
+      threaten(x1, y1);
+      // current is now moved and may be blocking royals, recalculate royals' moves if so  
+      if (board[x1][y1].royalThreats.size() > 0) {
+        ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
+        for (int i = 0; i < temp.size(); i++) {
+          //coordinate pair [0],[1] because r.T is in RMO
+
+          unthreaten(temp.get(i)[0], temp.get(i)[1]);
+          royalPotential(temp.get(i)[0], temp.get(i)[1]);
+          threaten(temp.get(i)[0], temp.get(i)[1]);
+        }
+      }
+      // check if orginal coors were king's Location 
+      if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
+        whiteKingLocation[0] = x1;
+        whiteKingLocation[1] = y1;
+        whiteCheck = false; 
+        System.out.println("White King moved, not in check");
+        saveTheKing.clear();
+        whiteCheckers.clear(); // white should only be able to move in directions that are never threatened
+      } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
+        blackKingLocation[0] = x1;
+        blackKingLocation[1] = y1;
+        blackCheck = false; 
+        System.out.println("Black King moved, not in check");
+        saveTheKing.clear();
+        blackCheckers.clear();
+      }
+      return true;
     } else {
-      board[x1][y1].piece.calcPotential(y1, x1);
-    }
-    threaten(x1, y1);
-    // current is now moved and may be blocking royals, recalculate royals' moves if so  
-    if (board[x1][y1].royalThreats.size() > 0) {
-      ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
-      for (int i = 0; i < temp.size(); i++) {
-        //coordinate pair [0],[1] because r.T is in RMO
-
-        unthreaten(temp.get(i)[0], temp.get(i)[1]);
-        royalPotential(temp.get(i)[0], temp.get(i)[1]);
-        threaten(temp.get(i)[0], temp.get(i)[1]);
-      }
-    }
-    // check if orginal coors were king's Location 
-    if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
-      whiteKingLocation[0] = x1;
-      whiteKingLocation[1] = y1;
-      whiteCheck = false; 
-      System.out.println("White King moved, not in check");
-      saveTheKing.clear();
-      whiteCheckers.clear(); // white should only be able to move in directions that are never threatened
-    } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
-      blackKingLocation[0] = x1;
-      blackKingLocation[1] = y1;
-      blackCheck = false; 
-      System.out.println("Black King moved, not in check");
-      saveTheKing.clear();
-      blackCheckers.clear();
+      return false;
     }
     // check if enemy king is in check
     //if (Turn) {
@@ -943,7 +1116,7 @@ public class board {
     }
   }
   void unthreaten(int x, int y) {
-    
+
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       if (board[x][y].piece.isRoyal) {
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
@@ -965,7 +1138,10 @@ public class board {
                 blackCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more black check");
+                unthreaten(blackKingLocation[0], blackKingLocation[1]);
+
                 board[blackKingLocation[0]][blackKingLocation[1]].piece.calcPotential(blackKingLocation[1], blackKingLocation[0]);
+                threaten(blackKingLocation[0], blackKingLocation[1]);
               }
             }
           }
@@ -989,7 +1165,9 @@ public class board {
                 whiteCheck = false;
                 saveTheKing.clear(); // MAY BE BUGGY 
                 System.out.println("NO more white check");
-                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[1], whiteKingLocation[0]); // DO NEXT: UNTHREATEN AND THEN THREATEN 
+                unthreaten(whiteKingLocation[0], whiteKingLocation[1]);
+                board[whiteKingLocation[0]][whiteKingLocation[1]].piece.calcPotential(whiteKingLocation[1], whiteKingLocation[0]); // DO NEXT: UNTHREATEN AND THEN THREATEN
+                threaten(whiteKingLocation[0], whiteKingLocation[1]);
               }
             }
           }
@@ -1175,12 +1353,10 @@ public class board {
                 i--;
                 // set new Potential
               }
-
-              
             }
             restricted.add(new int[]{pX, pY});
-              board[pX][pY].piece.setPotential(restriction);
-              look = false;
+            board[pX][pY].piece.setPotential(restriction);
+            look = false;
           }
         } else {
           //  System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
@@ -1243,12 +1419,10 @@ public class board {
               i--;
               // set new Potential
             }
-
-           
           }
-           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          restricted.add(new int[]{pX, pY});
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           //  System.out.println("Enemy on the horizon! BUT THEY DONT HIT");
           look = false;
@@ -1303,11 +1477,10 @@ public class board {
               i--;
               // set new Potential
             }
-           
           }
-           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          restricted.add(new int[]{pX, pY});
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1361,11 +1534,10 @@ public class board {
               i--;
               // set new Potential
             }
-           
           }
-           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          restricted.add(new int[]{pX, pY});
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1419,11 +1591,10 @@ public class board {
               i--;
               // set new Potential
             }
-            
           }
           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1478,11 +1649,10 @@ public class board {
               i--;
               // set new Potential
             }
-            
           }
           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1539,8 +1709,8 @@ public class board {
             }
           }
           restricted.add(new int[]{pX, pY});
-            board[pX][pY].piece.setPotential(restriction);
-            look = false;
+          board[pX][pY].piece.setPotential(restriction);
+          look = false;
         } else {
           look = false;
         }
@@ -1580,7 +1750,7 @@ public class board {
     }
     if (restricted.size() > 0) {
       String answ ="";
-      for(int i = 0; i < restricted.size(); i++){
+      for (int i = 0; i < restricted.size(); i++) {
         answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
       }
       System.out.println("RESTRICTED BEING PROCESSED: " + answ);
