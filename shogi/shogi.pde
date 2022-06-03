@@ -371,9 +371,9 @@ void draw() {
       rect(0, 0, 900, 900);
     } else if (Theme.equals("Hell")) {
       fill(0);
-    rect(0, 0, 900, 900);
+      rect(0, 0, 900, 900);
     }
-    
+
     strokeWeight(3);
     stroke(216, 185, 155);
     for (int i = 0; i <=9; i++) {
@@ -451,16 +451,16 @@ void draw() {
   if (InitialSelected.size() > 1 && selected) {
     ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
     fill(20, 50);
-    if (Theme.equals("Hell")){
+    if (Theme.equals("Hell")) {
       fill(0);
-      fill(222,217,215,150);
+      fill(222, 217, 215, 150);
     }
     for (int i = 0; i < list.size(); i++) {
       int x = list.get(i)[0];
       int y = list.get(i)[1];
       circle(x*100 + 50, y*100+50, 30);
     }
-        fill(20, 50);
+    fill(20, 50);
 
     rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
   } else if (showPromote) {
@@ -640,7 +640,6 @@ void draw() {
   strokeWeight(0);
   stroke(255, 0);
   fill(255);
-  prayer(1000, 100, 5);  
   fill(0);
 }
 boolean oneDrop() {
@@ -877,10 +876,15 @@ public class board {
       return false;
     } else {
       if (Turn) {
-        for (int i = 0; i < 9; i++) {
-          if (board[i][x1].piece!=null) {
-            if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
-              return false;
+        if (whiteCaptured.get(x).role.equals("pawn")) {
+          if(y1 > 6){
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
+                return false;
+              }
             }
           }
         }
@@ -896,6 +900,7 @@ public class board {
           threaten(y1, x1);
         } else {
           board[y1][x1].piece.calcPotential(x1, y1);
+          threaten(y1, x1);
         }
         if (board[y1][x1].royalThreats.size() > 0) {
           ArrayList<int[]> temp = (ArrayList)board[y1][x1].royalThreats.clone();
@@ -926,6 +931,7 @@ public class board {
           threaten(y1, x1);
         } else {
           board[y1][x1].piece.calcPotential(x1, y1);
+          threaten(y1, x1);
         }
         if (board[y1][x1].royalThreats.size() > 0) {
           ArrayList<int[]> temp = (ArrayList)board[y1][x1].royalThreats.clone();
