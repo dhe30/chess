@@ -877,7 +877,7 @@ public class board {
     } else {
       if (Turn) {
         if (whiteCaptured.get(x).role.equals("pawn")) {
-          if(y1 > 6){
+          if (y1 > 6) {
             return false;
           }
           for (int i = 0; i < 9; i++) {
@@ -912,10 +912,15 @@ public class board {
         }  
         return true;
       } else {
-        for (int i = 0; i < 9; i++) {
-          if (board[i][x1].piece!=null) {
-            if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
-              return false;
+        if (blackCaptured.get(x).role.equals("pawn")) {
+          if (y1 < 2) {
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
+                return false;
+              }
             }
           }
         }
