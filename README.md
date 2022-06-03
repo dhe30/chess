@@ -69,3 +69,7 @@ May 31:
 June 1:
 
     Daniel: added some more kanji and fixed their position, added threaten/ unthreaten to bot
+
+June 2: 
+
+    Daniel: added lava theme 
