@@ -476,9 +476,18 @@ void draw() {
        for(int j = 0; j < lMoves.size(); j++){
          if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
            if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value>highestVal){
-             highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
-             lMovesIndex=j;
-             blackCoorsIndex=i;
+             if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].whiteThreatened>0){
+               if(Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece.value<Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value){
+                 highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
+                 lMovesIndex=j;
+                 blackCoorsIndex=i;
+               }
+             }
+             else{
+               highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
+               lMovesIndex=j;
+               blackCoorsIndex=i;
+             }
            }
          }
        }
