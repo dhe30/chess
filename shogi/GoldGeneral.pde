@@ -2,6 +2,7 @@ public class GoldGeneral extends Piece{
   public GoldGeneral(String x){
     super(x);
     role="gold\nGeneral";
+    value=8;
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();

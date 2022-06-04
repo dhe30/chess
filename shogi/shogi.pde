@@ -467,31 +467,72 @@ void draw() {
     text("can't drop piece there", 950, 100);
   }
   if(onePlayer && !Turn){
+    //int highestVal=0;
+    //int lMovesIndex=-1;
+    //int blackCoorsIndex=-1;
+    //for(int i = 0; i < blackCoors.size(); i++){
+    //   System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
+    //   ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
+    //   for(int j = 0; j < lMoves.size(); j++){
+    //     if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
+    //       if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value>highestVal){
+    //         if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].whiteThreatened>0){
+    //           if(Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece.value<=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value){
+    //             highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
+    //             lMovesIndex=j;
+    //             blackCoorsIndex=i;
+    //           }
+    //         }
+    //         else{
+    //           highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
+    //           lMovesIndex=j;
+    //           blackCoorsIndex=i;
+    //         }
+    //       }
+    //     }
+    //   }
+    //}
+    //if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
+    //  ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
+    //  Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
+    //  Turn=!Turn;
+    //}
+    //else{
+    //  botMove();
+    //  Turn=!Turn;
+    //}
     int highestVal=0;
+    int currentVal=0;
     int lMovesIndex=-1;
     int blackCoorsIndex=-1;
     for(int i = 0; i < blackCoors.size(); i++){
        System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
        ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
+       System.out.println("didnt break");
        for(int j = 0; j < lMoves.size(); j++){
+         Piece piece=null;
          if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
-           if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value>highestVal){
-             if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].whiteThreatened>0){
-               if(Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece.value<Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value){
-                 highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
-                 lMovesIndex=j;
-                 blackCoorsIndex=i;
-               }
-             }
-             else{
-               highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
-               lMovesIndex=j;
-               blackCoorsIndex=i;
+           piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
+           currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
+         }
+         Board.move(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
+         for(int y = 0; y < 9; y++){
+           for(int z = 0; z < 9; z++){
+             if(Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null){
+               currentVal+=Board.board[y][z].piece.value;
              }
            }
          }
+         if(currentVal>highestVal){
+           highestVal=currentVal;
+           lMovesIndex=j;
+           blackCoorsIndex=i;
+         }
+         Board.move(lMoves.get(j)[1],lMoves.get(j)[0], blackCoors.get(i)[1], blackCoors.get(i)[0]);
+         Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
        }
     }
+    System.out.println("ended for loop");
     if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
       ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
       Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
@@ -501,17 +542,6 @@ void draw() {
       botMove();
       Turn=!Turn;
     }
-    //if(Board.blackCaptured.size()>2){
-    //  if(oneDrop()){
-    //    Turn=!Turn;
-    //  }
-    //  else{
-    //    botMove();
-    //    Turn=true;
-    //  }
-    //}
-    //botMove();
-    //Turn=true;
   }
   blackCoors.clear();
   for (int i = 0; i < Board.board.length; i++) {

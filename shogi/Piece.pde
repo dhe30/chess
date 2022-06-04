@@ -1,5 +1,6 @@
 public class Piece {
   int x,y;
+  int value;
   String role;
   boolean white;
   boolean promoted = false;

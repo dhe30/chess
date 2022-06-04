@@ -3,6 +3,7 @@ public class Rook extends Piece{
     super(x);
     role="rook";
     isRoyal=true;
+    value=10;
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
@@ -65,9 +66,11 @@ public class Rook extends Piece{
   void promote(){
     promoted=true;
     role="promoted\nrook";
+    value=20;
   }
   void demote(){
     promoted=false;
     role="rook";
+    value=10;
   }
 }

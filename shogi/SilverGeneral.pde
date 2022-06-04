@@ -2,6 +2,7 @@ public class SilverGeneral extends Piece{
   public SilverGeneral(String x){
     super(x);
     role="silver\nGeneral";
+    value=7;
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
@@ -110,9 +111,11 @@ public class SilverGeneral extends Piece{
   void promote(){
     promoted=true;
     role="promoted \n silver \n general";
+    value=8;
   }
   void demote(){
     promoted=false;
     role="silver \ngeneral";
+    value=7;
   }
 }

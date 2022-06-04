@@ -3,6 +3,7 @@ public class King extends Piece {
   public King(String x) {
     super(x);
     role="king";
+    value=100;
   }
   void calcPotential(int x, int y) {
     ArrayList<int[]> ans = new ArrayList();
