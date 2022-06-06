@@ -63,3 +63,11 @@ May 30:
 May 31:
 
     Samuel: fixed many aesthetic and minor issues
+
+June 1: 
+
+    Samuel: made chessBot using random moves
+
+June 3: 
+
+    Samuel: Made chessBot be smart by checking every possible move and attacks most valuable piece
