@@ -566,12 +566,14 @@ void draw() {
        //System.out.println("didnt break");
        for(int j = 0; j < lMoves.size(); j++){
          Piece piece=null;
+         boolean addedPiece=false;
          if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
            piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
            currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
+           addedPiece=true;
          }
          //System.out.println("move" + i);
-         Board.move(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
+         Board.moveX(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
          //System.out.println("move" + i + " didnt break");
          for(int y = 0; y < 9; y++){
            for(int z = 0; z < 9; z++){
@@ -589,9 +591,12 @@ void draw() {
          Board.moveX(lMoves.get(j)[1],lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
          Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
          currentVal=0;
+         if(addedPiece){
+           Board.blackCaptured.remove(Board.blackCaptured.size()-1);
+         }
        }
     }
-    System.out.println("ended for loop");
+    //System.out.println("ended for loop");
     if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
       ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
       Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
@@ -1088,15 +1093,6 @@ public class board {
       // move current piece to other tile, set current tile's piece to null
       board[x1][y1].setPiece(board[x][y].piece);
       board[x][y].setPiece(null);
-      int[] move = {x1, y1};
-      moves.add(move);
-      if (board[x1][y1].piece.white) {
-        String r = board[x1][y1].piece.role.replace("\n", " ");
-        pieceMoved.add("white " + r);
-      } else {
-        String r = board[x1][y1].piece.role.replace("\n", " ");
-        pieceMoved.add("black " + r);
-      }
       // recalculate royal pieces' moves only if current piece had been blocking them 
       if (board[x][y].royalThreats.size() > 0) {
         ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
