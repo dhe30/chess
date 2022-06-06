@@ -2,6 +2,7 @@ public class SilverGeneral extends Piece{
   public SilverGeneral(String x){
     super(x);
     role="silver\nGeneral";
+    value=7;
     display = "silver.txt";
   }
   void calcPotential(int x, int y){
@@ -110,11 +111,13 @@ public class SilverGeneral extends Piece{
   }
   void promote(){
     promoted=true;
+    value=8;
     role="promoted\nsilver\ngeneral";
   }
 
   void demote(){
     promoted=false;
     role="silver \ngeneral";
+    value=7;
   }
 }
