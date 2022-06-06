@@ -1,8 +1,10 @@
 public class GoldGeneral extends Piece{
+
   public GoldGeneral(String x){
     super(x);
     role="gold\nGeneral";
     value=8;
+    display = "gold.txt";
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();

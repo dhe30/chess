@@ -4,6 +4,7 @@ public class Bishop extends Piece{
     role="bishop";
     isRoyal=true;
     value=10;
+    display = "bishop.txt";
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
