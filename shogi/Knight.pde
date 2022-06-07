@@ -3,6 +3,7 @@ public class Knight extends Piece {
   public Knight(String x) {
     super(x);
     role="knight";
+    value=5;
     display = "horse.txt";
   }
   void calcPotential(int x, int y) {
@@ -85,11 +86,13 @@ public class Knight extends Piece {
   void promote() {
     promoted=true;
     role="promoted\nknight";
+    value=8;
     display = "promHorse.txt";
   }
   void demote() {
     promoted=false;
     role="knight";
+    value=6;
     display = "horse.txt";
   }
   void displayPiece(int x, int y, boolean white, String line) {

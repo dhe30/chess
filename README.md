@@ -64,12 +64,21 @@ May 31:
 
     Samuel: fixed many aesthetic and minor issues
 
+<<<<<<< HEAD
     Daniel: added some kanji 
 
 June 1:
 
     Daniel: added some more kanji and fixed their position, added threaten/ unthreaten to bot
+    
+    Samuel: made chessBot using random moves
 
 June 2: 
 
     Daniel: added lava theme 
+
+
+June 3: 
+
+    Samuel: Made chessBot be smart by checking every possible move and attacks most valuable piece
+

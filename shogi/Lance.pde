@@ -4,8 +4,8 @@ public class Lance extends Piece {
     super(x);
     role="lance";
     isRoyal=true;
-        display = "lance.txt";
-
+    value=3;
+    display = "lance.txt";
   }
   void calcPotential(int x, int y) {
     ArrayList<int[]> ans = new ArrayList();
@@ -89,11 +89,13 @@ public class Lance extends Piece {
     promoted=true;
     isRoyal = true;
     role="promoted\nlance";
+    value=8;
   }
   void demote(){
     promoted=false;
     isRoyal=true;
     role="lance";
+    value=3;
   }
 
 }

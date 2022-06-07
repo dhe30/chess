@@ -3,6 +3,7 @@ public class King extends Piece {
   public King(String x) {
     super(x);
     role="king";
+    value=100;
     display = "king.txt";
   }
   void calcPotential(int x, int y) {

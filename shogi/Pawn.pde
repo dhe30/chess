@@ -3,8 +3,8 @@ public class Pawn extends Piece {
   public Pawn(String x) {
     super(x);
     role="pawn";
-        display = "pawn.txt";
-
+    value=1;
+    display = "pawn.txt";
   }
   void calcPotential(int x, int y) {
     ArrayList<int[]> ans = new ArrayList();
@@ -79,10 +79,12 @@ public class Pawn extends Piece {
   void promote(){
     promoted=true;
     role="promoted\npawn";
+    value=8;
   }
   void demote(){
     promoted=false;
     role="pawn";
+    value=1;
   }
 
 }

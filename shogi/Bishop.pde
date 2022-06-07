@@ -3,8 +3,8 @@ public class Bishop extends Piece{
     super(x);
     role="bishop";
     isRoyal=true;
-        display = "bishop.txt";
-
+    value=10;
+    display = "bishop.txt";
   }
   void calcPotential(int x, int y){
     ArrayList<int[]> ans = new ArrayList();
@@ -76,9 +76,11 @@ public class Bishop extends Piece{
   void promote(){
     promoted=true;
     role="promoted\nbishop";
+    value=20;
   }
   void demote(){
     promoted=false;
     role="bishop";
+    value=10;
   }
 }

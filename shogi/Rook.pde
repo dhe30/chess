@@ -4,6 +4,7 @@ public class Rook extends Piece {
     super(x);
     role="rook";
     isRoyal=true;
+    value=10;
     display = "rook.txt";
   }
   void calcPotential(int x, int y) {
@@ -75,11 +76,13 @@ public class Rook extends Piece {
   void promote() {
     promoted=true;
     role="promoted\nrook";
+    value=20;
     display = "promRook.txt";
   }
   void demote() {
     promoted=false;
     role="rook";
+    value=10;
     display = "rook.txt";
   }
   void displayPiece(int x, int y, boolean white, String line) {
