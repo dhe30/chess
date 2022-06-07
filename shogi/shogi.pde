@@ -521,73 +521,31 @@ void draw() {
     text("can't drop piece there", 950, 100);
   }
   if(onePlayer && !Turn){
-    int highestVal=0;
-    int lMovesIndex=-1;
-    int blackCoorsIndex=-1;
-    for(int i = 0; i < blackCoors.size(); i++){
-       System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
-       ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
-       for(int j = 0; j < lMoves.size(); j++){
-         if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
-           if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value>highestVal){
-             if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].whiteThreatened>0){
-               if(Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece.value<=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value){
-                 highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
-                 lMovesIndex=j;
-                 blackCoorsIndex=i;
-               }
-             }
-             else{
-               highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
-               lMovesIndex=j;
-               blackCoorsIndex=i;
-             }
-           }
-         }
-       }
-    }
-    if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
-      ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
-      Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
-      Turn=!Turn;
-    }
-    else{
-      botMove();
-      Turn=!Turn;
-    }
-    
     //int highestVal=0;
-    //int currentVal=0;
     //int lMovesIndex=-1;
     //int blackCoorsIndex=-1;
     //for(int i = 0; i < blackCoors.size(); i++){
     //   System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
     //   ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
-    //   System.out.println("didnt break");
     //   for(int j = 0; j < lMoves.size(); j++){
-    //     Piece piece=null;
     //     if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
-    //       piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
-    //       currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
-    //     }
-    //     Board.move(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
-    //     for(int y = 0; y < 9; y++){
-    //       for(int z = 0; z < 9; z++){
-    //         if(Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null){
-    //           currentVal+=Board.board[y][z].piece.value;
+    //       if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value>highestVal){
+    //         if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].whiteThreatened>0){
+    //           if(Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece.value<=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value){
+    //             highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
+    //             lMovesIndex=j;
+    //             blackCoorsIndex=i;
+    //           }
+    //         }
+    //         else{
+    //           highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
+    //           lMovesIndex=j;
+    //           blackCoorsIndex=i;
     //         }
     //       }
     //     }
-    //     if(currentVal>highestVal){
-    //       highestVal=currentVal;
-    //       lMovesIndex=j;
-    //       blackCoorsIndex=i;
-    //     }
-    //     Board.move(lMoves.get(j)[1],lMoves.get(j)[0], blackCoors.get(i)[1], blackCoors.get(i)[0]);
-    //     Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
     //   }
     //}
-    //System.out.println("ended for loop");
     //if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
     //  ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
     //  Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
@@ -597,6 +555,57 @@ void draw() {
     //  botMove();
     //  Turn=!Turn;
     //}
+    
+    int highestVal=0;
+    int currentVal=0;
+    int lMovesIndex=-1;
+    int blackCoorsIndex=-1;
+    for(int i = 0; i < blackCoors.size(); i++){
+       //System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
+       ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
+       //System.out.println("didnt break");
+       for(int j = 0; j < lMoves.size(); j++){
+         Piece piece=null;
+         boolean addedPiece=false;
+         if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
+           piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
+           currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
+           addedPiece=true;
+         }
+         //System.out.println("move" + i);
+         Board.moveX(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
+         //System.out.println("move" + i + " didnt break");
+         for(int y = 0; y < 9; y++){
+           for(int z = 0; z < 9; z++){
+             if(Board.board[y][z].blackThreatened>0 && Board.board[y][z].piece!=null){
+               currentVal+=Board.board[y][z].piece.value;
+             }
+           }
+         }
+         if(currentVal>highestVal){
+           System.out.println(currentVal);
+           highestVal=currentVal;
+           lMovesIndex=j;
+           blackCoorsIndex=i;
+         }
+         Board.moveX(lMoves.get(j)[1],lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
+         Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
+         currentVal=0;
+         if(addedPiece){
+           Board.blackCaptured.remove(Board.blackCaptured.size()-1);
+         }
+       }
+    }
+    //System.out.println("ended for loop");
+    if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
+      ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
+      Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
+      Turn=!Turn;
+    }
+    else{
+      botMove();
+      Turn=!Turn;
+    }
   }
   blackCoors.clear();
   for (int i = 0; i < Board.board.length; i++) {
@@ -1048,6 +1057,88 @@ public class board {
         return true;
       }
     }
+  }
+  boolean moveX(int x, int y, int x1, int y1){
+    // update restricted if x y is found inside 
+    // MOVE this if statement when x1 and y1 are passed through unchecked and are potentially illegal
+    if (restricted.size() > 0) {
+      int index = restrictedIndex(x, y);
+      if (index != -1) {
+        restricted.remove(index);
+        restricted.add(new int[]{x1, y1});
+        String answ ="";
+      for(int i = 0; i < restricted.size(); i++){
+        answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
+      }
+      //System.out.println("NEW RESTRICTED" + answ);
+      }
+    }
+      // if there is a piece on other tile, move to Captured array 
+      if (board[x1][y1].piece!=null) {
+        if (board[x1][y1].piece.white==true) {
+          board[x1][y1].piece.demote();
+          blackCaptured.add(board[x1][y1].piece);
+        } else {
+          board[x1][y1].piece.demote();
+          whiteCaptured.add(board[x1][y1].piece);
+        }
+      }
+      // UNTHREATEN BOTH 
+      // NEED TO UNTHREATEN other tile
+      unthreaten(x, y);
+      if (board[x1][y1].piece != null) {
+
+        unthreaten(x1, y1);
+      }
+      // move current piece to other tile, set current tile's piece to null
+      board[x1][y1].setPiece(board[x][y].piece);
+      board[x][y].setPiece(null);
+      // recalculate royal pieces' moves only if current piece had been blocking them 
+      if (board[x][y].royalThreats.size() > 0) {
+        ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
+        for (int i = 0; i < temp.size(); i++) {
+
+          unthreaten(temp.get(i)[0], temp.get(i)[1]);
+          royalPotential(temp.get(i)[0], temp.get(i)[1]);
+          threaten(temp.get(i)[0], temp.get(i)[1]);
+        }
+      }
+      // if current is royal, recalculate moves
+      if (board[x1][y1].piece.isRoyal) {
+        royalPotential(x1, y1); // x then y because move parameters are given in row major order
+        // MOVE OUT OF IF STATEMENT when threaten is generalized
+      } else {
+        board[x1][y1].piece.calcPotential(y1, x1);
+      }
+      threaten(x1, y1);
+      // current is now moved and may be blocking royals, recalculate royals' moves if so  
+      if (board[x1][y1].royalThreats.size() > 0) {
+        ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
+        for (int i = 0; i < temp.size(); i++) {
+          //coordinate pair [0],[1] because r.T is in RMO
+
+          unthreaten(temp.get(i)[0], temp.get(i)[1]);
+          royalPotential(temp.get(i)[0], temp.get(i)[1]);
+          threaten(temp.get(i)[0], temp.get(i)[1]);
+        }
+      }
+      // check if orginal coors were king's Location 
+      if (board[x1][y1].piece.white && x == whiteKingLocation[0] && y == whiteKingLocation[1]) {
+        whiteKingLocation[0] = x1;
+        whiteKingLocation[1] = y1;
+        whiteCheck = false; 
+        System.out.println("White King moved, not in check");
+        saveTheKing.clear();
+        whiteCheckers.clear(); // white should only be able to move in directions that are never threatened
+      } else if (x == blackKingLocation[0] && y == blackKingLocation[1]) {
+        blackKingLocation[0] = x1;
+        blackKingLocation[1] = y1;
+        blackCheck = false; 
+        System.out.println("Black King moved, not in check");
+        saveTheKing.clear();
+        blackCheckers.clear();
+      }
+      return true;
   }
   boolean move(int x, int y, int x1, int y1) {
     // update restricted if x y is found inside 
