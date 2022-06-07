@@ -345,6 +345,72 @@ void mouseClicked() {
       }
     }
   }
+  if(onePlayer && !Turn){
+    int highestVal=0;
+    int currentVal=0;
+    int lMovesIndex=-1;
+    int blackCoorsIndex=-1;
+    for(int i = 0; i < blackCoors.size(); i++){
+       //System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
+       ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
+       //System.out.println("didnt break");
+       for(int j = 0; j < lMoves.size(); j++){
+         Piece piece=null;
+         if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
+           piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
+           currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
+         }
+         //System.out.println("move" + i);
+         Board.moveX(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
+         //System.out.println("move" + i + " didnt break");
+         for(int y = 0; y < 9; y++){
+           for(int z = 0; z < 9; z++){
+             if(Board.board[y][z].blackThreatened>0 && Board.board[y][z].piece!=null){
+               currentVal+=Board.board[y][z].piece.value;
+             }
+           }
+         }
+         if(currentVal>highestVal){
+           highestVal=currentVal;
+           lMovesIndex=j;
+           blackCoorsIndex=i;
+         }
+         Board.moveX(lMoves.get(j)[1],lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
+         Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
+         if(piece!=null){
+           Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], false);
+         }
+         currentVal=0;
+       }
+    }
+    //System.out.println("ended for loop");
+    if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
+      ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
+      Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
+      Turn=!Turn;
+      Board.revertPreviousPreventCheck();
+      Board.preventCheck();
+      Board.checkCheck();
+    }
+    else{
+      botMove();
+      Turn=!Turn;
+      Board.revertPreviousPreventCheck();
+      Board.preventCheck();
+      Board.checkCheck();
+    }
+  }
+  blackCoors.clear();
+  for (int i = 0; i < Board.board.length; i++) {
+    for (int a = 0; a < Board.board[i].length; a++) {
+      if (Board.board[i][a].piece != null) {
+        if(!Board.board[i][a].piece.white){
+          int[] coor = {i, a};
+          blackCoors.add(coor);
+        }
+      }
+    }
+  }
 }
 void prayer(int x, int y, int weight) {
   String[] lines = loadStrings("lava.txt");
@@ -519,103 +585,6 @@ void draw() {
   }
   if (!canDrop) {
     text("can't drop piece there", 950, 100);
-  }
-  if (onePlayer && !Turn) {
-    //int highestVal=0;
-    //int lMovesIndex=-1;
-    //int blackCoorsIndex=-1;
-    //for(int i = 0; i < blackCoors.size(); i++){
-    //   System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
-    //   ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
-    //   for(int j = 0; j < lMoves.size(); j++){
-    //     if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null){
-    //       if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value>highestVal){
-    //         if(Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].whiteThreatened>0){
-    //           if(Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece.value<=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value){
-    //             highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
-    //             lMovesIndex=j;
-    //             blackCoorsIndex=i;
-    //           }
-    //         }
-    //         else{
-    //           highestVal=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value;
-    //           lMovesIndex=j;
-    //           blackCoorsIndex=i;
-    //         }
-    //       }
-    //     }
-    //   }
-    //}
-    //if(lMovesIndex!=-1 && blackCoorsIndex!=-1){
-    //  ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
-    //  Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
-    //  Turn=!Turn;
-    //}
-    //else{
-    //  botMove();
-    //  Turn=!Turn;
-    //}
-
-    int highestVal=0;
-    int currentVal=0;
-    int lMovesIndex=-1;
-    int blackCoorsIndex=-1;
-    for (int i = 0; i < blackCoors.size(); i++) {
-      //System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
-      ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
-      //System.out.println("didnt break");
-      for (int j = 0; j < lMoves.size(); j++) {
-        Piece piece=null;
-        boolean addedPiece=false;
-        if (Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null) {
-          piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
-          currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
-          addedPiece=true;
-        }
-        //System.out.println("move" + i);
-        Board.moveX(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
-        //System.out.println("move" + i + " didnt break");
-        for (int y = 0; y < 9; y++) {
-          for (int z = 0; z < 9; z++) {
-            if (Board.board[y][z].blackThreatened>0 && Board.board[y][z].piece!=null) {
-              currentVal+=Board.board[y][z].piece.value;
-            }
-          }
-        }
-        if (currentVal>highestVal) {
-          System.out.println(currentVal);
-          highestVal=currentVal;
-          lMovesIndex=j;
-          blackCoorsIndex=i;
-        }
-        Board.moveX(lMoves.get(j)[1], lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
-        Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
-        currentVal=0;
-        if (addedPiece) {
-          Board.blackCaptured.remove(Board.blackCaptured.size()-1);
-        }
-      }
-    }
-    //System.out.println("ended for loop");
-    if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
-      ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
-      Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
-      Turn=!Turn;
-    } else {
-      botMove();
-      Turn=!Turn;
-    }
-  }
-  blackCoors.clear();
-  for (int i = 0; i < Board.board.length; i++) {
-    for (int a = 0; a < Board.board[i].length; a++) {
-      if (Board.board[i][a].piece != null) {
-        if (!Board.board[i][a].piece.white) {
-          int[] coor = {i, a};
-          blackCoors.add(coor);
-        }
-      }
-    }
   }
   if (!Tutorial) {
     fill(#b27e4d);
@@ -1072,16 +1041,32 @@ public class board {
         //System.out.println("NEW RESTRICTED" + answ);
       }
     }
-    // if there is a piece on other tile, move to Captured array 
-    if (board[x1][y1].piece!=null) {
-      if (board[x1][y1].piece.white==true) {
-        board[x1][y1].piece.demote();
-        blackCaptured.add(board[x1][y1].piece);
-      } else {
-        board[x1][y1].piece.demote();
-        whiteCaptured.add(board[x1][y1].piece);
+      // if there is a piece on other tile, move to Captured array 
+      // UNTHREATEN BOTH 
+      // NEED TO UNTHREATEN other tile
+      unthreaten(x, y, false);
+      if (board[x1][y1].piece != null) {
+
+        unthreaten(x1, y1, false);
       }
-    }
+      // move current piece to other tile, set current tile's piece to null
+      board[x1][y1].setPiece(board[x][y].piece);
+      board[x][y].setPiece(null);
+      // recalculate royal pieces' moves only if current piece had been blocking them 
+      if (board[x][y].royalThreats.size() > 0) {
+        ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
+        for (int i = 0; i < temp.size(); i++) {
+
+          unthreaten(temp.get(i)[0], temp.get(i)[1], false);
+          royalPotential(temp.get(i)[0], temp.get(i)[1]);
+          threaten(temp.get(i)[0], temp.get(i)[1], false);
+        }
+      }
+      // if current is royal, recalculate moves
+      if (board[x1][y1].piece.isRoyal) {
+        royalPotential(x1, y1); // x then y because move parameters are given in row major order
+        // MOVE OUT OF IF STATEMENT when threaten is generalized
+    // if there is a piece on other tile, move to Captured array 
     // UNTHREATEN BOTH 
     // NEED TO UNTHREATEN other tile
     unthreaten(x, y, false);
@@ -1122,6 +1107,7 @@ public class board {
       }
     }
     // check if orginal coors were king's Location 
+      }
     return true;
   }
   boolean move(int x, int y, int x1, int y1) {
