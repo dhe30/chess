@@ -378,7 +378,7 @@ void mouseClicked() {
          Board.moveX(lMoves.get(j)[1],lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
          Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
          if(piece!=null){
-           Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0]);
+           Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], false);
          }
          currentVal=0;
        }
@@ -1044,10 +1044,10 @@ public class board {
       // if there is a piece on other tile, move to Captured array 
       // UNTHREATEN BOTH 
       // NEED TO UNTHREATEN other tile
-      unthreaten(x, y);
+      unthreaten(x, y, false);
       if (board[x1][y1].piece != null) {
 
-        unthreaten(x1, y1);
+        unthreaten(x1, y1, false);
       }
       // move current piece to other tile, set current tile's piece to null
       board[x1][y1].setPiece(board[x][y].piece);
@@ -1057,9 +1057,9 @@ public class board {
         ArrayList<int[]> temp = (ArrayList)board[x][y].royalThreats.clone();
         for (int i = 0; i < temp.size(); i++) {
 
-          unthreaten(temp.get(i)[0], temp.get(i)[1]);
+          unthreaten(temp.get(i)[0], temp.get(i)[1], false);
           royalPotential(temp.get(i)[0], temp.get(i)[1]);
-          threaten(temp.get(i)[0], temp.get(i)[1]);
+          threaten(temp.get(i)[0], temp.get(i)[1], false);
         }
       }
       // if current is royal, recalculate moves
@@ -1107,6 +1107,7 @@ public class board {
       }
     }
     // check if orginal coors were king's Location 
+      }
     return true;
   }
   boolean move(int x, int y, int x1, int y1) {
