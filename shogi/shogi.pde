@@ -399,12 +399,12 @@ void Beyond() {
           for (int a = 0; a < temp.size(); a++) {
             //coordinate pair [0],[1] because r.T is in RMO
 
-            Board.unthreaten(temp.get(a)[0], temp.get(a)[1], true);
+            Board.unthreaten(temp.get(a)[0], temp.get(a)[1], false);
             Board.royalPotential(temp.get(a)[0], temp.get(a)[1]);
-            Board.threaten(temp.get(a)[0], temp.get(a)[1], true);
+            Board.threaten(temp.get(a)[0], temp.get(a)[1], false);
           }
         }
-        Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], true);
+        Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], false);
       }
       currentVal=0;
     }
@@ -1276,6 +1276,7 @@ public class board {
               int index = -1;
               for (int a = 0; a < blackCheckers.size(); a++) {
                 if (x == blackCheckers.get(a)[0] && y == blackCheckers.get(a)[1]) {
+                  System.out.println("BLACK CHECKER: " + x + " " + y);
                   index = a;
                 }
               }
@@ -1283,6 +1284,9 @@ public class board {
                 System.out.println("PLEASE FIX!");
               } else {
                 blackCheckers.remove(index);
+                System.out.println("REMOVED BLACK CHECKERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+                System.out.println(blackCheckers.size());
+                
                 if (blackCheckers.size() == 0) {
                   blackCheck = false;
                   saveTheKing.clear(); // MAY BE BUGGY 
