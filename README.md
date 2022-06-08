@@ -79,3 +79,7 @@ June 3:
 
     Samuel: Made chessBot be smart by checking every possible move and attacks most valuable piece
 
+June 7: 
+
+    Daniel: fixed bot to properly handle check and fixed other bot bugs
+
