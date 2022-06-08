@@ -17,6 +17,7 @@ int tutorialIndex=0;
 ArrayList<int[]> moves = new ArrayList<int[]>();
 ArrayList<int[]> blackCoors = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
+boolean animating = false;
 int count = 0;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 
@@ -187,6 +188,7 @@ void mouseClicked() {
     }
     System.out.println("WHit threats:"  + " "+ Board.board[mouseY / 100][mouseX / 100].whiteThreatened + " Black threats: " + Board.board[mouseY / 100][mouseX / 100].blackThreatened);
   } else {
+    if (!animating){
     System.out.println("Hit 1");
     if (mouseX < 900 && mouseY < 900) {
       // ex. mouse at (456,789) refers to tile (4,7)
@@ -344,7 +346,7 @@ void mouseClicked() {
         }
       }
     }
-  }
+  }}
   if (onePlayer && !Turn) {
     Beyond();
   }
