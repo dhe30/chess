@@ -110,6 +110,9 @@ void setup() {
     System.out.println(Arrays.toString(blackCoors.get(i)));
   }
 }
+void Hell(){
+  
+}
 void keyPressed() {
   if (key == 'u') {
     if (Theme.equals("Traditional")) {
