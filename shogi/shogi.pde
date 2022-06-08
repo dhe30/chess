@@ -351,6 +351,17 @@ void mouseClicked() {
 }
 void Beyond() {
   System.out.println("BOT THINKING" + " in check?" + Board.blackCheck );
+  blackCoors.clear();
+  for (int i = 0; i < Board.board.length; i++) {
+    for (int a = 0; a < Board.board[i].length; a++) {
+      if (Board.board[i][a].piece != null) {
+        if (!Board.board[i][a].piece.white) {
+          int[] coor = {i, a};
+          blackCoors.add(coor);
+        }
+      }
+    }
+  }
   int highestVal=0;
   int currentVal=0;
   int lMovesIndex=-1;
@@ -416,18 +427,6 @@ void Beyond() {
     Board.revertPreviousPreventCheck();
     Board.preventCheck();
     Board.checkCheck();
-  }
-
-  blackCoors.clear();
-  for (int i = 0; i < Board.board.length; i++) {
-    for (int a = 0; a < Board.board[i].length; a++) {
-      if (Board.board[i][a].piece != null) {
-        if (!Board.board[i][a].piece.white) {
-          int[] coor = {i, a};
-          blackCoors.add(coor);
-        }
-      }
-    }
   }
 }
 void prayer(int x, int y, int weight) {
