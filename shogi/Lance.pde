@@ -118,8 +118,8 @@ public class Lance extends Piece {
       start = 1;
       end = 17;
     } else if (idleCounter > 180) {
-      start = 18;
-      end = 34;
+      start = 35;
+      end = 51;
     } else {
       start = 35;
       end = 51;
