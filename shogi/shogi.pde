@@ -18,6 +18,7 @@ ArrayList<int[]> moves = new ArrayList<int[]>();
 ArrayList<int[]> blackCoors = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
 boolean animating = false;
+int idleCounter = 0;
 int count = 0;
 void setup() {
   //The board is 900 by 900, each tile is 100 by 100 

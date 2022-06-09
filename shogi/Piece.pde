@@ -46,30 +46,37 @@ public class Piece {
     String[] lines = loadStrings(line);
     if (white) {
       if (Theme.equals("Alien")) {
+        int scale = 4;
+        x+=idleCounter;
+        idleCounter+=1;
+        if (idleCounter == 10){
+          idleCounter =0;
+        }
         for (int i = 1; i < lines.length; i++) {
           for (int a = 0; a < lines[i].length(); a++) {
             if (lines[i].charAt(a)=='7') {
               fill(Seven);
-              rect(x + (a*2), y+(i*2), 2, 2);
+              
             } else if (lines[i].charAt(a)=='1') {
               fill(One);
-              rect(x + (a*2), y+(i*2), 2, 2);
+              
             } else if (lines[i].charAt(a)=='2') {
               fill(Two);
-              rect(x + (a*2), y+(i*2), 2, 2);
+              
             } else if (lines[i].charAt(a)=='3') {
               fill(Three);
-              rect(x + (a*2), y+(i*2), 2, 2);
+              
             } else if (lines[i].charAt(a)=='4') {
               fill(Four);
-              rect(x + (a*2), y+(i*2), 2, 2);
+              
             } else if (lines[i].charAt(a)=='5') {
               fill(Five);
-              rect(x + (a*2), y+(i*2), 2, 2);
+              
             } else if (lines[i].charAt(a)=='6') {
               fill(Six);
-              rect(x + (a*2), y+(i*2), 2, 2);
             }
+            if (lines[i].charAt(a)!='0')
+            rect(x + (a*scale), y+(i*scale), scale, scale);
           }
         }
       } else {
