@@ -83,3 +83,7 @@ June 7:
 
     Daniel: fixed bot to properly handle check and fixed other bot bugs
 
+June 9: 
+
+    Daniel: worked on alien theme and added animation to it
+
