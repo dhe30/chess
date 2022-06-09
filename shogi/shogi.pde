@@ -514,7 +514,7 @@ void draw() {
         if (Board.board[i][j].piece!=null) {
           if (Board.board[i][j].piece.white==true) {
             if (Theme.equals("Alien")) {
-              Board.board[2][0].piece.displayPiece(j*100, i*100, true, "robot.txt");
+              Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
             } else {
               Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
             }

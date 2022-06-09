@@ -8,6 +8,7 @@ public class Piece {
   boolean isRoyal=false;
   boolean canPromote=false;
   String display = "pawn.txt";
+  String alienDisplay = "robot.txt";
   final color One = color(34, 32, 52);
   final color Two = color(89, 86, 82);
   final color Three = color(105, 106, 106);
@@ -65,6 +66,7 @@ public class Piece {
           idleCounter =0;
         }
         for (int i = start; i < end; i++) {
+          //System.out.println(i);
           for (int a = 0; a < lines[i].length(); a++) {
             if (lines[i].charAt(a)=='7') {
               fill(Seven);
