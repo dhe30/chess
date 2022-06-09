@@ -117,8 +117,8 @@ void keyPressed() {
     if (Theme.equals("Traditional")) {
       Theme = "Hell";
     } else if (Theme.equals("Hell")) {
-      Theme = "Aliens";
-    } else if (Theme.equals("Aliens")) {
+      Theme = "Alien";
+    } else if (Theme.equals("Alien")) {
       Theme = "Traditional";
     }
   }
@@ -470,6 +470,9 @@ void draw() {
     } else if (Theme.equals("Hell")) {
       fill(0);
       rect(0, 0, 900, 900);
+    } else if (Theme.equals("Alien")){
+      fill(252, 204, 156);
+      rect(0, 0, 900, 900);
     }
 
     strokeWeight(3);
@@ -482,6 +485,9 @@ void draw() {
         stroke(130, 138, 131);
         line(100*i, 0, 100*i, 900);
         line(0, 100*i, 900, 100*i);
+      } else if (Theme.equals("Alien")){
+         line(100*i, 0, 100*i, 900);
+        line(0, 100*i, 900, 100*i);
       }
     }
     strokeWeight(0);
@@ -493,15 +499,18 @@ void draw() {
         if (Theme.equals("Traditional")) {
           fill(234, 193, 159);
           rect(j*100+5, i*100+5, 90, 90);
-        } else         if (Theme.equals("Hell")) {
+        } else if (Theme.equals("Hell")) {
           prayer(j*100+3, i*100, 5);
+        } else if (Theme.equals("Alien")){
+          fill(234, 193, 159);
+          rect(j*100+5, i*100+5, 90, 90);
         }
 
 
         if (Board.board[i][j].piece!=null) {
           if (Board.board[i][j].piece.white==true) {
             if (Theme.equals("Alien")) {
-              Board.board[i][j].piece.displayPiece(j*100, i*100, true, "robot.txt");
+              Board.board[2][0].piece.displayPiece(j*100, i*100, true, "robot.txt");
             } else {
               Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
             }
