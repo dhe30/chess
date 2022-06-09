@@ -17,6 +17,7 @@ int tutorialIndex=0;
 ArrayList<int[]> moves = new ArrayList<int[]>();
 ArrayList<int[]> blackCoors = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
+ArrayList<color[][]> planks = new ArrayList<color[][]>();
 boolean animating = false;
 int idleCounter = 0;
 int count = 0;
@@ -108,8 +109,11 @@ void setup() {
       }
     }
   }
-  for (int i = 0; i < blackCoors.size(); i++) {
-    System.out.println(Arrays.toString(blackCoors.get(i)));
+  //for (int i = 0; i < blackCoors.size(); i++) {
+  //  System.out.println(Arrays.toString(blackCoors.get(i)));
+  //}
+  for (int i = 0; i < 10; i++) {
+    planks.add(wood());
   }
 }
 void Hell() {
@@ -440,6 +444,46 @@ void Beyond() {
     Board.checkCheck();
   }
 }
+
+// ART ASSETS 
+
+color[][] wood() {
+  int lengthy = 108;
+  int widthy = 10;
+  color[][] plank = new color[lengthy][widthy];
+  color one = color(199, 113, 58);
+  color two = color(191, 105, 50);
+  color three = color(172, 91, 55);
+  color[] lookingBack = new color[10];
+  for (int i = 0; i < 10; i++) {
+    float random = random(3);
+    if (random <= 1) {
+      lookingBack[i] = one;
+    } else if (random > 1 && random <= 2) {
+      lookingBack[i] = two;
+    } else {
+      lookingBack[i] = three;
+    }
+  }
+  for (int i = 0; i < lengthy; i++) {
+    for (int a = 0; a < widthy; a++) {
+      float random = random(1);
+      if (random <= 0.7) {
+        plank[i][a] = (lookingBack[a]);
+      } else {
+        if (random <= 0.8) {
+          plank[i][a] =(one);
+        } else if (random <= 0.9) {
+          plank[i][a] =(two);
+        } else {
+          plank[i][a] =(three);
+        }
+      }
+    }
+  }
+  return plank;
+}
+
 void prayer(int x, int y, int weight) {
   String[] lines = loadStrings("lava.txt");
   for (int i = 1; i < lines.length; i++) {
@@ -466,6 +510,13 @@ void prayer(int x, int y, int weight) {
     }
   }
 }
+
+
+
+
+
+
+
 void draw() {
   if (!Tutorial) {
     if (Theme.equals("Traditional")) {
@@ -474,11 +525,10 @@ void draw() {
     } else if (Theme.equals("Hell")) {
       fill(0);
       rect(0, 0, 900, 900);
-    } else if (Theme.equals("Alien")){
+    } else if (Theme.equals("Alien")) {
       fill(252, 204, 156);
       rect(0, 0, 900, 900);
     }
-
     strokeWeight(3);
     stroke(216, 185, 155);
     for (int i = 0; i <=9; i++) {
@@ -489,8 +539,8 @@ void draw() {
         stroke(130, 138, 131);
         line(100*i, 0, 100*i, 900);
         line(0, 100*i, 900, 100*i);
-      } else if (Theme.equals("Alien")){
-         line(100*i, 0, 100*i, 900);
+      } else if (Theme.equals("Alien")) {
+        line(100*i, 0, 100*i, 900);
         line(0, 100*i, 900, 100*i);
       }
     }
@@ -505,7 +555,7 @@ void draw() {
           rect(j*100+5, i*100+5, 90, 90);
         } else if (Theme.equals("Hell")) {
           prayer(j*100+3, i*100, 5);
-        } else if (Theme.equals("Alien")){
+        } else if (Theme.equals("Alien")) {
           fill(234, 193, 159);
           rect(j*100+5, i*100+5, 90, 90);
         }
@@ -538,6 +588,8 @@ void draw() {
   rect(900, 0, 1500, 900);
   fill(0);
   textSize(20);
+  //fill(225);
+  //fill(0);
   if (!Tutorial) {
     if (Turn) {
       text("white's turn", 950, 50);
@@ -632,137 +684,151 @@ void draw() {
     text("can't drop piece there", 950, 100);
   }
   if (!Tutorial) {
-    fill(#b27e4d);
-    rect(1200, 5, 430, 302);
-    stroke(0);
-    strokeWeight(1);
-    line(1420, 5, 1420, 305);
-    line(1520, 5, 1520, 305);
-    for (int i = 0; i < 9; i++) {
-      line(1200, i*30+35, 1630, i*30+35);
-    }}
-    //if (onePlayer && !Turn) {
-    //  if (Board.blackCaptured.size()>2) {
-    //    if (oneDrop()) {
-    //      Turn=!Turn;
-    //      Board.revertPreviousPreventCheck();
-    //      Board.preventCheck();
-    //      Board.checkCheck();
-    //    } else {
-    //      botMove();
-    //      Turn=true;
-    //      Board.revertPreviousPreventCheck();
-    //      Board.preventCheck();
-    //      Board.checkCheck();
-    //    }
-    //  }
-    //  botMove();
-    //  Turn=true;
-    //  Board.revertPreviousPreventCheck();
-    //  Board.preventCheck();
-    //  Board.checkCheck();
-    //}
-    if (moves.size()>10) {
-      moves.remove(0);
-    }
-    if (pieceMoved.size()>10) {
-      pieceMoved.remove(0);
-    }
-    for (int i = moves.size()-1; i >= 0; i--) {
-      fill(0);
-      text(pieceMoved.get(i), 1210, i*30+35);
-      text(moves.get(i)[0], 1430, i*30+35);
-      text(moves.get(i)[1], 1530, i*30+35);
-    }
-    textSize(30);
-    if (Tutorial) {
-      System.out.println("YEYE");
-      switch(tutorialIndex) {
-      case 0:
-        PImage pawn = loadImage("pawn.jpg");
-        image(pawn, 0, 0, 900, 900); 
-        text("pawns move like normal pawns \nbut can't move two spaces on the first move \nand can't capture diagonally. \nThey can only capture what is right in front of them", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 1: 
-        PImage rook = loadImage("rook.jpg");
-        image(rook, 0, 0, 900, 900);
-        text("rook moves like a rook...not much else to say", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 2:
-        PImage bishop = loadImage("bishop.jpg");
-        image(bishop, 0, 0, 900, 900);
-        text("bishop moves like a bishop...what a surprise", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 3:
-        PImage lance = loadImage("lance.jpg");
-        image(lance, 0, 0, 900, 900);
-        text("lance moves like a rook \nbut only forwards", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 4:
-        PImage knight = loadImage("knight.jpg");
-        image(knight, 0, 0, 900, 900);
-        text("knight moves similar to a normal knight \nbut only forwards", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 5:
-        PImage silverGeneral = loadImage("silverGeneral.jpg");
-        image(silverGeneral, 0, 0, 900, 900);
-        text("silver general can move diagonally forwards one space, \nforward one space, \nor diagonally backward once space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 6:
-        PImage goldGeneral = loadImage("goldGeneral.jpg");
-        image(goldGeneral, 0, 0, 900, 900);
-        text("gold generals can move diagonally forwards one space, \nforwards one space, \nsideways one space, \nor backwards one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 7:
-        PImage king = loadImage("king.jpg");
-        image(king, 0, 0, 900, 900);
-        text("king is a king", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 8:
-        PImage promotedPawn = loadImage("promotedPawn.jpg");
-        image(promotedPawn, 0, 0, 450, 450);
-        PImage promotedLance = loadImage("promotedLance.jpg");
-        image(promotedLance, 450, 0, 450, 450);
-        PImage promotedKnight = loadImage("promotedKnight.jpg");
-        image(promotedKnight, 0, 450, 450, 450);
-        PImage promotedSilverGeneral = loadImage("promotedSilverGeneral.jpg");
-        image(promotedSilverGeneral, 450, 450, 450, 450);
-        text("promoted pawn, lance, knight, and silver general \nall move like a gold general", 950, 50);
-        textSize(14);
-        text("yes i know they're not in line screenshotting is hard ok", 950, 400);
-        textSize(30);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 9: 
-        PImage promotedRook = loadImage("promotedRook.jpg");
-        image(promotedRook, 0, 0, 900, 900);
-        text("promoted rook moves like a normal rook \nbut can also move in any diagonal direction one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 10:
-        PImage promotedBishop = loadImage("promotedBishop.jpg");
-        image(promotedBishop, 0, 0, 900, 900);
-        text("Similar to promoted rook, \npromoted bishop can move like a normal bishop \nbut can also move up, down, left, or right one space", 950, 50);
-        text("press 1 or 2 to scroll through tutorial", 950, 600);
-        break;
-      case 11:
-        Tutorial=false;
-        break;
+    //fill(#b27e4d);
+    //rect(1200, 5, 430, 302);
+    //line(1420, 5, 1420, 305);
+    //line(1520, 5, 1520, 305);
+    for (int i = 0; i < 10; i++) {
+      int scale = 4;
+      //line(1200, i*30+35, 1630, i*30+35);
+      for (int a = 0; a < planks.get(i).length; a++) {
+        for (int b = 0; b < planks.get(i)[a].length; b++) {
+          fill(planks.get(i)[a][b]);
+          rect(1200 + (a * scale), (i*45) + (b*scale), scale, scale);
+        }
       }
+      stroke(137, 63, 24);
+      strokeWeight(3);
+      line(1200, i*45+40, 1630, i*45+40);
+      line(1630, i*45, 1630, i*45+40);
+      stroke(210, 162, 85);
+
+      line(1200, i*45, 1630, i*45);
+      strokeWeight(0);
+      noStroke();
     }
-    strokeWeight(0);
-    stroke(255, 0);
-    fill(255);
+  }
+  //if (onePlayer && !Turn) {
+  //  if (Board.blackCaptured.size()>2) {
+  //    if (oneDrop()) {
+  //      Turn=!Turn;
+  //      Board.revertPreviousPreventCheck();
+  //      Board.preventCheck();
+  //      Board.checkCheck();
+  //    } else {
+  //      botMove();
+  //      Turn=true;
+  //      Board.revertPreviousPreventCheck();
+  //      Board.preventCheck();
+  //      Board.checkCheck();
+  //    }
+  //  }
+  //  botMove();
+  //  Turn=true;
+  //  Board.revertPreviousPreventCheck();
+  //  Board.preventCheck();
+  //  Board.checkCheck();
+  //}
+  if (moves.size()>10) {
+    moves.remove(0);
+  }
+  if (pieceMoved.size()>10) {
+    pieceMoved.remove(0);
+  }
+  for (int i = moves.size()-1; i >= 0; i--) {
     fill(0);
-  
+    text(pieceMoved.get(i), 1210, i*30+35);
+    text(moves.get(i)[0], 1430, i*30+35);
+    text(moves.get(i)[1], 1530, i*30+35);
+  }
+  textSize(30);
+  if (Tutorial) {
+    System.out.println("YEYE");
+    switch(tutorialIndex) {
+    case 0:
+      PImage pawn = loadImage("pawn.jpg");
+      image(pawn, 0, 0, 900, 900); 
+      text("pawns move like normal pawns \nbut can't move two spaces on the first move \nand can't capture diagonally. \nThey can only capture what is right in front of them", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 1: 
+      PImage rook = loadImage("rook.jpg");
+      image(rook, 0, 0, 900, 900);
+      text("rook moves like a rook...not much else to say", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 2:
+      PImage bishop = loadImage("bishop.jpg");
+      image(bishop, 0, 0, 900, 900);
+      text("bishop moves like a bishop...what a surprise", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 3:
+      PImage lance = loadImage("lance.jpg");
+      image(lance, 0, 0, 900, 900);
+      text("lance moves like a rook \nbut only forwards", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 4:
+      PImage knight = loadImage("knight.jpg");
+      image(knight, 0, 0, 900, 900);
+      text("knight moves similar to a normal knight \nbut only forwards", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 5:
+      PImage silverGeneral = loadImage("silverGeneral.jpg");
+      image(silverGeneral, 0, 0, 900, 900);
+      text("silver general can move diagonally forwards one space, \nforward one space, \nor diagonally backward once space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 6:
+      PImage goldGeneral = loadImage("goldGeneral.jpg");
+      image(goldGeneral, 0, 0, 900, 900);
+      text("gold generals can move diagonally forwards one space, \nforwards one space, \nsideways one space, \nor backwards one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 7:
+      PImage king = loadImage("king.jpg");
+      image(king, 0, 0, 900, 900);
+      text("king is a king", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 8:
+      PImage promotedPawn = loadImage("promotedPawn.jpg");
+      image(promotedPawn, 0, 0, 450, 450);
+      PImage promotedLance = loadImage("promotedLance.jpg");
+      image(promotedLance, 450, 0, 450, 450);
+      PImage promotedKnight = loadImage("promotedKnight.jpg");
+      image(promotedKnight, 0, 450, 450, 450);
+      PImage promotedSilverGeneral = loadImage("promotedSilverGeneral.jpg");
+      image(promotedSilverGeneral, 450, 450, 450, 450);
+      text("promoted pawn, lance, knight, and silver general \nall move like a gold general", 950, 50);
+      textSize(14);
+      text("yes i know they're not in line screenshotting is hard ok", 950, 400);
+      textSize(30);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 9: 
+      PImage promotedRook = loadImage("promotedRook.jpg");
+      image(promotedRook, 0, 0, 900, 900);
+      text("promoted rook moves like a normal rook \nbut can also move in any diagonal direction one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 10:
+      PImage promotedBishop = loadImage("promotedBishop.jpg");
+      image(promotedBishop, 0, 0, 900, 900);
+      text("Similar to promoted rook, \npromoted bishop can move like a normal bishop \nbut can also move up, down, left, or right one space", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 11:
+      Tutorial=false;
+      break;
+    }
+  }
+  strokeWeight(0);
+  stroke(255, 0);
+  fill(255);
+  fill(0);
 }
 boolean oneDrop() {
   int index = (int)(Math.random()*Board.blackCaptured.size()-1);
