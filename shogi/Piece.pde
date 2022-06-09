@@ -1,5 +1,5 @@
 public class Piece {
-  int x,y;
+  int x, y;
   int value;
   String role;
   boolean white;
@@ -35,16 +35,15 @@ public class Piece {
     canPromote=!canPromote;
   }
   void displayPiece(int x, int y, boolean white, String line) {
-    
     String[] lines = loadStrings(line);
     if (white) {
-      fill(173,168,164);
-    rect(x+17, y+44, 60, 50);
+      fill(173, 168, 164);
+      rect(x+17, y+44, 60, 50);
       triangle(x +17, y +44, x +77, y +44, x +47, y +14);
-            fill(255);
+      fill(255);
 
-      if(Theme.equals("Hell")){
-        fill(255,225,214);
+      if (Theme.equals("Hell")) {
+        fill(255, 225, 214);
       }
       rect(x +20, y +40, 60, 50);
       triangle(x +20, y +40, x +80, y +40, x +50, y +10);
@@ -70,12 +69,12 @@ public class Piece {
         }
       }
     } else {
-      fill(173,168,164);
+      fill(173, 168, 164);
       rect(x +17, y +13, 60, 50);
       triangle(x +17, y +63, x +77, y +63, x +47, y +93);
       fill(255);
-if(Theme.equals("Hell")){
-        fill(255,225,214);
+      if (Theme.equals("Hell")) {
+        fill(255, 225, 214);
       }
       rect(x +20, y +10, 60, 50);
       triangle(x +20, y +60, x +80, y +60, x +50, y +90);
