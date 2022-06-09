@@ -363,7 +363,7 @@ void mouseClicked() {
   }
 }
 void Beyond() {
-  System.out.println("BOT THINKING" + " in check?" + Board.blackCheck );
+  //System.out.println("BOT THINKING" + " in check?" + Board.blackCheck );
   blackCoors.clear();
   whiteCoors.clear();
   for (int i = 0; i < Board.board.length; i++) {
@@ -380,12 +380,12 @@ void Beyond() {
       }
     }
   }
-  System.out.println("JFDJFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-  for(int w = 0; w < whiteCoors.size(); w++){
-    System.out.println(Arrays.toString(whiteCoors.get(w)));
-  }
-  int highestVal=0;
-  int currentVal=0;
+  //System.out.println("JFDJFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+  //for(int w = 0; w < whiteCoors.size(); w++){
+  //  System.out.println(Arrays.toString(whiteCoors.get(w)));
+  //}
+  float highestVal=0.0;
+  float currentVal=0.0;
   int lMovesIndex=-1;
   int blackCoorsIndex=-1;
   for (int i = 0; i < blackCoors.size(); i++) {
@@ -421,8 +421,8 @@ void Beyond() {
         }
       }
       Board.moveX(lMoves.get(j)[1], lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
-      System.out.println("j="+j);
-      System.out.println(whiteCoors.size());
+      //System.out.println("j="+j);
+      //System.out.println(whiteCoors.size());
       for(int k = 0; k < whiteCoors.size(); k++){
         //System.out.println("k="+k);
         //System.out.print(Arrays.toString(whiteCoors.get(k)));
@@ -454,6 +454,12 @@ void Beyond() {
               }
             }
           }
+          if (currentVal>highestVal) {
+            highestVal=currentVal;
+            lMovesIndex=j;
+            blackCoorsIndex=i;
+          }
+          currentVal=0.0;
           Board.moveX(lMoves2.get(l)[1], lMoves2.get(l)[0], whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
 
           //System.out.print("cba");
@@ -477,7 +483,7 @@ void Beyond() {
           if(piece2!=null){
             int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
             blackCoors.add(bc);
-            System.out.println("blackCoors added " + Arrays.toString(bc));
+            //System.out.println("blackCoors added " + Arrays.toString(bc));
           }
         }
       }
@@ -490,44 +496,39 @@ void Beyond() {
           ArrayList<int[]> temp = (ArrayList)Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].royalThreats.clone();
           for (int a = 0; a < temp.size(); a++) {
             //coordinate pair [0],[1] because r.T is in RMO
-                            System.out.println("Threaten rouals after setting 2");
+                            //System.out.println("Threaten rouals after setting 2");
             Board.unthreaten(temp.get(a)[0], temp.get(a)[1], false);
             Board.royalPotential(temp.get(a)[0], temp.get(a)[1]);
             Board.threaten(temp.get(a)[0], temp.get(a)[1], false);
           }
         }
-                                    System.out.println("Threaten after setting 2 ");
-
+                                    //System.out.println("Threaten after setting 2 ");
         Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], false);
       }
       if(piece!=null){
         int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
         whiteCoors.add(wc);
-        System.out.println("whiteCoors added " + Arrays.toString(wc));
+        //System.out.println("whiteCoors added " + Arrays.toString(wc));
       }
-      if (currentVal>highestVal) {
-        highestVal=currentVal;
-        lMovesIndex=j;
-        blackCoorsIndex=i;
-      }
-      currentVal=0;
+      System.out.println(currentVal);
     }
   }
-  System.out.println("ended for loop");
+  System.out.println(highestVal);
+  //System.out.println("ended for loop");
   if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
     Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
     System.out.println(blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]+ " " +  lMoves.get(lMovesIndex)[1]+ " " +  lMoves.get(lMovesIndex)[0]);
 
     Turn=!Turn;
-    System.out.println("Turned");
+    //System.out.println("Turned");
     Board.revertPreviousPreventCheck();
     Board.preventCheck();
     Board.checkCheck();
   } else {
     botMove();
     Turn=!Turn;
-    System.out.println("Turned problem?");
+    //System.out.println("Turned problem?");
     Board.revertPreviousPreventCheck();
     Board.preventCheck();
     Board.checkCheck();
