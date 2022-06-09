@@ -136,8 +136,10 @@ void keyPressed() {
     }
   }
   if (key=='t') {
+    System.out.println("PRESSED T:" + " " + Tutorial);
     Tutorial=true;
     showTutorial=false;
+    System.out.println("After:" + " " + Tutorial + " SHOW:" + showTutorial);
   }
   if (key=='l') {
     onePlayer=true;
@@ -638,7 +640,7 @@ void draw() {
     line(1520, 5, 1520, 305);
     for (int i = 0; i < 9; i++) {
       line(1200, i*30+35, 1630, i*30+35);
-    }
+    }}
     //if (onePlayer && !Turn) {
     //  if (Board.blackCaptured.size()>2) {
     //    if (oneDrop()) {
@@ -674,6 +676,7 @@ void draw() {
     }
     textSize(30);
     if (Tutorial) {
+      System.out.println("YEYE");
       switch(tutorialIndex) {
       case 0:
         PImage pawn = loadImage("pawn.jpg");
@@ -759,7 +762,7 @@ void draw() {
     stroke(255, 0);
     fill(255);
     fill(0);
-  }
+  
 }
 boolean oneDrop() {
   int index = (int)(Math.random()*Board.blackCaptured.size()-1);
