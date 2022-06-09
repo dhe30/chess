@@ -373,12 +373,15 @@ void Beyond() {
           int[] coor = {i, a};
           blackCoors.add(coor);
         }
-        else{
+        else if(Board.board[i][a].piece.white){
           int[] coor = {i, a};
           whiteCoors.add(coor);
         }
       }
     }
+  }
+  for(int w = 0; w < whiteCoors.size(); w++){
+    System.out.println(Arrays.toString(whiteCoors.get(w)));
   }
   int highestVal=0;
   int currentVal=0;
@@ -411,6 +414,8 @@ void Beyond() {
         }
       }
       Board.moveX(lMoves.get(j)[1], lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
+      System.out.println("j="+j);
+      System.out.println(whiteCoors.size());
       for(int k = 0; k < whiteCoors.size(); k++){
         System.out.println("k="+k);
         System.out.print(Arrays.toString(whiteCoors.get(k)));
@@ -429,7 +434,7 @@ void Beyond() {
           }
           System.out.println("lMove2 = [" + lMoves2.get(l)[0] + "," + lMoves2.get(l)[1] + "]");
           Board.moveX(whiteCoors.get(k)[0], whiteCoors.get(k)[1], lMoves2.get(l)[1], lMoves2.get(l)[0]);
-          System.out.println("white 1 works");
+          //System.out.print("abcd");
           for (int y = 0; y < 9; y++) {
             for (int z = 0; z < 9; z++) {
               if (Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null) {
@@ -438,8 +443,9 @@ void Beyond() {
             }
           }
           Board.moveX(lMoves2.get(l)[1], lMoves2.get(l)[0], whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
-          System.out.println("white 2 works");
+          //System.out.print("cba");
           Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].setPiece(piece2);
+          //System.out.print("aa");
           if (piece2!=null) {
             if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.size() > 0) {
               ArrayList<int[]> temp2 = (ArrayList)Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.clone();
@@ -453,8 +459,11 @@ void Beyond() {
             }
             Board.threaten(lMoves.get(l)[1], lMoves.get(l)[0], false);
           }
-          int[] bc = {lMoves2.get(j)[1], lMoves2.get(j)[0]};
-          blackCoors.add(bc);
+          if(piece2!=null){
+            int[] bc = {lMoves2.get(l)[0], lMoves2.get(l)[1]};
+            blackCoors.add(bc);
+            System.out.println("blackCoors added " + Arrays.toString(bc));
+          }
         }
       }
       Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
@@ -471,8 +480,11 @@ void Beyond() {
         }
         Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], false);
       }
-      int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
-      whiteCoors.add(wc);
+      if(piece!=null){
+        int[] wc = {lMoves.get(j)[0], lMoves.get(j)[1]};
+        whiteCoors.add(wc);
+        System.out.println("whiteCoors added " + Arrays.toString(wc));
+      }
       if (currentVal>highestVal) {
         highestVal=currentVal;
         lMovesIndex=j;
