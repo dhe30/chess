@@ -45,14 +45,26 @@ public class Piece {
   void displayPiece(int x, int y, boolean white, String line) {
     String[] lines = loadStrings(line);
     if (white) {
+      int start;
+      int end;
+      if(idleCounter <= 120){
+        start = 1;
+        end = 17;
+      } else if (idleCounter > 120 && idleCounter < 240){
+        start = 18;
+        end = 34;
+      } else {
+        start = 35;
+        end = 51;
+      }
       if (Theme.equals("Alien")) {
         int scale = 4;
-        x+=idleCounter;
+        //x+=idleCounter;
         idleCounter+=1;
-        if (idleCounter == 10){
+        if (idleCounter == 360){
           idleCounter =0;
         }
-        for (int i = 1; i < lines.length; i++) {
+        for (int i = start; i < end; i++) {
           for (int a = 0; a < lines[i].length(); a++) {
             if (lines[i].charAt(a)=='7') {
               fill(Seven);
@@ -76,7 +88,7 @@ public class Piece {
               fill(Six);
             }
             if (lines[i].charAt(a)!='0')
-            rect(x + (a*scale), y+(i*scale), scale, scale);
+            rect(x + (a*scale), y+((i-start)*scale), scale, scale);
           }
         }
       } else {

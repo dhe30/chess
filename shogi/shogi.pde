@@ -21,6 +21,7 @@ boolean animating = false;
 int idleCounter = 0;
 int count = 0;
 void setup() {
+  frameRate(60);
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
   size(1800, 900);
