@@ -16,6 +16,7 @@ boolean showOnePlayer=true;
 int tutorialIndex=0;
 ArrayList<int[]> moves = new ArrayList<int[]>();
 ArrayList<int[]> blackCoors = new ArrayList<int[]>();
+ArrayList<int[]> whiteCoors = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
 boolean animating = false;
 int idleCounter = 0;
@@ -98,6 +99,10 @@ void setup() {
           int[] coor = {i, a};
           blackCoors.add(coor);
         }
+        else{
+          int[] coor = {i, a};
+          whiteCoors.add(coor);
+        }
         if (Board.board[i][a].piece.isRoyal) {
 
           Board.royalPotential(i, a);
@@ -107,9 +112,6 @@ void setup() {
         Board.threaten(i, a, true);
       }
     }
-  }
-  for (int i = 0; i < blackCoors.size(); i++) {
-    System.out.println(Arrays.toString(blackCoors.get(i)));
   }
 }
 void Hell() {
@@ -363,12 +365,17 @@ void mouseClicked() {
 void Beyond() {
   System.out.println("BOT THINKING" + " in check?" + Board.blackCheck );
   blackCoors.clear();
+  whiteCoors.clear();
   for (int i = 0; i < Board.board.length; i++) {
     for (int a = 0; a < Board.board[i].length; a++) {
       if (Board.board[i][a].piece != null) {
         if (!Board.board[i][a].piece.white) {
           int[] coor = {i, a};
           blackCoors.add(coor);
+        }
+        else{
+          int[] coor = {i, a};
+          whiteCoors.add(coor);
         }
       }
     }
@@ -386,8 +393,14 @@ void Beyond() {
       if (Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null) {
         piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
         currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
+        for(int v = 0; v < whiteCoors.size(); v++){
+          int[] wc = {lMoves.get(j)[0], lMoves.get(j)[1]};
+          if(Arrays.equals(whiteCoors.get(v), wc)){
+            whiteCoors.remove(v);
+          }
+        }
       }
-      System.out.println("move" + i + " The Piece: " + Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece);
+      //System.out.println("move" + i + " The Piece: " + Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece);
       Board.moveX(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
       //System.out.println("move" + i + " didnt break");
       for (int y = 0; y < 9; y++) {
@@ -397,12 +410,53 @@ void Beyond() {
           }
         }
       }
-      if (currentVal>highestVal) {
-        highestVal=currentVal;
-        lMovesIndex=j;
-        blackCoorsIndex=i;
-      }
       Board.moveX(lMoves.get(j)[1], lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
+      for(int k = 0; k < whiteCoors.size(); k++){
+        System.out.println("k="+k);
+        System.out.print(Arrays.toString(whiteCoors.get(k)));
+        ArrayList<int[]> lMoves2 = Board.legalMoves(whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
+        for(int l = 0; l < lMoves2.size(); l++){
+          Piece piece2=null;
+          if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece!=null) {
+            piece2 = Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece;
+            currentVal-=Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece.value*1.5;
+            for(int v = 0; v < blackCoors.size(); v++){
+              int[] bc = {lMoves2.get(l)[0], lMoves2.get(l)[1]};
+              if(Arrays.equals(blackCoors.get(v), bc)){
+                blackCoors.remove(v);
+              }
+            }
+          }
+          System.out.println("lMove2 = [" + lMoves2.get(l)[0] + "," + lMoves2.get(l)[1] + "]");
+          Board.moveX(whiteCoors.get(k)[0], whiteCoors.get(k)[1], lMoves2.get(l)[1], lMoves2.get(l)[0]);
+          System.out.println("white 1 works");
+          for (int y = 0; y < 9; y++) {
+            for (int z = 0; z < 9; z++) {
+              if (Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null) {
+                currentVal-=Board.board[y][z].piece.value;
+              }
+            }
+          }
+          Board.moveX(lMoves2.get(l)[1], lMoves2.get(l)[0], whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
+          System.out.println("white 2 works");
+          Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].setPiece(piece2);
+          if (piece2!=null) {
+            if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.size() > 0) {
+              ArrayList<int[]> temp2 = (ArrayList)Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.clone();
+              for (int a = 0; a < temp2.size(); a++) {
+                //coordinate pair [0],[1] because r.T is in RMO
+    
+                Board.unthreaten(temp2.get(a)[0], temp2.get(a)[1], false);
+                Board.royalPotential(temp2.get(a)[0], temp2.get(a)[1]);
+                Board.threaten(temp2.get(a)[0], temp2.get(a)[1], false);
+              }
+            }
+            Board.threaten(lMoves.get(l)[1], lMoves.get(l)[0], false);
+          }
+          int[] bc = {lMoves2.get(j)[1], lMoves2.get(j)[0]};
+          blackCoors.add(bc);
+        }
+      }
       Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
       if (piece!=null) {
         if (Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].royalThreats.size() > 0) {
@@ -416,6 +470,13 @@ void Beyond() {
           }
         }
         Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], false);
+      }
+      int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
+      whiteCoors.add(wc);
+      if (currentVal>highestVal) {
+        highestVal=currentVal;
+        lMovesIndex=j;
+        blackCoorsIndex=i;
       }
       currentVal=0;
     }
