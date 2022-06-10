@@ -21,7 +21,7 @@ ArrayList<String> pieceMoved = new ArrayList<String>();
 ArrayList<color[][]> planks = new ArrayList<color[][]>();
 ArrayList<int[]> moving = new ArrayList<int[]>();
 boolean animating = false;
-int animateTime = 0;
+int animateTime = 20;
 int animateCounter = 0;
 int idleCounter = 0;
 int count = 0;
@@ -302,10 +302,9 @@ void mouseClicked() {
       }
     }
   }
-  //if (onePlayer && !Turn) {
-  //  Beyond();
-  //}
-  //MOVE THIS TO DRAW (WITH IF STATEMENTS)
+  if (onePlayer && !Turn && !Theme.equals("Alien")) {
+    Beyond();
+  }
 }
 void Beyond() {
   //System.out.println("BOT THINKING" + " in check?" + Board.blackCheck );
@@ -610,8 +609,22 @@ void draw() {
           rect(j*100+5, i*100+5, 90, 90);
         }
         if (Board.board[i][j].piece!=null) {
-          if (animating) {
+          if ( animating) {
             if (Arrays.equals(new int[]{i, j}, moving.get(0))) {
+            } else {
+              if (Board.board[i][j].piece.white==true) {
+                if (Theme.equals("Alien")) {
+                  Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
+                } else {
+                  Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
+                }
+              } else {            
+                if (Theme.equals("Alien")) {
+                  Board.board[i][j].piece.displayPiece(j*100, i*100, true, "robot.txt");
+                } else {
+                  Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
+                }
+              }
             }
           } else {
             if (Board.board[i][j].piece.white==true) {
