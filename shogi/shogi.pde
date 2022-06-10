@@ -448,7 +448,7 @@ void Beyond() {
 // ART ASSETS 
 
 color[][] wood() {
-  int lengthy = 108;
+  int lengthy = 143;
   int widthy = 10;
   color[][] plank = new color[lengthy][widthy];
   color one = color(199, 113, 58);
@@ -689,22 +689,22 @@ void draw() {
     //line(1420, 5, 1420, 305);
     //line(1520, 5, 1520, 305);
     for (int i = 0; i < 10; i++) {
-      int scale = 4;
+      int scale = 3;
       //line(1200, i*30+35, 1630, i*30+35);
       for (int a = 0; a < planks.get(i).length; a++) {
         for (int b = 0; b < planks.get(i)[a].length; b++) {
           fill(planks.get(i)[a][b]);
-          rect(1200 + (a * scale), (i*45) + (b*scale), scale, scale);
+          rect(1200 + (a * scale), (i*35) + (b*scale), scale, scale);
         }
       }
       stroke(137, 63, 24);
       strokeWeight(3);
-      line(1200, i*45+40, 1630, i*45+40);
-      line(1630, i*45, 1630, i*45+40);
+      line(1200, i*35+30, 1630, i*35+30);
+      line(1630, i*35, 1630, i*35+30);
       stroke(210, 162, 85);
 
-      line(1200, i*45, 1630, i*45);
-            line(1200, i*45, 1200, i*45+40);
+      line(1200, i*35, 1630, i*35);
+            line(1200, i*35, 1200, i*35+30);
 
       strokeWeight(0);
       noStroke();
@@ -739,9 +739,9 @@ void draw() {
   }
   for (int i = moves.size()-1; i >= 0; i--) {
     fill(0);
-    text(pieceMoved.get(i), 1210, i*30+35);
-    text(moves.get(i)[0], 1430, i*30+35);
-    text(moves.get(i)[1], 1530, i*30+35);
+    text(pieceMoved.get(i), 1210, i*35+20);
+    text(moves.get(i)[0], 1430, i*35+20);
+    text(moves.get(i)[1], 1530, i*35+20);
   }
   textSize(30);
   if (Tutorial) {
