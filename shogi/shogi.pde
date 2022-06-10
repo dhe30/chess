@@ -390,6 +390,9 @@ void Beyond() {
   float currentVal=0.0;
   int lMovesIndex=-1;
   int blackCoorsIndex=-1;
+  boolean doDrop=false;
+  int graveyardIndex=-1;
+  int[] dropIndex;
   for (int i = 0; i < blackCoors.size(); i++) {
     //System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
            // System.out.println("LORD 2!");
@@ -400,7 +403,7 @@ void Beyond() {
       Piece piece=null;
       if (Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null) {
         piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
-        currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
+        currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.7;
         System.out.println(whiteCoors.size());
         for(int v = 0; v < whiteCoors.size(); v++){
           int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
@@ -512,10 +515,15 @@ void Beyond() {
         whiteCoors.add(wc);
         //System.out.println("whiteCoors added " + Arrays.toString(wc));
       }
-      System.out.println(currentVal);
+      //System.out.println(currentVal);
     }
   }
-  System.out.println(highestVal);
+  //if(Board.blackCaptured.size()>=1){
+  //  for(int m = 0; m < Board.blackCaptured.size(); m++){
+  //    for(int 
+  //  }
+  //}
+  //System.out.println(highestVal);
   //System.out.println("ended for loop");
   if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
@@ -565,6 +573,8 @@ void prayer(int x, int y, int weight) {
   }
 }
 void draw() {
+  System.out.println(Board.blackCaptured.size());
+  System.out.println(Board.whiteCaptured.size());
   if (!Tutorial) {
     if (Theme.equals("Traditional")) {
       fill(252, 204, 156);
@@ -725,6 +735,15 @@ void draw() {
     } else {
       text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
     }
+    for(int i = 0; i < 9; i++){
+      for(int j = 0; j < 9; j++){
+        System.out.println(InitialSelected.get(0));
+        if(Board.dropTest(InitialSelected.get(0), j, i)){
+          fill(20, 50);
+          rect(j*100, i*100, 100, 100);
+        }
+      }
+    }
   }
   if (!canDrop) {
     text("can't drop piece there", 950, 100);
@@ -862,21 +881,10 @@ void draw() {
     fill(0);
   
 }
-boolean oneDrop() {
-  int index = (int)(Math.random()*Board.blackCaptured.size()-1);
-  for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 9; j++) {
-      if (Board.board[i][j].piece==null) {
-        int rand = (int)(Math.random()*10);
-        if (Board.drop(index, i, j) && rand%2==0) {
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
 boolean botMove() {
+  if(Board.checkmate){
+    return false;
+  }
   int xCor = (int)(Math.random()*9);
   int yCor = (int)(Math.random()*9);
   if (Board.board[yCor][xCor].piece!=null) {
@@ -1090,6 +1098,45 @@ public class board {
       }
     }
     return -1;
+  }
+  boolean dropTest(int x, int x1, int y1){
+    if (board[y1][x1].piece!=null) {
+      return false;
+    } else {
+      if (Turn) {
+        if(y1>6){
+          return false;
+        }
+        if (whiteCaptured.get(x).role.equals("pawn")) {
+          if (y1 > 6) {
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
+                return false;
+              }
+            }
+          }
+        }
+        return true;
+      }
+      else{
+        if (blackCaptured.get(x).role.equals("pawn")) {
+          if (y1 < 2) {
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
+                return false;
+              }
+            }
+          }
+        }
+        return true;
+      }
+    }
   }
   boolean drop(int x, int x1, int y1) { // x1 and y1 are not row major order
     if (board[y1][x1].piece!=null) {
