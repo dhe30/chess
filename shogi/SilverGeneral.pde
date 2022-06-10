@@ -126,7 +126,7 @@ public class SilverGeneral extends Piece{
 
   void demote(){
     promoted=false;
-    role="silver \ngeneral";
+    role="silver\ngeneral";
     value=7;
   }
   void displayPiece(int x, int y, boolean white, String line) {

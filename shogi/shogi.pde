@@ -114,15 +114,14 @@ void setup() {
       }
     }
   }
-<<<<<<< HEAD
+
   //for (int i = 0; i < blackCoors.size(); i++) {
   //  System.out.println(Arrays.toString(blackCoors.get(i)));
   //}
   for (int i = 0; i < 8; i++) {
     planks.add(wood());
   }
-=======
->>>>>>> bot
+
 }
 void Hell() {
 }
@@ -182,14 +181,10 @@ void keyPressed() {
       Board.revertPreviousPreventCheck();
       Board.preventCheck();
       Board.checkCheck();
-<<<<<<< HEAD
       if (onePlayer) {
         Beyond();
       }
-=======
-      if(onePlayer){
-      Beyond();}
->>>>>>> bot
+
     } else if (key == 'x' && piece.canPromote) {
       showPromote=false;
       InitialSelected.clear();
@@ -199,14 +194,10 @@ void keyPressed() {
       Board.revertPreviousPreventCheck();
       Board.preventCheck();
       Board.checkCheck();
-<<<<<<< HEAD
       if (onePlayer) {
         Beyond();
       }
-=======
-      if(onePlayer){
-      Beyond();}
->>>>>>> bot
+
     }
   }
 }
