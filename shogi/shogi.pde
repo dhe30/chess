@@ -28,92 +28,12 @@ void setup() {
   background(252, 204, 156);
   size(1800, 900);
   Board = new board();
-  for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 9; j++) {
-      Tile tile = new Tile();
-      Board.board[i][j]=tile;
-    }
-  }
   for (int i = 0; i <=9; i++) {
     line(100*i, 0, 100*i, 900);
     line(0, 100*i, 900, 100*i);
   }
   fill(180);
   rect(900, 0, 1500, 900);
-  //sets down the rooks
-  Piece blackRook = new Rook("black");
-  Piece whiteRook = new Rook("white");
-  Board.board[1][1].setPiece(blackRook);
-  Board.board[7][7].setPiece(whiteRook);
-  //sets down bishops
-  Piece blackBishop = new Bishop("black");
-  Piece whiteBishop = new Bishop("white");
-  Board.board[1][7].setPiece(blackBishop);
-  Board.board[7][1].setPiece(whiteBishop);
-  for (int i = 0; i < 9; i++) {
-    //sets all the pawns down
-    Piece blackPawn = new Pawn("black");
-    Board.board[2][i].setPiece(blackPawn);
-    Piece whitePawn = new Pawn("white");
-    Board.board[6][i].setPiece(whitePawn);
-    //sets down lances
-    if (i==0 || i==8) {
-      Piece blackLance = new Lance("black");
-      Board.board[0][i].setPiece(blackLance);
-      Piece whiteLance = new Lance("white");
-      Board.board[8][i].setPiece(whiteLance);
-    }
-    //sets down knights
-    if (i==1 || i==7) {
-      Piece blackKnight = new Knight("black");
-      Board.board[0][i].setPiece(blackKnight);
-      Piece whiteKnight = new Knight("white");
-      Board.board[8][i].setPiece(whiteKnight);
-    }
-    //sets down silver generals
-    if (i==2 || i==6) {
-      Piece blackSilverGeneral = new SilverGeneral("black");
-      Board.board[0][i].setPiece(blackSilverGeneral);
-      Piece whiteSilverGeneral = new SilverGeneral("white");
-      Board.board[8][i].setPiece(whiteSilverGeneral);
-    }
-    //sets down gold generals
-    if (i==3 || i==5) {
-      Piece blackGoldGeneral = new GoldGeneral("black");
-      Board.board[0][i].setPiece(blackGoldGeneral);
-      Piece whiteGoldGeneral = new GoldGeneral("white");
-      Board.board[8][i].setPiece(whiteGoldGeneral);
-    }
-    //sets down kings
-    if (i==4) {
-      Piece blackKing = new King("black");
-      Board.board[0][i].setPiece(blackKing);
-      Piece whiteKing = new King("white");
-      Board.board[8][i].setPiece(whiteKing);
-    }
-  }
-
-  for (int i = 0; i < Board.board.length; i++) {
-    for (int a = 0; a < Board.board[i].length; a++) {
-      if (Board.board[i][a].piece != null) {
-        if (!Board.board[i][a].piece.white) {
-          int[] coor = {i, a};
-          blackCoors.add(coor);
-        }
-        else{
-          int[] coor = {i, a};
-          whiteCoors.add(coor);
-        }
-        if (Board.board[i][a].piece.isRoyal) {
-
-          Board.royalPotential(i, a);
-        } else {
-          Board.board[i][a].piece.calcPotential(a, i); // calcPotential should not be in RMO
-        }
-        Board.threaten(i, a, true);
-      }
-    }
-  }
 
   //for (int i = 0; i < blackCoors.size(); i++) {
   //  System.out.println(Arrays.toString(blackCoors.get(i)));
@@ -121,7 +41,6 @@ void setup() {
   for (int i = 0; i < 8; i++) {
     planks.add(wood());
   }
-
 }
 void Hell() {
 }
@@ -184,7 +103,6 @@ void keyPressed() {
       if (onePlayer) {
         Beyond();
       }
-
     } else if (key == 'x' && piece.canPromote) {
       showPromote=false;
       InitialSelected.clear();
@@ -197,7 +115,6 @@ void keyPressed() {
       if (onePlayer) {
         Beyond();
       }
-
     }
   }
 }
@@ -252,7 +169,7 @@ void mouseClicked() {
               if (Board.board[0][i].piece!=null) {
                 if (Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))) {
                   Board.board[0][i].piece.promote();
-                  Board.forcePromote(0,i);
+                  Board.forcePromote(0, i);
                   //THIS IS BROKEN< FIXXXXXXXXXXXXXXXXXXXXXXXXX
                   if (Board.board[0][i].piece.canPromote) {
                     Board.board[0][i].piece.canPromote();
@@ -264,7 +181,7 @@ void mouseClicked() {
               }
               if (Board.board[1][i].piece!=null) {
                 if (Board.board[1][i].piece.white && Board.board[1][i].piece.role.equals("knight")) {
-                                    Board.forcePromote(1,i);
+                  Board.forcePromote(1, i);
 
                   Board.board[1][i].piece.promote();
                 }
@@ -282,7 +199,7 @@ void mouseClicked() {
               if (Board.board[8][i].piece!=null) {
                 if (!Board.board[8][i].piece.white && (Board.board[8][i].piece.role.equals("knight") || Board.board[8][i].piece.role.equals("pawn") || Board.board[8][i].piece.role.equals("lance"))) {
                   Board.board[8][i].piece.promote();
-                                    Board.forcePromote(8,i);
+                  Board.forcePromote(8, i);
 
                   if (Board.board[8][i].piece.canPromote) {
                     Board.board[8][i].piece.canPromote();
@@ -294,7 +211,7 @@ void mouseClicked() {
               }
               if (Board.board[7][i].piece!=null) {
                 if (!Board.board[7][i].piece.white && Board.board[7][i].piece.role.equals("knight")) {
-                                    Board.forcePromote(7,i);
+                  Board.forcePromote(7, i);
 
                   Board.board[7][i].piece.promote();
                 }
@@ -395,8 +312,7 @@ void Beyond() {
         if (!Board.board[i][a].piece.white) {
           int[] coor = {i, a};
           blackCoors.add(coor);
-        }
-        else if(Board.board[i][a].piece.white){
+        } else if (Board.board[i][a].piece.white) {
           int[] coor = {i, a};
           whiteCoors.add(coor);
         }
@@ -413,7 +329,7 @@ void Beyond() {
   int blackCoorsIndex=-1;
   for (int i = 0; i < blackCoors.size(); i++) {
     //System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
-           // System.out.println("LORD 2!");
+    // System.out.println("LORD 2!");
 
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
     //System.out.println("didnt break");
@@ -423,11 +339,11 @@ void Beyond() {
         piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
         currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
         System.out.println(whiteCoors.size());
-        for(int v = 0; v < whiteCoors.size(); v++){
+        for (int v = 0; v < whiteCoors.size(); v++) {
           int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
-                    //  System.out.println("RemEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEoved: " + Arrays.toString(wc) + " " + Arrays.toString(whiteCoors.get(v)));
+          //  System.out.println("RemEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEoved: " + Arrays.toString(wc) + " " + Arrays.toString(whiteCoors.get(v)));
 
-          if(Arrays.equals(whiteCoors.get(v), wc)){
+          if (Arrays.equals(whiteCoors.get(v), wc)) {
             whiteCoors.remove(v);
             v--; // CHANGE 1
           }
@@ -446,14 +362,14 @@ void Beyond() {
       Board.moveX(lMoves.get(j)[1], lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
       //System.out.println("j="+j);
       //System.out.println(whiteCoors.size());
-      for(int k = 0; k < whiteCoors.size(); k++){
+      for (int k = 0; k < whiteCoors.size(); k++) {
         //System.out.println("k="+k);
         //System.out.print(Arrays.toString(whiteCoors.get(k)));
-       // System.out.println("LORD !");
+        // System.out.println("LORD !");
         ArrayList<int[]> lMoves2 = Board.legalMoves(whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
-            //    System.out.println("LORD !!");
+        //    System.out.println("LORD !!");
 
-        for(int l = 0; l < lMoves2.size(); l++){
+        for (int l = 0; l < lMoves2.size(); l++) {
           //System.out.println(Arrays.toString(lMoves2.get(l)));
           Piece piece2=null;
           if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece!=null) {
@@ -491,7 +407,7 @@ void Beyond() {
           //System.out.print("aa");
           if (piece2!=null) {
             if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.size() > 0) {
-                    //  System.out.println("LORD 3!");
+              //  System.out.println("LORD 3!");
 
               ArrayList<int[]> temp2 = (ArrayList)Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.clone();
               for (int a = 0; a < temp2.size(); a++) {
@@ -503,7 +419,7 @@ void Beyond() {
             }
             Board.threaten(lMoves2.get(l)[1], lMoves2.get(l)[0], false);
           }
-          if(piece2!=null){
+          if (piece2!=null) {
             int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
             //blackCoors.add(bc);
             //System.out.println("blackCoors added " + Arrays.toString(bc));
@@ -514,21 +430,21 @@ void Beyond() {
 
       if (piece!=null) {
         if (Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].royalThreats.size() > 0) {
-                //  System.out.println("LORD 4!");
+          //  System.out.println("LORD 4!");
 
           ArrayList<int[]> temp = (ArrayList)Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].royalThreats.clone();
           for (int a = 0; a < temp.size(); a++) {
             //coordinate pair [0],[1] because r.T is in RMO
-                            //System.out.println("Threaten rouals after setting 2");
+            //System.out.println("Threaten rouals after setting 2");
             Board.unthreaten(temp.get(a)[0], temp.get(a)[1], false);
             Board.royalPotential(temp.get(a)[0], temp.get(a)[1]);
             Board.threaten(temp.get(a)[0], temp.get(a)[1], false);
           }
         }
-                                    //System.out.println("Threaten after setting 2 ");
+        //System.out.println("Threaten after setting 2 ");
         Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], false);
       }
-      if(piece!=null){
+      if (piece!=null) {
         int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
         whiteCoors.add(wc);
         //System.out.println("whiteCoors added " + Arrays.toString(wc));
@@ -541,7 +457,7 @@ void Beyond() {
   if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
     System.out.println(lMoves.size() + " LOVE " + lMovesIndex);
-        System.out.println(blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
+    System.out.println(blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
 
     Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
 
@@ -674,8 +590,6 @@ void draw() {
           fill(234, 193, 159);
           rect(j*100+5, i*100+5, 90, 90);
         }
-
-
         if (Board.board[i][j].piece!=null) {
           if (Board.board[i][j].piece.white==true) {
             if (Theme.equals("Alien")) {
@@ -714,6 +628,10 @@ void draw() {
   }
   if (Board.checkmate) {
     text("YOU HAVE BEEN MATED!", 950, 75);
+  } else if (Board.blackCheck) {
+    text("BLACK IN CHECK", 950, 75);
+  } else if (Board.whiteCheck) {
+    text("WhITE IN CHECK", 950, 75);
   }
   if (showPromote) {
     fill(13, 178, 46, 150);
@@ -1036,6 +954,83 @@ public class board {
   ArrayList<int[]> saveTheKing = new ArrayList<int[]>(); // tiles that can block check or kill 
   Tile[][] board = new Tile[9][9];
   public board() {
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        Tile tile = new Tile();
+        board[i][j]=tile;
+      }
+    }
+    Piece blackRook = new Rook("black");
+    Piece whiteRook = new Rook("white");
+    board[1][1].setPiece(blackRook);
+    board[7][7].setPiece(whiteRook);
+    //sets down bishops
+    Piece blackBishop = new Bishop("black");
+    Piece whiteBishop = new Bishop("white");
+    board[1][7].setPiece(blackBishop);
+    board[7][1].setPiece(whiteBishop);
+    for (int i = 0; i < 9; i++) {
+      //sets all the pawns down
+      Piece blackPawn = new Pawn("black");
+      board[2][i].setPiece(blackPawn);
+      Piece whitePawn = new Pawn("white");
+      board[6][i].setPiece(whitePawn);
+      //sets down lances
+      if (i==0 || i==8) {
+        Piece blackLance = new Lance("black");
+        board[0][i].setPiece(blackLance);
+        Piece whiteLance = new Lance("white");
+        board[8][i].setPiece(whiteLance);
+      }
+      //sets down knights
+      if (i==1 || i==7) {
+        Piece blackKnight = new Knight("black");
+        board[0][i].setPiece(blackKnight);
+        Piece whiteKnight = new Knight("white");
+        board[8][i].setPiece(whiteKnight);
+      }
+      //sets down silver generals
+      if (i==2 || i==6) {
+        Piece blackSilverGeneral = new SilverGeneral("black");
+        board[0][i].setPiece(blackSilverGeneral);
+        Piece whiteSilverGeneral = new SilverGeneral("white");
+        board[8][i].setPiece(whiteSilverGeneral);
+      }
+      //sets down gold generals
+      if (i==3 || i==5) {
+        Piece blackGoldGeneral = new GoldGeneral("black");
+        board[0][i].setPiece(blackGoldGeneral);
+        Piece whiteGoldGeneral = new GoldGeneral("white");
+        board[8][i].setPiece(whiteGoldGeneral);
+      }
+      //sets down kings
+      if (i==4) {
+        Piece blackKing = new King("black");
+        board[0][i].setPiece(blackKing);
+        Piece whiteKing = new King("white");
+        board[8][i].setPiece(whiteKing);
+      }
+    }
+    for (int i = 0; i < board.length; i++) {
+      for (int a = 0; a < board[i].length; a++) {
+        if (board[i][a].piece != null) {
+          if (!board[i][a].piece.white) {
+            int[] coor = {i, a};
+            blackCoors.add(coor);
+          } else {
+            int[] coor = {i, a};
+            whiteCoors.add(coor);
+          }
+          if (board[i][a].piece.isRoyal) {
+
+            royalPotential(i, a);
+          } else {
+            board[i][a].piece.calcPotential(a, i); // calcPotential should not be in RMO
+          }
+          threaten(i, a, true);
+        }
+      }
+    }
   }
   void checkCheck() {
     if (whiteCheck || blackCheck) {
