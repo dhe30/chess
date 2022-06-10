@@ -547,7 +547,7 @@ void prayer(int x, int y, int weight) {
   }
 }
 
-
+//
 
 
 
@@ -555,13 +555,13 @@ void prayer(int x, int y, int weight) {
 
 void draw() {
   if (!Tutorial) {
-    if (animating){
-      if (animateCounter >= animateTime){
+    if (animating) {
+      if (animateCounter >= animateTime) {
         System.out.println("ENDED!" + " " + Turn);
         animating = false;
         animateCounter = 0;
         moving.clear();
-        if (onePlayer && !Turn){
+        if (onePlayer && !Turn) {
           Beyond();
         }
       } else {
@@ -576,7 +576,7 @@ void draw() {
       fill(0);
       rect(0, 0, 900, 900);
     } else if (Theme.equals("Alien")) {
-      fill(252, 204, 156);
+      fill(255, 255, 255);
       rect(0, 0, 900, 900);
     }
     strokeWeight(3);
@@ -590,8 +590,8 @@ void draw() {
         line(100*i, 0, 100*i, 900);
         line(0, 100*i, 900, 100*i);
       } else if (Theme.equals("Alien")) {
-        line(100*i, 0, 100*i, 900);
-        line(0, 100*i, 900, 100*i);
+        //line(100*i, 0, 100*i, 900);
+        //line(0, 100*i, 900, 100*i);
       }
     }
     strokeWeight(0);
@@ -606,21 +606,26 @@ void draw() {
         } else if (Theme.equals("Hell")) {
           prayer(j*100+3, i*100, 5);
         } else if (Theme.equals("Alien")) {
-          fill(234, 193, 159);
+          fill(255, 255, 255);
           rect(j*100+5, i*100+5, 90, 90);
         }
         if (Board.board[i][j].piece!=null) {
-          if (Board.board[i][j].piece.white==true) {
-            if (Theme.equals("Alien")) {
-              Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
-            } else {
-              Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
+          if (animating) {
+            if (Arrays.equals(new int[]{i, j}, moving.get(0))) {
             }
-          } else {            
-            if (Theme.equals("Alien")) {
-              Board.board[i][j].piece.displayPiece(j*100, i*100, true, "robot.txt");
-            } else {
-              Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
+          } else {
+            if (Board.board[i][j].piece.white==true) {
+              if (Theme.equals("Alien")) {
+                Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
+              } else {
+                Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
+              }
+            } else {            
+              if (Theme.equals("Alien")) {
+                Board.board[i][j].piece.displayPiece(j*100, i*100, true, "robot.txt");
+              } else {
+                Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
+              }
             }
           }
         }
@@ -632,160 +637,160 @@ void draw() {
     ellipse(600, 300, 6, 6);
     ellipse(600, 600, 6, 6);
   }
-  if (!animating){
-  fill(180);
-  rect(900, 0, 1500, 900);
-  fill(0);
-  textSize(20);
-  //fill(225);
-  //fill(0);
-  if (!Tutorial) {
-    if (Turn) {
-      text("white's turn", 950, 50);
-    } else {
-      text("black's turn", 950, 50);
-    }
-        text(frameRate,1100,50);
-
-  }
-  if (Board.checkmate) {
-    text("YOU HAVE BEEN MATED!", 950, 75);
-  } else if (Board.blackCheck) {
-    text("BLACK IN CHECK", 950, 75);
-  } else if (Board.whiteCheck) {
-    text("WhITE IN CHECK", 950, 75);
-  }
-  if (showPromote) {
-    fill(13, 178, 46, 150);
-    rect(950, 100, 160, 150);
+  if (!animating) {
+    fill(180);
+    rect(900, 0, 1500, 900);
     fill(0);
     textSize(20);
-    text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
-  }
-  if (showTutorial) {
-    fill(3, 186, 252, 150);
-    rect(950, 100, 160, 70);
-    fill(0);
-    text("Press 'T' for \ntutorial", 960, 120);
-  }
-  if (showOnePlayer && !Tutorial) {
-    fill(#6e2ad5, 150);
-    rect(950, 180, 160, 100);
-    fill(0);
-    text("Press 'L' \nfor one \nplayer mode", 960, 200);
-  }
-  if (InitialSelected.size() > 1 && selected) {
-    ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
-    fill(20, 50);
-    if (Theme.equals("Hell")) {
-      fill(0);
-      fill(222, 217, 215, 150);
-    }
-    for (int i = 0; i < list.size(); i++) {
-      int x = list.get(i)[0];
-      int y = list.get(i)[1];
-      circle(x*100 + 50, y*100+50, 30);
-    }
-    fill(20, 50);
-
-    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
-  } else if (showPromote) {
-    fill(20, 50);
-    rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
-  }
-  textSize(12);
-  int x=0;
-  for (int i = 0; i < Board.whiteCaptured.size(); i++) {
-    if (x==8) {
-      x=0;
-    }
-    int j=i/8;
-    fill(255);
-
-    //rect(x*100+950, j*100+640, 60, 50);
-    //triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
-    Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).display);
-    Board.whiteCaptured.get(i).x=x*100+950;
-    Board.whiteCaptured.get(i).y=j*100+640;
+    //fill(225);
     //fill(0);
-    //text(Board.whiteCaptured.get(i).role, x*100+960, j*100+655);
-    x++;
-  }
-  x=0;
-  for (int i = 0; i < Board.blackCaptured.size(); i++) {
-    if (x==8) {
-      x=0;
-    }
-    int j=i/8;
-    //fill(255);
-    //rect(x*100+950, j*100+310, 60, 50);
-    //triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
-    Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
-
-    Board.blackCaptured.get(i).x=x*100+950;
-    Board.blackCaptured.get(i).y=j*100+310;
-    //fill(0);
-    //text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
-    x++;
-  }
-  if (InitialSelected.size()==1) {
-    if (Turn) {
-      text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
-    } else {
-      text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
-    }
-  }
-  if (!canDrop) {
-    text("can't drop piece there", 950, 100);
-  }
-  if (!Tutorial) {
-    //fill(#b27e4d);
-    //rect(1200, 5, 430, 302);
-    //line(1420, 5, 1420, 305);
-    //line(1520, 5, 1520, 305);
-    for (int i = 0; i < 8; i++) {
-      int scale = 3;
-      //line(1200, i*30+35, 1630, i*30+35);
-      for (int a = 0; a < planks.get(i).length; a++) {
-        for (int b = 0; b < planks.get(i)[a].length; b++) {
-          fill(planks.get(i)[a][b]);
-          rect(1200 + (a * scale), (i*35) + (b*scale), scale, scale);
-        }
+    if (!Tutorial) {
+      if (Turn) {
+        text("white's turn", 950, 50);
+      } else {
+        text("black's turn", 950, 50);
       }
-      stroke(137, 63, 24);
-      strokeWeight(3);
-      line(1200, i*35+30, 1630, i*35+30);
-      line(1630, i*35, 1630, i*35+30);
-      stroke(210, 162, 85);
-      line(1200, i*35, 1630, i*35);
-      line(1200, i*35, 1200, i*35+30);
-      strokeWeight(0);
-      noStroke();
-      fill(200);
-      ellipse(1206, i*35 + 6, 3, 3);
-      ellipse(1206, i*35 + 25, 3, 3);
-      ellipse(1626, i*35 + 6, 3, 3);
-      ellipse(1626, i*35 + 25, 3, 3);
+      text(frameRate, 1100, 50);
+    }
+    if (Board.checkmate) {
+      text("YOU HAVE BEEN MATED!", 950, 75);
+    } else if (Board.blackCheck) {
+      text("BLACK IN CHECK", 950, 75);
+    } else if (Board.whiteCheck) {
+      text("WhITE IN CHECK", 950, 75);
+    }
+    if (showPromote) {
+      fill(13, 178, 46, 150);
+      rect(950, 100, 160, 150);
+      fill(0);
+      textSize(20);
+      text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
+    }
+    if (showTutorial) {
+      fill(3, 186, 252, 150);
+      rect(950, 100, 160, 70);
+      fill(0);
+      text("Press 'T' for \ntutorial", 960, 120);
+    }
+    if (showOnePlayer && !Tutorial) {
+      fill(#6e2ad5, 150);
+      rect(950, 180, 160, 100);
+      fill(0);
+      text("Press 'L' \nfor one \nplayer mode", 960, 200);
+    }
+    if (InitialSelected.size() > 1 && selected) {
+      ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
+      fill(20, 50);
+      if (Theme.equals("Hell")) {
+        fill(0);
+        fill(222, 217, 215, 150);
+      }
+      for (int i = 0; i < list.size(); i++) {
+        int x = list.get(i)[0];
+        int y = list.get(i)[1];
+        circle(x*100 + 50, y*100+50, 30);
+      }
+      fill(20, 50);
 
-      ellipse(1420, i*35 + 6, 3, 3);
-      ellipse(1420, i*35 + 25, 3, 3);
-      ellipse(1520, i*35 + 6, 3, 3);
-      ellipse(1520, i*35 + 25, 3, 3);
+      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+    } else if (showPromote) {
+      fill(20, 50);
+      rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
+    }
+    textSize(12);
+    int x=0;
+    for (int i = 0; i < Board.whiteCaptured.size(); i++) {
+      if (x==8) {
+        x=0;
+      }
+      int j=i/8;
+      fill(255);
+
+      //rect(x*100+950, j*100+640, 60, 50);
+      //triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
+      Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).display);
+      Board.whiteCaptured.get(i).x=x*100+950;
+      Board.whiteCaptured.get(i).y=j*100+640;
+      //fill(0);
+      //text(Board.whiteCaptured.get(i).role, x*100+960, j*100+655);
+      x++;
+    }
+    x=0;
+    for (int i = 0; i < Board.blackCaptured.size(); i++) {
+      if (x==8) {
+        x=0;
+      }
+      int j=i/8;
+      //fill(255);
+      //rect(x*100+950, j*100+310, 60, 50);
+      //triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
+      Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
+
+      Board.blackCaptured.get(i).x=x*100+950;
+      Board.blackCaptured.get(i).y=j*100+310;
+      //fill(0);
+      //text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
+      x++;
+    }
+    if (InitialSelected.size()==1) {
+      if (Turn) {
+        text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
+      } else {
+        text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
+      }
+    }
+    if (!canDrop) {
+      text("can't drop piece there", 950, 100);
+    }
+    if (!Tutorial) {
+      //fill(#b27e4d);
+      //rect(1200, 5, 430, 302);
+      //line(1420, 5, 1420, 305);
+      //line(1520, 5, 1520, 305);
+      for (int i = 0; i < 8; i++) {
+        int scale = 3;
+        //line(1200, i*30+35, 1630, i*30+35);
+        for (int a = 0; a < planks.get(i).length; a++) {
+          for (int b = 0; b < planks.get(i)[a].length; b++) {
+            fill(planks.get(i)[a][b]);
+            rect(1200 + (a * scale), (i*35) + (b*scale), scale, scale);
+          }
+        }
+        stroke(137, 63, 24);
+        strokeWeight(3);
+        line(1200, i*35+30, 1630, i*35+30);
+        line(1630, i*35, 1630, i*35+30);
+        stroke(210, 162, 85);
+        line(1200, i*35, 1630, i*35);
+        line(1200, i*35, 1200, i*35+30);
+        strokeWeight(0);
+        noStroke();
+        fill(200);
+        ellipse(1206, i*35 + 6, 3, 3);
+        ellipse(1206, i*35 + 25, 3, 3);
+        ellipse(1626, i*35 + 6, 3, 3);
+        ellipse(1626, i*35 + 25, 3, 3);
+
+        ellipse(1420, i*35 + 6, 3, 3);
+        ellipse(1420, i*35 + 25, 3, 3);
+        ellipse(1520, i*35 + 6, 3, 3);
+        ellipse(1520, i*35 + 25, 3, 3);
+      }
+    }
+    if (moves.size()>8) {
+      moves.remove(0);
+    }
+    if (pieceMoved.size()>10) {
+      pieceMoved.remove(0);
+    }
+    for (int i = moves.size()-1; i >= 0; i--) {
+      fill(225);
+      textSize(13);
+      text(pieceMoved.get(i), 1210, i*35+20);
+      text(moves.get(i)[0], 1465, i*35+20);
+      text(moves.get(i)[1], 1570, i*35+20);
     }
   }
-  if (moves.size()>8) {
-    moves.remove(0);
-  }
-  if (pieceMoved.size()>10) {
-    pieceMoved.remove(0);
-  }
-  for (int i = moves.size()-1; i >= 0; i--) {
-    fill(225);
-    textSize(13);
-    text(pieceMoved.get(i), 1210, i*35+20);
-    text(moves.get(i)[0], 1465, i*35+20);
-    text(moves.get(i)[1], 1570, i*35+20);
-  }}
   textSize(30);
   if (Tutorial) {
     switch(tutorialIndex) {
@@ -1340,10 +1345,10 @@ public class board {
       }
       // UNTHREATEN BOTH 
       // NEED TO UNTHREATEN other tile
-      moving.add(new int[]{x,y});
+      moving.add(new int[]{x, y});
       unthreaten(x, y, true);
       if (board[x1][y1].piece != null) {
-
+        moving.add(new int[]{x1, y1});
         unthreaten(x1, y1, true);
       }
       // move current piece to other tile, set current tile's piece to null
@@ -1407,7 +1412,9 @@ public class board {
         planks.remove(0);
         planks.add(wood());
       }
-      animating = true;
+      if (Theme.equals("Alien")) {
+        animating = true;
+      }
       return true;
     } else {
       return false;
