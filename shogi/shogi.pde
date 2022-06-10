@@ -649,7 +649,7 @@ void draw() {
 
     //rect(x*100+950, j*100+640, 60, 50);
     //triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
-    Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -44, true, Board.whiteCaptured.get(i).display);
+    Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 +24, true, Board.whiteCaptured.get(i).display);
     Board.whiteCaptured.get(i).x=x*100+950;
     Board.whiteCaptured.get(i).y=j*100+640;
     //fill(0);
@@ -665,7 +665,7 @@ void draw() {
     //fill(255);
     //rect(x*100+950, j*100+310, 60, 50);
     //triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
-    Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
+    Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 +50, false, Board.blackCaptured.get(i).display);
 
     Board.blackCaptured.get(i).x=x*100+950;
     Board.blackCaptured.get(i).y=j*100+310;
@@ -704,6 +704,8 @@ void draw() {
       stroke(210, 162, 85);
 
       line(1200, i*45, 1630, i*45);
+            line(1200, i*45, 1200, i*45+40);
+
       strokeWeight(0);
       noStroke();
     }
@@ -1498,7 +1500,7 @@ public class board {
         } else if (board[x][y].piece.white == Turn) {
           // System.out.println("hitted and ally and then hitted an ally");
           look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted\nrook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
           System.out.println("IN CHECK!");
           // DO QUICK: THREATEN tile below the king in the same row based on TURN , add to supplement threats, REMOVE IN revert method opposite of turn 
           // because revert happens after the turn changes 
@@ -1514,7 +1516,7 @@ public class board {
             //System.out.println("SUPPLEMENTAL");
           }
           look = false;
-        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
+        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted\nrook") || board[x][y].piece.role.equals("lance")) {
           //  System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
           if (board[x][y].piece.role.equals("lance") && x <= ogX) {
             look = false;
@@ -1567,7 +1569,7 @@ public class board {
         } else if (board[x][y].piece.white == Turn) {
           //   System.out.println("hitted and ally and then hitted an ally");
           look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted\nrook") || board[x][y].piece.role.equals("lance"))) { // no ally hit and piece hit is not an ally 
           //   System.out.println("IN CHECK!");
           if (ogX - 1 >=0) {
             if (Turn) {
@@ -1581,7 +1583,7 @@ public class board {
             //System.out.println("SUPPLEMENTAL");
           }
           look = false;
-        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook") || board[x][y].piece.role.equals("lance")) {
+        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted\nrook") || board[x][y].piece.role.equals("lance")) {
           //  System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
           if (board[x][y].piece.role.equals("lance") && x >= ogX) {
             look = false;
@@ -1635,7 +1637,7 @@ public class board {
         } else if (board[x][y].piece.white == Turn) {
           //    System.out.println("hitted and ally and then hitted an ally");
           look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook"))) { // no ally hit and piece hit is not an ally 
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted\nrook"))) { // no ally hit and piece hit is not an ally 
           //   System.out.println("IN CHECK!");
           if (ogY + 1 <=8) {
             if (Turn) {
@@ -1649,7 +1651,7 @@ public class board {
             //System.out.println("SUPPLEMENTAL");
           }
           look = false;
-        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook")) {
+        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted\nrook")) {
           //   System.out.println("hitted an ally and then hitted an Enemy on the horizon!");
 
           // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
@@ -1697,10 +1699,10 @@ public class board {
           protector.add(y);
         } else if (board[x][y].piece.white == Turn) {
           look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook"))) { // no ally hit and piece hit is not an ally 
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted\nrook"))) { // no ally hit and piece hit is not an ally 
           if (ogY - 1 >= 0) {
             if (Turn) {
-              //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
+              System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
 
               board[ogX][ogY -1].setBlackThreats(1);
             } else {
@@ -1710,7 +1712,7 @@ public class board {
             //System.out.println("SUPPLEMENTAL");
           }
           look = false;
-        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted \n rook")) {
+        } else if (board[x][y].piece.role.equals("rook") || board[x][y].piece.role.equals("promoted\nrook")) {
           int pX = protector.get(0); 
           int pY = protector.get(1);
           ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
@@ -1755,7 +1757,7 @@ public class board {
           protector.add(y);
         } else if (board[x][y].piece.white == Turn) {
           look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted\nbishop"))) { // no ally hit and piece hit is not an ally 
           if (ogY - 1 >= 0 && ogX +1 <= 8) {
             if (Turn) {
               //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
@@ -1768,7 +1770,7 @@ public class board {
             //System.out.println("SUPPLEMENTAL");
           }
           look = false;
-        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
+        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted\nbishop")) {
           int pX = protector.get(0); 
           int pY = protector.get(1);
           ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
@@ -1812,7 +1814,7 @@ public class board {
           protector.add(y);
         } else if (board[x][y].piece.white == Turn) {
           look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted\nbishop"))) { // no ally hit and piece hit is not an ally 
           if (ogY + 1 <= 8 && ogX +1 <= 8) {
             if (Turn) {
               //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
@@ -1825,7 +1827,7 @@ public class board {
             //System.out.println("SUPPLEMENTAL");
           }
           look = false;
-        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
+        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted\nbishop")) {
           int pX = protector.get(0); 
           int pY = protector.get(1);
           ArrayList<int[]> restriction = (ArrayList)board[pX][pY].piece.potentialMoves.clone();
@@ -1869,7 +1871,7 @@ public class board {
           protector.add(y);
         } else if (board[x][y].piece.white == Turn) {
           look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted\nbishop"))) { // no ally hit and piece hit is not an ally 
           if (ogY - 1 >= 0 && ogX -1 >= 0) {
             if (Turn) {
               //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
@@ -1882,7 +1884,7 @@ public class board {
             //System.out.println("SUPPLEMENTAL");
           }
           look = false;
-        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
+        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted\nbishop")) {
           // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
@@ -1927,7 +1929,7 @@ public class board {
           protector.add(y);
         } else if (board[x][y].piece.white == Turn) {
           look = false;
-        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop"))) { // no ally hit and piece hit is not an ally 
+        } else if (protector.size() == 0 && (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted\nbishop"))) { // no ally hit and piece hit is not an ally 
           if (ogY + 1 <= 8 && ogX -1 >= 0) {
             if (Turn) {
               //System.out.println("SUPPLEMENTAL WHITE: " + (ogX+1) + " " + ogY);
@@ -1940,7 +1942,7 @@ public class board {
             //System.out.println("SUPPLEMENTAL");
           }
           look = false;
-        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted \n bishop")) {
+        } else if (board[x][y].piece.role.equals("bishop") || board[x][y].piece.role.equals("promoted\nbishop")) {
           // Juicy code: if potentialMoves of protector is NOT in the SAME ROW, remove from potential, unthreaten 
           int pX = protector.get(0); 
           int pY = protector.get(1);
