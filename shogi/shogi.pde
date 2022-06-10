@@ -172,7 +172,8 @@ void keyPressed() {
       Board.revertPreviousPreventCheck();
       Board.preventCheck();
       Board.checkCheck();
-      Beyond();
+      if(onePlayer){
+      Beyond();}
     } else if (key == 'x' && piece.canPromote) {
       showPromote=false;
       InitialSelected.clear();
@@ -182,7 +183,8 @@ void keyPressed() {
       Board.revertPreviousPreventCheck();
       Board.preventCheck();
       Board.checkCheck();
-      Beyond();
+      if(onePlayer){
+      Beyond();}
     }
   }
 }
@@ -436,13 +438,13 @@ void Beyond() {
           if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece!=null) {
             piece2 = Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece;
             currentVal-=Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece.value*1.5;
-            for(int v = 0; v < blackCoors.size(); v++){
-              int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
-              if(Arrays.equals(blackCoors.get(v), bc)){
-                blackCoors.remove(v);
-                v--; // CHANGE 2
-              }
-            }
+            //for(int v = 0; v < blackCoors.size(); v++){
+            //  int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
+            //  if(Arrays.equals(blackCoors.get(v), bc)){
+            //    //blackCoors.remove(v);
+            //    v--; // CHANGE 2
+            //  }
+            //}
           }
           //System.out.println("lMove2 = [" + lMoves2.get(l)[0] + "," + lMoves2.get(l)[1] + "]");
           Board.moveX(whiteCoors.get(k)[0], whiteCoors.get(k)[1], lMoves2.get(l)[1], lMoves2.get(l)[0]);
@@ -482,7 +484,7 @@ void Beyond() {
           }
           if(piece2!=null){
             int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
-            blackCoors.add(bc);
+            //blackCoors.add(bc);
             //System.out.println("blackCoors added " + Arrays.toString(bc));
           }
         }
@@ -517,8 +519,10 @@ void Beyond() {
   //System.out.println("ended for loop");
   if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
+    System.out.println(lMoves.size() + " LOVE " + lMovesIndex);
+        System.out.println(blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
+
     Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
-    System.out.println(blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]+ " " +  lMoves.get(lMovesIndex)[1]+ " " +  lMoves.get(lMovesIndex)[0]);
 
     Turn=!Turn;
     //System.out.println("Turned");
