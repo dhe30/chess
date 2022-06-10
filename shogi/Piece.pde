@@ -51,7 +51,7 @@ public class Piece {
       if(idleCounter <= 120){
         start = 1;
         end = 17;
-      } else if (idleCounter > 120 && idleCounter < 240){
+      } else if (idleCounter > 120 && idleCounter < 180){
         start = 18;
         end = 34;
       } else {
@@ -59,6 +59,7 @@ public class Piece {
         end = 51;
       }
       if (Theme.equals("Alien")) {
+        lines = loadStrings(alienDisplay);
         int scale = 4;
         //x+=idleCounter;
         idleCounter+=1;
