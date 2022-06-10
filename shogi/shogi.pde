@@ -20,6 +20,8 @@ ArrayList<int[]> whiteCoors = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
 ArrayList<color[][]> planks = new ArrayList<color[][]>();
 boolean animating = false;
+int animateTime = 0;
+int animateCounter = 0;
 int idleCounter = 0;
 int count = 0;
 void setup() {
@@ -118,6 +120,8 @@ void keyPressed() {
     }
   }
 }
+
+
 void mouseClicked() {
   showTutorial=false;
   showOnePlayer=false;
@@ -170,7 +174,6 @@ void mouseClicked() {
                 if (Board.board[0][i].piece.white && (Board.board[0][i].piece.role.equals("knight") || Board.board[0][i].piece.role.equals("pawn") || Board.board[0][i].piece.role.equals("lance"))) {
                   Board.board[0][i].piece.promote();
                   Board.forcePromote(0, i);
-                  //THIS IS BROKEN< FIXXXXXXXXXXXXXXXXXXXXXXXXX
                   if (Board.board[0][i].piece.canPromote) {
                     Board.board[0][i].piece.canPromote();
                   }
@@ -298,9 +301,10 @@ void mouseClicked() {
       }
     }
   }
-  if (onePlayer && !Turn) {
-    Beyond();
-  }
+  //if (onePlayer && !Turn) {
+  //  Beyond();
+  //}
+  //MOVE THIS TO DRAW (WITH IF STATEMENTS)
 }
 void Beyond() {
   //System.out.println("BOT THINKING" + " in check?" + Board.blackCheck );
@@ -550,6 +554,19 @@ void prayer(int x, int y, int weight) {
 
 void draw() {
   if (!Tutorial) {
+    if (animating){
+      if (animateCounter >= animateTime){
+        System.out.println("ENDED!" + " " + Turn);
+        animating = false;
+        animateCounter = 0;
+        if (onePlayer && !Turn){
+          Beyond();
+        }
+      } else {
+        System.out.println(animateCounter);
+        animateCounter +=1;
+      }
+    }
     if (Theme.equals("Traditional")) {
       fill(252, 204, 156);
       rect(0, 0, 900, 900);
@@ -613,6 +630,7 @@ void draw() {
     ellipse(600, 300, 6, 6);
     ellipse(600, 600, 6, 6);
   }
+  if (!animating){
   fill(180);
   rect(900, 0, 1500, 900);
   fill(0);
@@ -625,6 +643,8 @@ void draw() {
     } else {
       text("black's turn", 950, 50);
     }
+        text(frameRate,1100,50);
+
   }
   if (Board.checkmate) {
     text("YOU HAVE BEEN MATED!", 950, 75);
@@ -751,27 +771,6 @@ void draw() {
       ellipse(1520, i*35 + 25, 3, 3);
     }
   }
-  //if (onePlayer && !Turn) {
-  //  if (Board.blackCaptured.size()>2) {
-  //    if (oneDrop()) {
-  //      Turn=!Turn;
-  //      Board.revertPreviousPreventCheck();
-  //      Board.preventCheck();
-  //      Board.checkCheck();
-  //    } else {
-  //      botMove();
-  //      Turn=true;
-  //      Board.revertPreviousPreventCheck();
-  //      Board.preventCheck();
-  //      Board.checkCheck();
-  //    }
-  //  }
-  //  botMove();
-  //  Turn=true;
-  //  Board.revertPreviousPreventCheck();
-  //  Board.preventCheck();
-  //  Board.checkCheck();
-  //}
   if (moves.size()>8) {
     moves.remove(0);
   }
@@ -784,10 +783,9 @@ void draw() {
     text(pieceMoved.get(i), 1210, i*35+20);
     text(moves.get(i)[0], 1465, i*35+20);
     text(moves.get(i)[1], 1570, i*35+20);
-  }
+  }}
   textSize(30);
   if (Tutorial) {
-    System.out.println("YEYE");
     switch(tutorialIndex) {
     case 0:
       PImage pawn = loadImage("pawn.jpg");
@@ -1307,18 +1305,6 @@ public class board {
   boolean move(int x, int y, int x1, int y1) {
     // update restricted if x y is found inside 
     // MOVE this if statement when x1 and y1 are passed through unchecked and are potentially illegal
-    if (restricted.size() > 0) {
-      int index = restrictedIndex(x, y);
-      if (index != -1) {
-        restricted.remove(index);
-        restricted.add(new int[]{x1, y1});
-        String answ ="";
-        for (int i = 0; i < restricted.size(); i++) {
-          answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
-        }
-        //System.out.println("NEW RESTRICTED" + answ);
-      }
-    }
     boolean isLegal=false;
     ArrayList<int[]> lMoves = legalMoves(x, y);
     for (int i = 0; i < lMoves.size(); i++) {
@@ -1328,6 +1314,18 @@ public class board {
       }
     }
     if (isLegal) {
+      if (restricted.size() > 0) {
+        int index = restrictedIndex(x, y);
+        if (index != -1) {
+          restricted.remove(index);
+          restricted.add(new int[]{x1, y1});
+          String answ ="";
+          for (int i = 0; i < restricted.size(); i++) {
+            answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
+          }
+          //System.out.println("NEW RESTRICTED" + answ);
+        }
+      }
       // if there is a piece on other tile, move to Captured array 
       if (board[x1][y1].piece!=null) {
         if (board[x1][y1].piece.white==true) {
@@ -1406,6 +1404,7 @@ public class board {
         planks.remove(0);
         planks.add(wood());
       }
+      animating = true;
       return true;
     } else {
       return false;
