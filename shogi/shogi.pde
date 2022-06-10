@@ -19,6 +19,7 @@ ArrayList<int[]> blackCoors = new ArrayList<int[]>();
 ArrayList<int[]> whiteCoors = new ArrayList<int[]>();
 ArrayList<String> pieceMoved = new ArrayList<String>();
 ArrayList<color[][]> planks = new ArrayList<color[][]>();
+ArrayList<int[]> moving = new ArrayList<int[]>();
 boolean animating = false;
 int animateTime = 0;
 int animateCounter = 0;
@@ -559,6 +560,7 @@ void draw() {
         System.out.println("ENDED!" + " " + Turn);
         animating = false;
         animateCounter = 0;
+        moving.clear();
         if (onePlayer && !Turn){
           Beyond();
         }
@@ -1338,6 +1340,7 @@ public class board {
       }
       // UNTHREATEN BOTH 
       // NEED TO UNTHREATEN other tile
+      moving.add(new int[]{x,y});
       unthreaten(x, y, true);
       if (board[x1][y1].piece != null) {
 
