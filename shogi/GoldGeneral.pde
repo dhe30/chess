@@ -73,16 +73,17 @@ public class GoldGeneral extends Piece {
     String[] lines = loadStrings(line);
     int start = 1;
     int end = 17;
-    //if (idleCounter <= 180) {
-    //  start = 1;
-    //  end = 18;
-    //} else if (idleCounter > 180) {
-    //  start = 19;
-    //  end = 36;
-    //} else {
-    //  start = 35;
-    //  end = 51;
-    //}
+    if (!animating){
+    if (idleCounter <= 180) {
+      start = 1;
+      end = 17;
+    } else if (idleCounter > 180) {
+      start = 35;
+      end = 50;
+    } else {
+      start = 35;
+      end = 51;
+    }}
     if (Theme.equals("Alien")) {
       int scale =4;
       //x+=idleCounter;
@@ -100,6 +101,8 @@ public class GoldGeneral extends Piece {
           } else {
             start = 18;
             end = 34;
+           // switcher = !switcher;
+
           }
         }
         displayX += scaleX;
