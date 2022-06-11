@@ -83,3 +83,11 @@ June 7:
 
     Daniel: fixed bot to properly handle check and fixed other bot bugs
 
+June 9:
+
+    Samuel: made bot look two moves ahead
+
+June 10: 
+
+    Samuel: made bot be able to drop pieces while looking two moves ahead
+
