@@ -521,11 +521,9 @@ void Beyond() {
   if(Board.blackCaptured.size()>=1){
     for(int m = 0; m < Board.blackCaptured.size(); m++){
       Piece piece = Board.blackCaptured.get(m);
-      piece.switchSides();
       for(int i = 2; i < 9; i++){
         for(int j = 0; j < 9; j++){
-          if(Board.dropTest(m, j, i)){
-            Board.drop(m, j, i);
+          if(Board.drop(m, j, i)){
             moves.remove(moves.size()-1);
             for (int y = 0; y < 9; y++) {
               for (int z = 0; z < 9; z++) {
@@ -553,7 +551,7 @@ void Beyond() {
                 }
                 if (currentVal>highestVal) {
                   highestVal=currentVal;
-                  lMovesIndex=j-1;
+                  lMovesIndex=-1;
                   blackCoorsIndex=-1;
                   doDrop=true;
                   graveyardIndex=m;
@@ -588,6 +586,7 @@ void Beyond() {
                 }
               }
             }
+            piece.white=true;
             Board.blackCaptured.add(m, piece);
             Board.board[i][j].setPiece(null);
           }
@@ -648,8 +647,8 @@ void prayer(int x, int y, int weight) {
   }
 }
 void draw() {
-  System.out.println(Board.blackCaptured.size());
-  System.out.println(Board.whiteCaptured.size());
+  //System.out.println(Board.blackCaptured.size());
+  //System.out.println(Board.whiteCaptured.size());
   if (!Tutorial) {
     if (Theme.equals("Traditional")) {
       fill(252, 204, 156);
@@ -1607,8 +1606,8 @@ public class board {
         }
       }
     } else if (whiteCheck || blackCheck) {
-      System.out.println("SHOULD NOT BE ZERO, UNLESS CHECKMATED: " + saveTheKing.size());
-      System.out.println("white check: " + whiteCheck + " black check: " + blackCheck);
+      //System.out.println("SHOULD NOT BE ZERO, UNLESS CHECKMATED: " + saveTheKing.size());
+      //System.out.println("white check: " + whiteCheck + " black check: " + blackCheck);
       for (int i = 0; i < ans.size(); i++) {
         boolean found = false;
         for (int a = 0; a < saveTheKing.size() && !found; a++) {
