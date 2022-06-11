@@ -54,6 +54,7 @@ void keyPressed() {
     } else if (Theme.equals("Hell")) {
       Theme = "Alien";
     } else if (Theme.equals("Alien")) {
+      animating = false;
       Theme = "Traditional";
     }
   }
@@ -608,42 +609,66 @@ void draw() {
           fill(255, 255, 255);
           rect(j*100+5, i*100+5, 90, 90);
         }
+      }
+    }
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
+        if (Theme.equals("Traditional")) {
+          fill(234, 193, 159);
+          rect(j*100+5, i*100+5, 90, 90);
+        } else if (Theme.equals("Hell")) {
+          prayer(j*100+3, i*100, 5);
+        } else if (Theme.equals("Alien")) {
+          fill(255, 255, 255);
+          rect(j*100+5, i*100+5, 90, 90);
+        }
+        
+      }
+    }
+    for (int i = 0; i < 9; i++) {
+      for (int j = 0; j < 9; j++) {
         if (Board.board[i][j].piece!=null) {
-          if ( animating) {
-            if (Arrays.equals(new int[]{i, j}, moving.get(0))) {
+          //if ( animating) {
+          //  if (Arrays.equals(new int[]{i, j}, moving.get(0))) {
+          //  } else {
+          //    if (Board.board[i][j].piece.white==true) {
+          //      if (Theme.equals("Alien")) {
+          //        Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
+          //      } else {
+          //        Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
+          //      }
+          //    } else {            
+          //      if (Theme.equals("Alien")) {
+          //        Board.board[i][j].piece.displayPiece(j*100, i*100, true, "robot.txt");
+          //      } else {
+          //        Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
+          //      }
+          //    }
+          //  }
+          //} else {
+          if (Board.board[i][j].piece.white==true) {
+            if (Theme.equals("Alien")) {
+              Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
             } else {
-              if (Board.board[i][j].piece.white==true) {
-                if (Theme.equals("Alien")) {
-                  Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
-                } else {
-                  Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
-                }
-              } else {            
-                if (Theme.equals("Alien")) {
-                  Board.board[i][j].piece.displayPiece(j*100, i*100, true, "robot.txt");
-                } else {
-                  Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
-                }
-              }
+              Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
             }
-          } else {
-            if (Board.board[i][j].piece.white==true) {
-              if (Theme.equals("Alien")) {
-                Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
-              } else {
-                Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
-              }
-            } else {            
-              if (Theme.equals("Alien")) {
-                Board.board[i][j].piece.displayPiece(j*100, i*100, true, "robot.txt");
-              } else {
-                Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
-              }
+          } else {            
+            if (Theme.equals("Alien")) {
+              Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.alienDisplay);
+            } else {
+              Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
             }
           }
+          //}
         }
       }
     }
+
+
+
+
+
+
     fill(0);
     ellipse(300, 300, 6, 6);
     ellipse(300, 600, 6, 6);
@@ -1358,10 +1383,8 @@ public class board {
       }
       // UNTHREATEN BOTH 
       // NEED TO UNTHREATEN other tile
-      moving.add(new int[]{x, y});
       unthreaten(x, y, true);
       if (board[x1][y1].piece != null) {
-        moving.add(new int[]{x1, y1});
         unthreaten(x1, y1, true);
       }
       // move current piece to other tile, set current tile's piece to null
@@ -1426,7 +1449,8 @@ public class board {
         planks.add(wood());
       }
       if (Theme.equals("Alien")) {
-        animating = true;
+        animating = true; 
+        board[x1][y1].piece.animate(x, y, x1, y1);
       }
       return true;
     } else {
