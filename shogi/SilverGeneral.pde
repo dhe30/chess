@@ -9,7 +9,7 @@ public class SilverGeneral extends Piece {
   final color Eight = color(0, 0, 0);
   public SilverGeneral(String x) {
     super(x);
-    role="silver\nGeneral";
+    role="silver\ngeneral";
     value=7;
     display = "silver.txt";
     alienDisplay = "silverBot.txt";
@@ -195,7 +195,7 @@ public class SilverGeneral extends Piece {
         }
       }
     } else {
-      super.displayPiece(x, y, white, "lance.txt");
+      super.displayPiece(x, y, white, "silver.txt");
     }
   }
 }

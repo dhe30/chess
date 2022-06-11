@@ -121,6 +121,9 @@ void keyPressed() {
   if (InitialSelected.size()>0) {
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
     if (key == 'p' && piece.canPromote) {
+      if (makeSure){
+        makeSure = false;
+      }
       showPromote=false;
       piece.canPromote=false;
       Board.unthreaten(InitialSelected.get(1), InitialSelected.get(0), true);
@@ -143,6 +146,9 @@ void keyPressed() {
         Beyond();
       }
     } else if (key == 'x' && piece.canPromote) {
+      if (makeSure){
+        makeSure = false;
+      }
       showPromote=false;
       InitialSelected.clear();
       Turn = !Turn;
@@ -160,6 +166,9 @@ void keyPressed() {
 
 
 void mouseClicked() {
+  if(makeSure){
+    makeSure = false;
+  }
   showTutorial=false;
   showOnePlayer=false;
   // ArrayOutOfBounds if click not within 900 * 900 and system crashes
@@ -758,8 +767,10 @@ void draw() {
       if (makeSure) {
         text("Press r to confirm", 950, 90);
       } else {
-        if (moves.size() > 0) {
+        if (moves.size() > 0 && InitialSelected.size() == 0) {
           text("Press r to restart", 950, 90);
+        } else if (InitialSelected.size() == 2){
+          text(Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece.role.replace("\n", " "), 950,90);
         }
       }
     }

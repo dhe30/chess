@@ -146,7 +146,7 @@ public class GoldGeneral extends Piece {
         }
       }
     } else {
-      super.displayPiece(x, y, white, "lance.txt");
+      super.displayPiece(x, y, white, "gold.txt");
     }
   }
   void animate(int x, int y, int x1, int y1) {
