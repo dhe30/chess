@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 board Board;
+String[] frame;
 String Theme = "Traditional";
 boolean Test = false;
 ArrayList<Integer> InitialSelected = new ArrayList<Integer>();
@@ -25,7 +26,9 @@ int animateTime = 20;
 int animateCounter = 0;
 int idleCounter = 0;
 int count = 0;
+boolean makeSure = false;
 void setup() {
+  frame = loadStrings("frame.txt");
   frameRate(60);
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
@@ -48,6 +51,38 @@ void setup() {
 void Hell() {
 }
 void keyPressed() {
+  if (key == 'r') {
+    if (makeSure == true || Board.checkmate == true) {
+      makeSure = false;
+      Board = new board();
+      moves = new ArrayList<int[]>();
+      blackCoors = new ArrayList<int[]>();
+      whiteCoors = new ArrayList<int[]>();
+      pieceMoved = new ArrayList<String>();
+      planks = new ArrayList<color[][]>();
+      for (int i = 0; i < 8; i++) {
+        planks.add(wood());
+      }
+      InitialSelected = new ArrayList<Integer>();
+      Turn = true;
+      showPromote = false;
+      selected = false;
+      sameRow=false;
+      canDrop=true;
+      Tutorial=false;
+      showTutorial=true;
+      onePlayer=false;
+      showOnePlayer=true;
+      tutorialIndex=0;
+      animating = false;
+    }
+    if (moves.size() > 0) {
+      makeSure = true;
+    }
+  }
+  if (key == 'x' && makeSure) {
+    makeSure = false;
+  }
   if (key == 'u') {
     if (Theme.equals("Traditional")) {
       Theme = "Hell";
@@ -75,7 +110,7 @@ void keyPressed() {
     showTutorial=false;
     System.out.println("After:" + " " + Tutorial + " SHOW:" + showTutorial);
   }
-  if (key=='l') {
+  if (key=='l' && moves.size() == 0) {
     onePlayer=true;
     showOnePlayer=false;
     showTutorial=false;
@@ -685,12 +720,40 @@ void draw() {
     //fill(225);
     //fill(0);
     if (!Tutorial) {
+      int scale = 20;
+      for (int i = 1; i < frame.length; i++) {
+        //System.out.println(i);
+        for (int a = 0; a < frame[i].length(); a++) {
+          if (frame[i].charAt(a)=='1') {
+            fill(90, 189, 19);
+          } else if (frame[i].charAt(a)=='2') {
+            fill(159, 227, 111);
+          } else if (frame[i].charAt(a)=='3') {
+            fill(179, 219, 149);
+          } else if (frame[i].charAt(a)=='4') {
+            fill(216, 240, 200);
+          } else if (frame[i].charAt(a)=='0') { 
+            fill(255);
+          }
+          if (frame[i].charAt(a)!='5') {
+            rect(920 + (a*scale), ((i)*scale)-20, scale, scale);
+          }
+        }
+      } 
+      fill(0);
       if (Turn) {
         text("white's turn", 950, 50);
       } else {
         text("black's turn", 950, 50);
       }
       text(frameRate, 1100, 50);
+      if (makeSure) {
+        text("Press r to confirm", 950, 90);
+      } else {
+        if (moves.size() > 0) {
+          text("Press r to restart", 950, 90);
+        }
+      }
     }
     if (Board.checkmate) {
       text("YOU HAVE BEEN MATED!", 950, 75);
@@ -699,18 +762,30 @@ void draw() {
     } else if (Board.whiteCheck) {
       text("WhITE IN CHECK", 950, 75);
     }
-    if (showPromote) {
+    if (showPromote && !makeSure) {
       fill(13, 178, 46, 150);
-      rect(950, 100, 160, 150);
+      ellipse(980, 160, 50, 50);
+      fill(255);
+      text("'P'", 970, 167);
+
       fill(0);
       textSize(20);
-      text("press 'P'  \r\nto promote \npress 'X' \r\nto not promote", 960, 120);
+      text("promote", 1010, 160);
+    } else if (makeSure) {
+      fill(13, 178, 46, 150);
+      ellipse(980, 160, 50, 50);
+      fill(255);
+      text("'R'", 970, 167);
+
+      fill(0);
+      textSize(20);
+      text("Restart", 1010, 160);
     }
     if (showTutorial) {
       fill(3, 186, 252, 150);
       rect(950, 100, 160, 70);
       fill(0);
-      text("Press 'T' for \ntutorial", 960, 120);
+      text("Press 'T' for \ntutorial", 980, 120);
     }
     if (showOnePlayer && !Tutorial) {
       fill(#6e2ad5, 150);
