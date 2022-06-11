@@ -87,6 +87,8 @@ June 9:
 
     Samuel: made bot look two moves ahead
 
+    Daniel: worked on alien theme and added animation to it
+
 June 10: 
 
     Samuel: made bot be able to drop pieces while looking two moves ahead
