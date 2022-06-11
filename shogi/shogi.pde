@@ -523,7 +523,7 @@ void Beyond() {
       Piece piece = Board.blackCaptured.get(m);
       for(int i = 2; i < 9; i++){
         for(int j = 0; j < 9; j++){
-          if(Board.drop(m, j, i)){
+          if(Board.dropX(m, j, i)){
             moves.remove(moves.size()-1);
             for (int y = 0; y < 9; y++) {
               for (int z = 0; z < 9; z++) {
@@ -577,11 +577,13 @@ void Beyond() {
               }
             }
             //System.out.println("second threat didnt break");
-            //Board.threaten(i, j, false);
+            Board.unthreaten(i, j, false);
             if(Board.board[i][j].piece.isRoyal){
               if (Board.board[i][j].royalThreats.size() > 0) {
                 ArrayList<int[]> temp = (ArrayList)Board.board[i][j].royalThreats.clone();
                 for (int a = 0; a < temp.size(); a++) {
+                  Board.unthreaten(temp.get(a)[0], temp.get(a)[1], false);
+                  Board.royalPotential(temp.get(a)[0], temp.get(a)[1]);
                   Board.unthreaten(temp.get(a)[0], temp.get(a)[1], false);
                 }
               }
@@ -1202,6 +1204,85 @@ public class board {
                 return false;
               }
             }
+          }
+        }
+        return true;
+      }
+    }
+  }
+  boolean dropX(int x, int x1, int y1) { // x1 and y1 are not row major order
+    if (board[y1][x1].piece!=null) {
+      return false;
+    } else {
+      if (Turn) {
+        if (whiteCaptured.get(x).role.equals("pawn")) {
+          if (y1 == 0) {
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
+                return false;
+              }
+            }
+          }
+        }
+        board[y1][x1].setPiece(whiteCaptured.get(x));
+        whiteCaptured.remove(x);
+        board[y1][x1].piece.switchSides();
+        int[] move = {y1, x1};
+        moves.add(move);
+        String r = board[y1][x1].piece.role.replace("\n", " ");
+        pieceMoved.add("white " + r);
+        if (board[y1][x1].piece.isRoyal) {
+          royalPotential(y1, x1);
+          threaten(y1, x1, false);
+        } else {
+          board[y1][x1].piece.calcPotential(x1, y1);
+          threaten(y1, x1, false);
+        }
+        if (board[y1][x1].royalThreats.size() > 0) {
+          ArrayList<int[]> temp = (ArrayList)board[y1][x1].royalThreats.clone();
+          for (int i = 0; i < temp.size(); i++) {           
+            unthreaten(temp.get(i)[0], temp.get(i)[1], false);
+            royalPotential(temp.get(i)[0], temp.get(i)[1]);
+            threaten(temp.get(i)[0], temp.get(i)[1], false);
+          }
+        }  
+        return true;
+      } else {
+        if (blackCaptured.get(x).role.equals("pawn")) {
+          if(y1==8){
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
+                return false;
+              }
+            }
+          }
+        }
+        board[y1][x1].setPiece(blackCaptured.get(x));
+        blackCaptured.remove(x);
+        board[y1][x1].piece.switchSides();
+        int[] move = {y1, x1};
+        moves.add(move);
+        String r = board[y1][x1].piece.role.replace("\n", " ");
+        pieceMoved.add("black " + r);
+        if (board[y1][x1].piece.isRoyal) {
+          royalPotential(y1, x1);
+          threaten(y1, x1, false);
+        } else {
+          board[y1][x1].piece.calcPotential(x1, y1);
+          threaten(y1, x1, false);
+        }
+        if (board[y1][x1].royalThreats.size() > 0) {
+          ArrayList<int[]> temp = (ArrayList)board[y1][x1].royalThreats.clone();
+          for (int i = 0; i < temp.size(); i++) {           
+            unthreaten(temp.get(i)[0], temp.get(i)[1], false);
+            royalPotential(temp.get(i)[0], temp.get(i)[1]);
+            threaten(temp.get(i)[0], temp.get(i)[1], false);
           }
         }
         return true;
