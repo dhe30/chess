@@ -112,7 +112,7 @@ public class Rook extends Piece {
       if (Theme.equals("Alien")) {
 
         lines = loadStrings(alienDisplay);
-        int scale = 4;
+        float scale = 3.5;
         //x+=idleCounter;
         idleCounter+=1;
         if (idleCounter == 360) {
@@ -130,7 +130,7 @@ public class Rook extends Piece {
             }
           } else {
             start = 76;
-              end = 100;
+            end = 100;
           }
           movingCounter +=1;
           displayX += scaleX;
@@ -165,13 +165,18 @@ public class Rook extends Piece {
             if (lines[i].charAt(a)!='0') {
               if (animating) {
                 System.out.println(displayX+ " " +displayY + " " + scaleX);
-                rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                if (fly) {
+                                    rect(displayX + (a*scale), displayY+((i-start)*scale)-8, scale+0.5, scale+0.5);
+
+                } else {
+                  rect(displayX + (a*scale), displayY+((i-start)*scale), scale+0.5, scale+0.5);
+                }
                 if (movingCounter >= Stop) {
                   animating = false;
                   System.out.println(movingCounter);
                 }
               } else {
-                rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+                rect(x + (a*scale), y+((i-start)*scale), scale+0.5, scale+0.5);
               }
             }
           }
@@ -269,7 +274,7 @@ public class Rook extends Piece {
     displayX = y*100;
     scaleY = ((x1*100)-(x*100))/Stop;
     scaleX = ((y1*100)-(y*100))/Stop;
-    if(Math.abs(scaleX) > 15 || Math.abs(scaleY) > 15){
+    if (Math.abs(scaleX) > 15 || Math.abs(scaleY) > 15) {
       fly = true;
     }
     System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
