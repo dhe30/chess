@@ -24,6 +24,7 @@ public class Piece {
   float scaleY = 0;
   int displayX = 0;
   int displayY = 0;
+  boolean flipped = false;
   public Piece(String x) {
     if (x.equals("white")) {
       white = true;
@@ -53,17 +54,17 @@ public class Piece {
   void displayPiece(int x, int y, boolean white, String line) {
     String[] lines = loadStrings(line);
     int start;
-      int end;
-      if (idleCounter <= 120) {
-        start = 1;
-        end = 17;
-      } else if (idleCounter > 120 && idleCounter < 180) {
-        start = 18;
-        end = 34;
-      } else {
-        start = 35;
-        end = 51;
-      }
+    int end;
+    if (idleCounter <= 120) {
+      start = 1;
+      end = 17;
+    } else if (idleCounter > 120 && idleCounter < 180) {
+      start = 18;
+      end = 34;
+    } else {
+      start = 35;
+      end = 51;
+    }
     if (white) {
       if (Theme.equals("Alien")) {
 
@@ -74,10 +75,19 @@ public class Piece {
         if (idleCounter == 360) {
           idleCounter =0;
         }
-        if (animating){
+        if (animating) {
+          start = 1;
+          end = 17;
           movingCounter +=1;
+          scaleY+=0.5;
           displayX += scaleX;
-                displayY += scaleY;
+          displayY += scaleY;
+          //if (movingCounter >20) {
+          //  scaleX= 0;
+          //  scaleY= 0;
+          //  start = 35;
+          //  end = 51;
+          //}
         }
         for (int i = start; i < end; i++) {
           //System.out.println(i);
@@ -103,6 +113,7 @@ public class Piece {
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
                 if (movingCounter >= Stop) {
                   animating = false;
+                  System.out.println(movingCounter);
                 }
               } else {
                 rect(x + (a*scale), y+((i-start)*scale), scale, scale);
@@ -152,10 +163,20 @@ public class Piece {
         if (idleCounter == 360) {
           idleCounter =0;
         }
-        if (animating){
+        if (animating) {
+          start = 1;
+          end = 17;
           movingCounter +=1;
+          scaleY+=0.5;
           displayX += scaleX;
-                displayY += scaleY;
+          displayY += scaleY;
+
+          //if (movingCounter > 20) {
+          //  scaleX= 0;
+          //  scaleY= 0;
+          //  start = 35;
+          //  end = 51;
+          //}
         }
         for (int i = start; i < end; i++) {
           //System.out.println(i);
@@ -216,11 +237,15 @@ public class Piece {
     }
   }
   void animate(int x, int y, int x1, int y1) {
+    flipped = false;
+    if (x1 < x) {
+      flipped = true;
+    }
     animating = true;
     movingCounter = 0;
     displayY = x*100;
     displayX = y*100;
-    scaleY = ((x1*100)-(x*100))/Stop;
+    scaleY = ((((x1*100)-(x*100))-(0.5*0.5*20*20))/20);
     scaleX = ((y1*100)-(y*100))/Stop;
     System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
