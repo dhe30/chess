@@ -125,7 +125,7 @@ public class Lance extends Piece {
       end = 51;
     }
     if (Theme.equals("Alien")) {
-      int scale = 5;
+      int scale = 4;
       //x+=idleCounter;
       idleCounter+=1;
       if (idleCounter == 360) {

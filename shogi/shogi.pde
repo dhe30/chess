@@ -569,6 +569,8 @@ void draw() {
         animateCounter +=1;
       }
     }
+    strokeWeight(0);
+    stroke(255, 255, 255,0);
     if (Theme.equals("Traditional")) {
       fill(252, 204, 156);
       rect(0, 0, 900, 900);
@@ -590,8 +592,9 @@ void draw() {
         line(100*i, 0, 100*i, 900);
         line(0, 100*i, 900, 100*i);
       } else if (Theme.equals("Alien")) {
-        //line(100*i, 0, 100*i, 900);
-        //line(0, 100*i, 900, 100*i);
+        stroke(214, 130, 130);
+        line(100*i, 0, 100*i, 900);
+        line(0, 100*i, 900, 100*i);
       }
     }
     strokeWeight(0);
@@ -606,25 +609,19 @@ void draw() {
         } else if (Theme.equals("Hell")) {
           prayer(j*100+3, i*100, 5);
         } else if (Theme.equals("Alien")) {
-          fill(255, 255, 255);
-          rect(j*100+5, i*100+5, 90, 90);
+          fill(214, 130, 130);
+          //fill(200, 100, 255);
+            rect(j*100+5, i*100+5, 90, 90);
+          float b = random(-1, 1);
+
+          // ellipse(j*100+50, i*100+45 + b, 90, 55);
+          //quad(j*100+5, (i*100)+45+5,j*100+45+5, (i*100)+5+20,j*100+90+5,(i*100)+45+5, j*100+45+5,(i*100)+70+5);
+          //fill(147,27,27);
+          //quad(j*100+5, (i*100)+45+5,j*100+45+5,(i*100)+70+5,j*100+5+45, (i*100)+120+5,j*100+5, (i*100)+93+5);
         }
       }
     }
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        if (Theme.equals("Traditional")) {
-          fill(234, 193, 159);
-          rect(j*100+5, i*100+5, 90, 90);
-        } else if (Theme.equals("Hell")) {
-          prayer(j*100+3, i*100, 5);
-        } else if (Theme.equals("Alien")) {
-          fill(255, 255, 255);
-          rect(j*100+5, i*100+5, 90, 90);
-        }
-        
-      }
-    }
+
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (Board.board[i][j].piece!=null) {
@@ -676,8 +673,13 @@ void draw() {
     ellipse(600, 600, 6, 6);
   }
   if (!animating) {
-    fill(180);
-    rect(900, 0, 1500, 900);
+    if (!Theme.equals("Alien")) {
+      fill(180);
+      rect(902, 0, 1500, 900);
+    } else {
+      fill(255);
+      rect(902, 0, 1500, 900);
+    }
     fill(0);
     textSize(20);
     //fill(225);
