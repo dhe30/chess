@@ -80,7 +80,7 @@ void keyPressed() {
       makeSure = true;
     }
   }
-  if (key == 'x' && makeSure) {
+  if (key == 'c' && makeSure && !Board.checkmate) {
     makeSure = false;
   }
   if (key == 'u') {
@@ -742,9 +742,17 @@ void draw() {
       } 
       fill(0);
       if (Turn) {
-        text("white's turn", 950, 50);
+        if (Board.whiteCheck) {
+          text("White in check", 950, 50);
+        } else {
+          text("White's turn", 950, 50);
+        }
       } else {
-        text("black's turn", 950, 50);
+        if (Board.blackCheck) {
+          text("Black in check", 950, 50);
+        } else {
+          text("Black's turn", 950, 50);
+        }
       }
       text(frameRate, 1100, 50);
       if (makeSure) {
@@ -757,41 +765,58 @@ void draw() {
     }
     if (Board.checkmate) {
       text("YOU HAVE BEEN MATED!", 950, 75);
-    } else if (Board.blackCheck) {
-      text("BLACK IN CHECK", 950, 75);
-    } else if (Board.whiteCheck) {
-      text("WhITE IN CHECK", 950, 75);
-    }
-    if (showPromote && !makeSure) {
+    } 
+    if (showPromote && !makeSure && !Board.checkmate) {
       fill(13, 178, 46, 150);
-      ellipse(980, 160, 50, 50);
+      ellipse(980, 190, 50, 50);
       fill(255);
-      text("'P'", 970, 167);
+      text("'P'", 970, 197);
 
       fill(0);
       textSize(20);
-      text("promote", 1010, 160);
-    } else if (makeSure) {
+      text("promote", 1010, 197);
+      fill(255, 5, 10, 150);
+        ellipse(980, 250, 50, 50);
+        fill(255);
+        text("'X'", 970, 257);
+        fill(0);
+        textSize(20);
+        text("No promote", 1010, 257);
+    } else if (makeSure || Board.checkmate) {
       fill(13, 178, 46, 150);
-      ellipse(980, 160, 50, 50);
+      ellipse(980, 190, 50, 50);
       fill(255);
-      text("'R'", 970, 167);
-
+      text("'R'", 970, 197);
       fill(0);
       textSize(20);
-      text("Restart", 1010, 160);
+      text("Restart", 1010, 197);
+      if (!Board.checkmate) {
+        fill(255, 5, 10, 150);
+        ellipse(980, 250, 50, 50);
+        fill(255);
+        text("'C'", 970, 257);
+        fill(0);
+        textSize(20);
+        text("Continue", 1010, 257);
+      }
     }
     if (showTutorial) {
       fill(3, 186, 252, 150);
-      rect(950, 100, 160, 70);
+      ellipse(980, 190, 50, 50);
+      fill(255);
+      text("'T'", 970, 197);
       fill(0);
-      text("Press 'T' for \ntutorial", 980, 120);
+      textSize(20);
+      text("Tutorial", 1010, 197);
     }
     if (showOnePlayer && !Tutorial) {
       fill(#6e2ad5, 150);
-      rect(950, 180, 160, 100);
-      fill(0);
-      text("Press 'L' \nfor one \nplayer mode", 960, 200);
+      ellipse(980, 250, 50, 50);
+        fill(255);
+        text("'L'", 970, 257);
+        fill(0);
+        textSize(20);
+        text("One Player", 1010, 257);
     }
     if (InitialSelected.size() > 1 && selected) {
       ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
