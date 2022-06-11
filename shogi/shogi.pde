@@ -392,7 +392,7 @@ void Beyond() {
   int blackCoorsIndex=-1;
   boolean doDrop=false;
   int graveyardIndex=-1;
-  int[] dropIndex;
+  int[] dropIndex={-1, -1};
   for (int i = 0; i < blackCoors.size(); i++) {
     //System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
            // System.out.println("LORD 2!");
@@ -485,11 +485,11 @@ void Beyond() {
             }
             Board.threaten(lMoves2.get(l)[1], lMoves2.get(l)[0], false);
           }
-          if(piece2!=null){
-            int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
-            //blackCoors.add(bc);
-            //System.out.println("blackCoors added " + Arrays.toString(bc));
-          }
+          //if(piece2!=null){
+          //  int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
+          //  blackCoors.add(bc);
+          //  System.out.println("blackCoors added " + Arrays.toString(bc));
+          //}
         }
       }
       Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
@@ -521,9 +521,75 @@ void Beyond() {
   if(Board.blackCaptured.size()>=1){
     for(int m = 0; m < Board.blackCaptured.size(); m++){
       Piece piece = Board.blackCaptured.get(m);
+      piece.switchSides();
       for(int i = 2; i < 9; i++){
         for(int j = 0; j < 9; j++){
           if(Board.dropTest(m, j, i)){
+            Board.drop(m, j, i);
+            moves.remove(moves.size()-1);
+            for (int y = 0; y < 9; y++) {
+              for (int z = 0; z < 9; z++) {
+                if (Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null) {
+                  currentVal+=Board.board[y][z].piece.value;
+                }
+              }
+            }
+            for(int k = 0; k < whiteCoors.size(); k++){
+              ArrayList<int[]> lMoves2 = Board.legalMoves(whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
+      
+              for(int l = 0; l < lMoves2.size(); l++){
+                Piece piece2=null;
+                if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece!=null) {
+                  piece2 = Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece;
+                  currentVal-=Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece.value*1.5;
+                }
+                Board.moveX(whiteCoors.get(k)[0], whiteCoors.get(k)[1], lMoves2.get(l)[1], lMoves2.get(l)[0]);
+                for (int y = 0; y < 9; y++) {
+                  for (int z = 0; z < 9; z++) {
+                    if (Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null) {
+                      currentVal-=Board.board[y][z].piece.value;
+                    }
+                  }
+                }
+                if (currentVal>highestVal) {
+                  highestVal=currentVal;
+                  lMovesIndex=j-1;
+                  blackCoorsIndex=-1;
+                  doDrop=true;
+                  graveyardIndex=m;
+                  int[] dropIndex2 ={j, i};
+                  dropIndex = Arrays.copyOf(dropIndex2, 2);
+                }
+                currentVal=0.0;
+                Board.moveX(lMoves2.get(l)[1], lMoves2.get(l)[0], whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
+                Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].setPiece(piece2);
+                if (piece2!=null) {
+                  if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.size() > 0) {
+                    ArrayList<int[]> temp2 = (ArrayList)Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.clone();
+                    for (int a = 0; a < temp2.size(); a++) {
+                      //coordinate pair [0],[1] because r.T is in RMo
+                      Board.unthreaten(temp2.get(a)[0], temp2.get(a)[1], false);
+                      Board.royalPotential(temp2.get(a)[0], temp2.get(a)[1]);
+                      Board.threaten(temp2.get(a)[0], temp2.get(a)[1], false);
+                    }
+                  }
+                  Board.threaten(lMoves2.get(l)[1], lMoves2.get(l)[0], false);
+                }
+                //System.out.println("first threat didnt break");
+              }
+            }
+            //System.out.println("second threat didnt break");
+            //Board.threaten(i, j, false);
+            if(Board.board[i][j].piece.isRoyal){
+              if (Board.board[i][j].royalThreats.size() > 0) {
+                ArrayList<int[]> temp = (ArrayList)Board.board[i][j].royalThreats.clone();
+                for (int a = 0; a < temp.size(); a++) {
+                  Board.unthreaten(temp.get(a)[0], temp.get(a)[1], false);
+                }
+              }
+            }
+            Board.blackCaptured.add(m, piece);
+            Board.board[i][j].setPiece(null);
           }
         }
       }
@@ -531,13 +597,16 @@ void Beyond() {
   }
   //System.out.println(highestVal);
   //System.out.println("ended for loop");
-  if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
+  if(doDrop){
+    Board.drop(graveyardIndex, dropIndex[0], dropIndex[1]);
+    Turn=!Turn;
+  }
+  else if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
     System.out.println(lMoves.size() + " LOVE " + lMovesIndex);
         System.out.println(blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
-
+        System.out.println(blackCoors.size());
     Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
-
     Turn=!Turn;
     //System.out.println("Turned");
     Board.revertPreviousPreventCheck();
