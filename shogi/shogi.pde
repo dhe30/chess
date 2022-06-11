@@ -518,11 +518,17 @@ void Beyond() {
       //System.out.println(currentVal);
     }
   }
-  //if(Board.blackCaptured.size()>=1){
-  //  for(int m = 0; m < Board.blackCaptured.size(); m++){
-  //    for(int 
-  //  }
-  //}
+  if(Board.blackCaptured.size()>=1){
+    for(int m = 0; m < Board.blackCaptured.size(); m++){
+      Piece piece = Board.blackCaptured.get(m);
+      for(int i = 2; i < 9; i++){
+        for(int j = 0; j < 9; j++){
+          if(Board.dropTest(m, j, i)){
+          }
+        }
+      }
+    }
+  }
   //System.out.println(highestVal);
   //System.out.println("ended for loop");
   if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
