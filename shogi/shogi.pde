@@ -570,7 +570,7 @@ void draw() {
       }
     }
     strokeWeight(0);
-    stroke(255, 255, 255,0);
+    stroke(255, 255, 255, 0);
     if (Theme.equals("Traditional")) {
       fill(252, 204, 156);
       rect(0, 0, 900, 900);
@@ -611,7 +611,7 @@ void draw() {
         } else if (Theme.equals("Alien")) {
           fill(214, 130, 130);
           //fill(200, 100, 255);
-            rect(j*100+5, i*100+5, 90, 90);
+          rect(j*100+5, i*100+5, 90, 90);
           float b = random(-1, 1);
 
           // ellipse(j*100+50, i*100+45 + b, 90, 55);
@@ -748,7 +748,11 @@ void draw() {
 
       //rect(x*100+950, j*100+640, 60, 50);
       //triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
-      Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).display);
+      if (Theme.equals("Alien")) {      
+        Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).alienDisplay);
+      } else {
+        Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).display);
+      }
       Board.whiteCaptured.get(i).x=x*100+950;
       Board.whiteCaptured.get(i).y=j*100+640;
       //fill(0);
@@ -764,8 +768,11 @@ void draw() {
       //fill(255);
       //rect(x*100+950, j*100+310, 60, 50);
       //triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
-      Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
-
+      if (Theme.equals("Alien")) {    
+        Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).alienDisplay);
+      } else {
+        Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
+      }
       Board.blackCaptured.get(i).x=x*100+950;
       Board.blackCaptured.get(i).y=j*100+310;
       //fill(0);

@@ -149,7 +149,7 @@ public class SilverGeneral extends Piece {
       }
       if (animating) {
         start = 1;
-        end = 17;
+        end = 18;
         movingCounter +=1;
         scaleY+=0.5;
         displayX += scaleX;
