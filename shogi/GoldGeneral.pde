@@ -1,11 +1,12 @@
 public class GoldGeneral extends Piece {
-  final color One = color(27,27,27);
-  final color Two = color(93,93,93);
-  final color Three = color(59,59,59);
-  final color Four = color(39,39,39);
-  final color Five = color(19,19,19);
-  final color Six = color(254,237,86);
-  final color Seven = color(31,75,99);
+  final color One = color(27, 27, 27);
+  final color Two = color(93, 93, 93);
+  final color Three = color(59, 59, 59);
+  final color Four = color(39, 39, 39);
+  final color Five = color(19, 19, 19);
+  final color Six = color(254, 237, 86);
+  final color Seven = color(31, 75, 99);
+  boolean switcher = false;
   public GoldGeneral(String x) {
     super(x);
     role="gold\nGeneral";
@@ -83,17 +84,24 @@ public class GoldGeneral extends Piece {
     //  end = 51;
     //}
     if (Theme.equals("Alien")) {
-      int scale =5;
+      int scale =4;
       //x+=idleCounter;
       idleCounter+=1;
       if (idleCounter == 360) {
         idleCounter =0;
       }
       if (animating) {
-        start = 1;
-        end = 17;
         movingCounter +=1;
-        scaleY+=0.5;
+        if (movingCounter % 2 == 0) {
+          if (!switcher) {
+            start = 1;
+            end = 17;
+            switcher = !switcher;
+          } else {
+            start = 18;
+            end = 34;
+          }
+        }
         displayX += scaleX;
         displayY += scaleY;
         //if (movingCounter >20) {
@@ -137,5 +145,15 @@ public class GoldGeneral extends Piece {
     } else {
       super.displayPiece(x, y, white, "lance.txt");
     }
+  }
+  void animate(int x, int y, int x1, int y1) {
+    switcher = false;
+    animating = true;
+    movingCounter = 0;
+    displayY = x*100;
+    displayX = y*100;
+    scaleY = ((x1*100)-(x*100))/Stop;
+    scaleX = ((y1*100)-(y*100))/Stop;
+    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }
