@@ -118,10 +118,10 @@ void keyPressed() {
   if (key == ' ') {
     Test = !Test;
   }
-  if (InitialSelected.size()>0) {
+  if (InitialSelected.size()>1) {
     Piece piece = Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece;
     if (key == 'p' && piece.canPromote) {
-      if (makeSure){
+      if (makeSure) {
         makeSure = false;
       }
       showPromote=false;
@@ -146,7 +146,7 @@ void keyPressed() {
         Beyond();
       }
     } else if (key == 'x' && piece.canPromote) {
-      if (makeSure){
+      if (makeSure) {
         makeSure = false;
       }
       showPromote=false;
@@ -166,7 +166,7 @@ void keyPressed() {
 
 
 void mouseClicked() {
-  if(makeSure){
+  if (makeSure) {
     makeSure = false;
   }
   showTutorial=false;
@@ -766,11 +766,31 @@ void draw() {
       text(frameRate, 1100, 50);
       if (makeSure) {
         text("Press r to confirm", 950, 90);
-      } else {
+      } else if (canDrop) {
         if (moves.size() > 0 && InitialSelected.size() == 0) {
-          text("Press r to restart", 950, 90);
-        } else if (InitialSelected.size() == 2){
-          text(Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece.role.replace("\n", " "), 950,90);
+          textSize(15);
+
+          text("Press r to restart", 950, 85);
+          textSize(20);
+        } else if (InitialSelected.size() == 2) {
+          textSize(15);
+          text(Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece.role.replace("\n", " "), 950, 85);
+          textSize(20);
+        } else if (InitialSelected.size()==1) {
+          textSize(15);
+
+          if (Turn) {
+            text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 85);
+          } else {
+            text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 85);
+          }
+          textSize(20);
+        }
+      } else {
+        if (!canDrop) {
+          textSize(15);
+          text("can't drop piece there", 950, 85);
+          textSize(20);
         }
       }
     }
@@ -787,12 +807,12 @@ void draw() {
       textSize(20);
       text("promote", 1010, 197);
       fill(255, 5, 10, 150);
-        ellipse(980, 250, 50, 50);
-        fill(255);
-        text("'X'", 970, 257);
-        fill(0);
-        textSize(20);
-        text("No promote", 1010, 257);
+      ellipse(980, 250, 50, 50);
+      fill(255);
+      text("'X'", 970, 257);
+      fill(0);
+      textSize(20);
+      text("No promote", 1010, 257);
     } else if (makeSure || Board.checkmate) {
       fill(13, 178, 46, 150);
       ellipse(980, 190, 50, 50);
@@ -823,11 +843,11 @@ void draw() {
     if (showOnePlayer && !Tutorial) {
       fill(#6e2ad5, 150);
       ellipse(980, 250, 50, 50);
-        fill(255);
-        text("'L'", 970, 257);
-        fill(0);
-        textSize(20);
-        text("One Player", 1010, 257);
+      fill(255);
+      text("'L'", 970, 257);
+      fill(0);
+      textSize(20);
+      text("One Player", 1010, 257);
     }
     if (InitialSelected.size() > 1 && selected) {
       ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
@@ -890,16 +910,7 @@ void draw() {
       //text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
       x++;
     }
-    if (InitialSelected.size()==1) {
-      if (Turn) {
-        text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 100);
-      } else {
-        text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 100);
-      }
-    }
-    if (!canDrop) {
-      text("can't drop piece there", 950, 100);
-    }
+
     if (!Tutorial) {
       //fill(#b27e4d);
       //rect(1200, 5, 430, 302);
