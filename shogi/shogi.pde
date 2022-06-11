@@ -832,28 +832,8 @@ void draw() {
     line(1520, 5, 1520, 305);
     for (int i = 0; i < 9; i++) {
       line(1200, i*30+35, 1630, i*30+35);
-    }}
-    //if (onePlayer && !Turn) {
-    //  if (Board.blackCaptured.size()>2) {
-    //    if (oneDrop()) {
-    //      Turn=!Turn;
-    //      Board.revertPreviousPreventCheck();
-    //      Board.preventCheck();
-    //      Board.checkCheck();
-    //    } else {
-    //      botMove();
-    //      Turn=true;
-    //      Board.revertPreviousPreventCheck();
-    //      Board.preventCheck();
-    //      Board.checkCheck();
-    //    }
-    //  }
-    //  botMove();
-    //  Turn=true;
-    //  Board.revertPreviousPreventCheck();
-    //  Board.preventCheck();
-    //  Board.checkCheck();
-    //}
+    }
+  }
     if (moves.size()>10) {
       moves.remove(0);
     }
@@ -946,6 +926,25 @@ void draw() {
         text("press 1 or 2 to scroll through tutorial", 950, 600);
         break;
       case 11:
+        PImage graveyard = loadImage("graveyard.jpg");
+        image(graveyard, 0, 0, 900, 900);
+        strokeWeight(1);
+        stroke(0);
+        noFill();
+        rect(40, 300, 285, 100);
+        rect(40, 600, 285, 100);
+        text("black graveyard", 50, 450);
+        text("white graveyard", 50, 750);
+        text("Any piece captured will be sent to your graveyard.\nAll captured pieces are automatically demoted", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 12:
+        PImage drop = loadImage("drop.jpg");
+        image(drop, 0, 0, 900, 900);
+        text("you can drop a piece on any empty square\nwith the following restrictions:\n \n1. you can't place a pawn on the same \ncolumn as an unpromoted ally pawn\n \n2. you cant place a piece \nwhere it cant move on the next turn\nsuch as a pawn on the last row \nor a knight on the last two rows", 950, 50);
+        text("press 1 or 2 to scroll through tutorial", 950, 600);
+        break;
+      case 13:
         Tutorial=false;
         break;
       }
@@ -1179,11 +1178,8 @@ public class board {
       return false;
     } else {
       if (Turn) {
-        if(y1>6){
-          return false;
-        }
         if (whiteCaptured.get(x).role.equals("pawn")) {
-          if (y1 > 6) {
+          if (y1 == 0) {
             return false;
           }
           for (int i = 0; i < 9; i++) {
@@ -1198,7 +1194,7 @@ public class board {
       }
       else{
         if (blackCaptured.get(x).role.equals("pawn")) {
-          if (y1 < 2) {
+          if(y1==8){
             return false;
           }
           for (int i = 0; i < 9; i++) {
@@ -1219,7 +1215,7 @@ public class board {
     } else {
       if (Turn) {
         if (whiteCaptured.get(x).role.equals("pawn")) {
-          if (y1 > 6) {
+          if (y1 == 0) {
             return false;
           }
           for (int i = 0; i < 9; i++) {
@@ -1255,7 +1251,7 @@ public class board {
         return true;
       } else {
         if (blackCaptured.get(x).role.equals("pawn")) {
-          if (y1 < 2) {
+          if(y1==8){
             return false;
           }
           for (int i = 0; i < 9; i++) {
