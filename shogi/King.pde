@@ -15,7 +15,7 @@ public class King extends Piece {
   public King(String x) {
     super(x);
     role="king";
-    value=100;
+    value=50;
     display = "king.txt";
     alienDisplay = "kingBot.txt";
   }
