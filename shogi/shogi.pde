@@ -27,7 +27,7 @@ int idleCounter = 0;
 boolean makeSure = false;
 void setup() {
   frame = loadStrings("frame.txt");
-  frameRate(60);
+  frameRate(30);
   //The board is 900 by 900, each tile is 100 by 100 
   background(252, 204, 156);
   size(1800, 900);
