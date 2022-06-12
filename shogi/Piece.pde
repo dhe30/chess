@@ -24,7 +24,6 @@ public class Piece {
   float scaleY = 0;
   int displayX = 0;
   int displayY = 0;
-  boolean flipped = false;
   public Piece(String x) {
     if (x.equals("white")) {
       white = true;
@@ -237,10 +236,6 @@ public class Piece {
     }
   }
   void animate(int x, int y, int x1, int y1) {
-    flipped = false;
-    if (x1 < x) {
-      flipped = true;
-    }
     animating = true;
     movingCounter = 0;
     displayY = x*100;

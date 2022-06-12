@@ -1,16 +1,16 @@
 public class Lance extends Piece {
   final color One = color(92, 83, 84);
   final color Two = color(207, 197, 185);
-  final color Three = color(56,49,75);
-  final color Four = color(158,150,139);
-  final color Five = color(222,221,217);
-  final color Six = color(61,90,85);
-  final color Seven = color(59,122,69);
-  final color Eight = color(113,171,54);
-  final color Nine = color(130,121,150);
-  final color Ten = color(87,65,101);
-  final color Eleven = color(142,71,138);
-  final color Twelve = color(231,67,45);
+  final color Three = color(56, 49, 75);
+  final color Four = color(158, 150, 139);
+  final color Five = color(222, 221, 217);
+  final color Six = color(61, 90, 85);
+  final color Seven = color(59, 122, 69);
+  final color Eight = color(113, 171, 54);
+  final color Nine = color(130, 121, 150);
+  final color Ten = color(87, 65, 101);
+  final color Eleven = color(142, 71, 138);
+  final color Twelve = color(231, 67, 45);
 
   public Lance(String x) {
     super(x);
@@ -131,6 +131,14 @@ public class Lance extends Piece {
       if (idleCounter == 360) {
         idleCounter =0;
       }
+      if (animating) {
+          start = 35;
+          end = 51;
+          movingCounter +=1;
+          scaleY+=2;
+          displayX += scaleX;
+          displayY += scaleY;
+        }
       for (int i = start; i < end; i++) {
         for (int a = 0; a < lines[i].length(); a++) {
           if (lines[i].charAt(a)=='7') {
@@ -147,28 +155,41 @@ public class Lance extends Piece {
             fill(Five);
           } else if (lines[i].charAt(a)=='6') {
             fill(Six);
-          }
-          else if (lines[i].charAt(a)=='c') {
+          } else if (lines[i].charAt(a)=='c') {
             fill(Twelve);
-          }
-          else if (lines[i].charAt(a)=='8') {
+          } else if (lines[i].charAt(a)=='8') {
             fill(Eight);
-          }
-          else if (lines[i].charAt(a)=='9') {
+          } else if (lines[i].charAt(a)=='9') {
             fill(Nine);
-          }
-          else if (lines[i].charAt(a)=='a') {
+          } else if (lines[i].charAt(a)=='a') {
             fill(Ten);
-          }
-          else if (lines[i].charAt(a)=='b') {
+          } else if (lines[i].charAt(a)=='b') {
             fill(Eleven);
           }
-          if (lines[i].charAt(a)!='0')
-            rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+          if (lines[i].charAt(a)!='0') {
+            if (animating) {
+                System.out.println(displayX+ " " +displayY);
+                rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                if (movingCounter >= Stop) {
+                  animating = false;
+                }
+              } else {
+                rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+              }
+          }
         }
       }
     } else {
       super.displayPiece(x, y, white, "lance.txt");
     }
+  }
+  void animate(int x, int y, int x1, int y1) {
+    animating = true;
+    movingCounter = 0;
+    displayY = x*100;
+    displayX = y*100;
+    scaleY = ((((x1*100)-(x*100))-(0.5*2*20*20))/20);
+    scaleX = ((y1*100)-(y*100))/Stop;
+    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }

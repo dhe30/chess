@@ -7,6 +7,8 @@ public class Rook extends Piece {
   final color Six = color(98, 74, 205);
   final color Seven = color(189, 164, 65);
   final color Eight = color(255, 255, 255);
+  float accelerationX = 0;
+  float accelerationY = 0;
   boolean fly = false;
   public Rook(String x) {
     super(x);
@@ -129,6 +131,13 @@ public class Rook extends Piece {
               // switcher = !switcher;
             }
           } else {
+                    System.out.println("CRITAIA: " + accelerationX + " " + accelerationY);
+
+            if (Math.abs(accelerationX) > 0){
+              scaleX += accelerationX;
+            } else {
+              scaleY += accelerationY;
+            }
             start = 76;
             end = 100;
           }
@@ -166,14 +175,13 @@ public class Rook extends Piece {
               if (animating) {
                 System.out.println(displayX+ " " +displayY + " " + scaleX);
                 if (fly) {
-                                    rect(displayX + (a*scale), displayY+((i-start)*scale)-8, scale+0.5, scale+0.5);
-
+                  rect(displayX + (a*scale), displayY+((i-start)*scale)-8, scale+0.5, scale+0.5);
                 } else {
                   rect(displayX + (a*scale), displayY+((i-start)*scale), scale+0.5, scale+0.5);
                 }
                 if (movingCounter >= Stop) {
                   animating = false;
-                  System.out.println(movingCounter);
+                  //System.out.println(movingCounter);
                 }
               } else {
                 rect(x + (a*scale), y+((i-start)*scale), scale+0.5, scale+0.5);
@@ -268,14 +276,26 @@ public class Rook extends Piece {
   }
   void animate(int x, int y, int x1, int y1) {
     fly = false;
+    accelerationY =0;
+    accelerationX = 0;
     animating = true;
     movingCounter = 0;
     displayY = x*100;
     displayX = y*100;
-    scaleY = ((x1*100)-(x*100))/Stop;
-    scaleX = ((y1*100)-(y*100))/Stop;
+    scaleY = ((x1*100)-(x*100.0))/Stop;
+    scaleX = ((y1*100)-(y*100.0))/Stop;
+    System.out.println(scaleX + " " + scaleY);
     if (Math.abs(scaleX) > 15 || Math.abs(scaleY) > 15) {
       fly = true;
+      if (scaleY == 0){
+        scaleX = 0;
+        accelerationX = (2.0*((y1*100.0)-(y*100.0)))/(Stop*Stop);
+        System.out.println(accelerationX + " " + accelerationY);
+      } else if (scaleX == 0){
+        scaleY = 0;
+        accelerationY = (2*((x1*100)-(x*100)))/(Stop*Stop);
+
+      }
     }
     System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
