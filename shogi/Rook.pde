@@ -131,9 +131,9 @@ public class Rook extends Piece {
               // switcher = !switcher;
             }
           } else {
-                    System.out.println("CRITAIA: " + accelerationX + " " + accelerationY);
+            System.out.println("CRITAIA: " + accelerationX + " " + accelerationY);
 
-            if (Math.abs(accelerationX) > 0){
+            if (Math.abs(accelerationX) > 0) {
               scaleX += accelerationX;
             } else {
               scaleY += accelerationY;
@@ -202,22 +202,28 @@ public class Rook extends Piece {
         fill(0);
         if (promoted) {
           fill(211, 4, 4);
-          x=x +30;
-          y=y +38;
-          for (int i = 1; i < lines.length; i++) {
-            for (int a = 0; a < lines[i].length(); a++) {
-              if (lines[i].charAt(a)=='1') {
-                rect(x + (a*2.6), y+(i*2.4), 2.6, 2.5);
+        }
+        if (English) {          
+          text(role, x+30, y+55);
+        } else {
+          if (promoted) {
+            x=x +30;
+            y=y +38;
+            for (int i = 1; i < lines.length; i++) {
+              for (int a = 0; a < lines[i].length(); a++) {
+                if (lines[i].charAt(a)=='1') {
+                  rect(x + (a*2.6), y+(i*2.4), 2.6, 2.5);
+                }
               }
             }
-          }
-        } else {
-          x=x +35;
-          y=y +38;
-          for (int i = 1; i < lines.length; i++) {
-            for (int a = 0; a < lines[i].length(); a++) {
-              if (lines[i].charAt(a)=='1') {
-                rect(x + (a*2.2), y+(i*1.9), 2.2, 3.6);
+          } else {
+            x=x +35;
+            y=y +38;
+            for (int i = 1; i < lines.length; i++) {
+              for (int a = 0; a < lines[i].length(); a++) {
+                if (lines[i].charAt(a)=='1') {
+                  rect(x + (a*2.2), y+(i*1.9), 2.2, 3.6);
+                }
               }
             }
           }
@@ -249,25 +255,32 @@ public class Rook extends Piece {
       //  store1="";
       //  store2="";
       //}
-
       if (promoted) {
         fill(211, 4, 4);
-        x=x +30;
-        y=y +27;
-        for (int i = 1; i < lines.length; i++) {
-          for (int a = 0; a < lines[i].length(); a++) {
-            if (lines[i].charAt(a)=='1') {
-              rect(x + (a*2.6), y+(i*2.4), 2.6, 2.5);
+      }
+      if (English) {
+        text(role, x+30, y+45);
+      } else {
+        if (promoted) {
+
+          x=x +30;
+          y=y +27;
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {
+                rect(x + (a*2.6), y+(i*2.4), 2.6, 2.5);
+              }
             }
           }
-        }
-      } else {
-        x=x +35;
-        y=y +30;
-        for (int i = 1; i < lines.length; i++) {
-          for (int a = 0; a < lines[i].length(); a++) {
-            if (lines[i].charAt(a)=='1') {
-              rect(x + (a*2.2), y+(i*1.9), 2.2, 3.6);
+        } else {
+
+          x=x +35;
+          y=y +30;
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {
+                rect(x + (a*2.2), y+(i*1.9), 2.2, 3.6);
+              }
             }
           }
         }
@@ -287,14 +300,13 @@ public class Rook extends Piece {
     System.out.println(scaleX + " " + scaleY);
     if (Math.abs(scaleX) > 15 || Math.abs(scaleY) > 15) {
       fly = true;
-      if (scaleY == 0){
+      if (scaleY == 0) {
         scaleX = 0;
         accelerationX = (2.0*((y1*100.0)-(y*100.0)))/(Stop*Stop);
         System.out.println(accelerationX + " " + accelerationY);
-      } else if (scaleX == 0){
+      } else if (scaleX == 0) {
         scaleY = 0;
         accelerationY = (2*((x1*100)-(x*100)))/(Stop*Stop);
-
       }
     }
     System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);

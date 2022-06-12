@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 board Board;
+boolean English = false;
 String[] frame;
 String Theme = "Traditional";
 boolean Test = false;
@@ -49,6 +50,9 @@ void setup() {
 void Hell() {
 }
 void keyPressed() {
+  if(key == 'e'){
+    English = !English;
+  }
   if (key == 'r') {
     if (makeSure == true || Board.checkmate == true) {
       makeSure = false;
@@ -872,9 +876,9 @@ void draw() {
           textSize(15);
 
           if (Turn) {
-            text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 85);
+            text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role.replace("\n", " "), 950, 85);
           } else {
-            text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 85);
+            text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role.replace("\n", " "), 950, 85);
           }
           textSize(20);
         }
@@ -1627,6 +1631,18 @@ public class board {
       return false;
     } else {
       if (Turn) {
+        if (whiteCheck) {
+                  boolean truth = false;
+
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
+              truth = true;
+            }
+          }
+          if(!truth){
+            return false;
+          }
+        }
         if (whiteCaptured.get(x).role.equals("pawn")) {
           if (y1 == 0) {
             return false;
@@ -1673,6 +1689,17 @@ public class board {
         }  
         return true;
       } else {
+        if (blackCheck) {
+          boolean truth = false;
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
+              truth = true;
+            }
+          }
+          if (!truth) {
+            return false;
+          }
+        }
         if (blackCaptured.get(x).role.equals("pawn")) {
           if (y1==8) {
             return false;

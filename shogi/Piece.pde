@@ -142,13 +142,18 @@ public class Piece {
         if (promoted) {
           fill(211, 4, 4);
         }
-        x=x +35;
-        y=y +38;
-        for (int i = 1; i < lines.length; i++) {
-          for (int a = 0; a < lines[i].length(); a++) {
-            if (lines[i].charAt(a)=='1') {
+        if (English) {
+          text(role, x+30, y+55);
+        } else {
 
-              rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+          x=x +35;
+          y=y +38;
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {
+
+                rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+              }
             }
           }
         }
@@ -223,12 +228,16 @@ public class Piece {
         if (promoted) {
           fill(211, 4, 4);
         }
-        x=x +35;
-        y=y +26;
-        for (int i = 1; i < lines.length; i++) {
-          for (int a = 0; a < lines[i].length(); a++) {
-            if (lines[i].charAt(a)=='1') {       
-              rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+        if (English) {
+          text(role, x+30, y+45);
+        } else {
+          x=x +35;
+          y=y +26;
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {       
+                rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+              }
             }
           }
         }
