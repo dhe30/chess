@@ -154,11 +154,19 @@ public class Knight extends Piece {
               if (animating) {
                 System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*(scale-0.9)), displayY+((i-start)*(scale-1.2)), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(displayX + (a*(scale-0.9)), displayY+((i-start)*(scale-1.2)), scale, scale);
+                }
                 if (movingCounter >= Stop) {
                   animating = false;
                 }
               } else {
                 rect(x + (a*(scale-0.9)), y+((i-start)*(scale-1.2)), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + (a*(scale-0.9)), y+((i-start)*(scale-1.2)), scale, scale);
+                }
               }
             }
           }
@@ -244,7 +252,7 @@ public class Knight extends Piece {
             if (lines[i].charAt(a)=='1') {
               fill(One);
             } else if (lines[i].charAt(a)=='2') {
-              fill(Two);
+              fill(198, 112, 232);
             } else if (lines[i].charAt(a)=='3') {
               fill(Three);
             } else if (lines[i].charAt(a)=='4') {
@@ -256,11 +264,19 @@ public class Knight extends Piece {
               if (animating) {
                 System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*(scale-0.9)), displayY+((i-start)*(scale-1.2)), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(displayX + (a*(scale-0.9)), displayY+((i-start)*(scale-1.2)), scale, scale);
+                }
                 if (movingCounter >= Stop) {
                   animating = false;
                 }
               } else {
                 rect(x + (a*(scale-0.9)), y+((i-start)*(scale-1.2)), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + (a*(scale-0.9)), y+((i-start)*(scale-1.2)), scale, scale);
+                }
               }
             }
           }
