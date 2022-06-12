@@ -23,9 +23,7 @@ ArrayList<color[][]> planks = new ArrayList<color[][]>();
 ArrayList<int[]> moving = new ArrayList<int[]>();
 boolean animating = false;
 int animateTime = 20;
-int animateCounter = 0;
 int idleCounter = 0;
-int count = 0;
 boolean makeSure = false;
 void setup() {
   frame = loadStrings("frame.txt");
@@ -1553,7 +1551,6 @@ public class board {
         ArrayList<int[]> temp = (ArrayList)board[x1][y1].royalThreats.clone();
         for (int i = 0; i < temp.size(); i++) {
           //coordinate pair [0],[1] because r.T is in RMO
-
           unthreaten(temp.get(i)[0], temp.get(i)[1], true);
           royalPotential(temp.get(i)[0], temp.get(i)[1]);
           threaten(temp.get(i)[0], temp.get(i)[1], true);
