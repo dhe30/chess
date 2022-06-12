@@ -107,10 +107,10 @@ public class Knight extends Piece {
     int end = 25;
     if (idleCounter <= 180) {
       start = 1;
-      end = 25;
+      end = 26;
     }  else {
-      start = 26;
-      end = 50;
+      start = 27;
+      end = 52;
     }
     if (white) {
       if (Theme.equals("Alien")) {
@@ -123,7 +123,7 @@ public class Knight extends Piece {
         }
         if (animating) {
           start = 1;
-          end = 25;
+          end = 26;
           movingCounter +=1;
           scaleY+=2;
           displayX += scaleX;

@@ -184,7 +184,7 @@ public class Piece {
         }
         for (int i = start; i < end; i++) {
           //System.out.println(i);
-          for (int a = 0; a < lines[i].length(); a++) {
+          for (int a = lines[i].length() - 1; a >= 0; a--) {
             if (lines[i].charAt(a)=='7') {
               fill(Seven);
             } else if (lines[i].charAt(a)=='1') {
@@ -208,7 +208,7 @@ public class Piece {
                   animating = false;
                 }
               } else {
-                rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+                rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
               }
             }
           }
