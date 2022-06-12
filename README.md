@@ -93,3 +93,11 @@ June 10:
 
     Samuel: made bot be able to drop pieces while looking two moves ahead
 
+June 11:
+
+    Samuel: added more to the tutorial and fixed various issues related to the bot drop
+
+June 12: 
+
+    Samuel: worked with Daniel to fix up any bugs related to the bot and wrapped things up
+

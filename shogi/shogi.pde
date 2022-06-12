@@ -393,7 +393,7 @@ void Beyond() {
       Piece piece=null;
       if (Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null) {
         piece = Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece;
-        currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.7;
+        currentVal+=Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece.value*1.5;
         System.out.println(whiteCoors.size());
         for (int v = 0; v < whiteCoors.size(); v++) {
           int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
@@ -798,6 +798,12 @@ void draw() {
             }
           }
           //}
+        }
+        if(InitialSelected.size()==1){
+          if(Board.dropTest(InitialSelected.get(0), j, i)){
+            fill(20, 50);
+            rect(j*100, i*100, 100, 100);
+          }
         }
       }
     }
