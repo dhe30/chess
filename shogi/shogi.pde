@@ -509,7 +509,6 @@ void Beyond() {
       for (int i = 2; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
           if (Board.dropX(m, j, i)) {
-            moves.remove(moves.size()-1);
             for (int y = 0; y < 9; y++) {
               for (int z = 0; z < 9; z++) {
                 if (Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null) {
@@ -1466,6 +1465,16 @@ public class board {
             }
           }
         }
+        if(whiteCaptured.get(x).role.equals("knight")){
+          if (y1 <= 1) {
+            return false;
+          }
+        }
+        if(whiteCaptured.get(x).role.equals("lance")){
+          if (y1 == 0) {
+            return false;
+          }
+        }
         return true;
       } else {
         if (blackCaptured.get(x).role.equals("pawn")) {
@@ -1478,6 +1487,16 @@ public class board {
                 return false;
               }
             }
+          }
+        }
+        if(blackCaptured.get(x).role.equals("knight")){
+          if(y1>=7){
+            return false;
+          }
+        }
+        if(blackCaptured.get(x).role.equals("lance")){
+          if(y1==8){
+            return false;
           }
         }
         return true;
@@ -1501,13 +1520,19 @@ public class board {
             }
           }
         }
+        if(whiteCaptured.get(x).role.equals("knight")){
+          if (y1 <= 1) {
+            return false;
+          }
+        }
+        if(whiteCaptured.get(x).role.equals("lance")){
+          if (y1 == 0) {
+            return false;
+          }
+        }
         board[y1][x1].setPiece(whiteCaptured.get(x));
         whiteCaptured.remove(x);
         board[y1][x1].piece.switchSides();
-        int[] move = {y1, x1};
-        moves.add(move);
-        String r = board[y1][x1].piece.role.replace("\n", " ");
-        pieceMoved.add("white " + r);
         if (board[y1][x1].piece.isRoyal) {
           royalPotential(y1, x1);
           threaten(y1, x1, false);
@@ -1537,13 +1562,19 @@ public class board {
             }
           }
         }
+        if(blackCaptured.get(x).role.equals("knight")){
+          if(y1>=7){
+            return false;
+          }
+        }
+        if(blackCaptured.get(x).role.equals("lance")){
+          if(y1==8){
+            return false;
+          }
+        }
         board[y1][x1].setPiece(blackCaptured.get(x));
         blackCaptured.remove(x);
         board[y1][x1].piece.switchSides();
-        int[] move = {y1, x1};
-        moves.add(move);
-        String r = board[y1][x1].piece.role.replace("\n", " ");
-        pieceMoved.add("black " + r);
         if (board[y1][x1].piece.isRoyal) {
           royalPotential(y1, x1);
           threaten(y1, x1, false);
@@ -1580,6 +1611,16 @@ public class board {
             }
           }
         }
+        if(whiteCaptured.get(x).role.equals("knight")){
+          if (y1 <= 1) {
+            return false;
+          }
+        }
+        if(whiteCaptured.get(x).role.equals("lance")){
+          if (y1 == 0) {
+            return false;
+          }
+        }
         board[y1][x1].setPiece(whiteCaptured.get(x));
         whiteCaptured.remove(x);
         board[y1][x1].piece.switchSides();
@@ -1614,6 +1655,16 @@ public class board {
                 return false;
               }
             }
+          }
+        }
+        if(blackCaptured.get(x).role.equals("knight")){
+          if(y1>=7){
+            return false;
+          }
+        }
+        if(blackCaptured.get(x).role.equals("lance")){
+          if(y1==8){
+            return false;
           }
         }
         board[y1][x1].setPiece(blackCaptured.get(x));
