@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 board Board;
+boolean English = false;
 String[] frame;
 String Theme = "Traditional";
 boolean Test = false;
@@ -49,6 +50,9 @@ void setup() {
 void Hell() {
 }
 void keyPressed() {
+  if(key == 'e' && Theme.equals("Traditional")){
+    English = !English;
+  }
   if (key == 'r') {
     if (makeSure == true || Board.checkmate == true) {
       makeSure = false;
@@ -866,9 +870,9 @@ void draw() {
           textSize(15);
 
           if (Turn) {
-            text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 85);
+            text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role.replace("\n", " "), 950, 85);
           } else {
-            text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 85);
+            text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role.replace("\n", " "), 950, 85);
           }
           textSize(20);
         }
