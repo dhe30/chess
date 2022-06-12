@@ -789,6 +789,12 @@ void draw() {
           }
           //}
         }
+        if(InitialSelected.size()==1){
+          if(Board.dropTest(InitialSelected.get(0), j, i)){
+            fill(20, 50);
+            rect(j*100, i*100, 100, 100);
+          }
+        }
       }
     }
 
