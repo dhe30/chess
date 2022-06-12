@@ -474,7 +474,6 @@ void Beyond() {
           //  blackCoors.add(bc);
           //  System.out.println("blackCoors added " + Arrays.toString(bc));
           //}
-
         }
       }
       Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
@@ -1465,12 +1464,12 @@ public class board {
             }
           }
         }
-        if(whiteCaptured.get(x).role.equals("knight")){
+        if (whiteCaptured.get(x).role.equals("knight")) {
           if (y1 <= 1) {
             return false;
           }
         }
-        if(whiteCaptured.get(x).role.equals("lance")){
+        if (whiteCaptured.get(x).role.equals("lance")) {
           if (y1 == 0) {
             return false;
           }
@@ -1489,13 +1488,13 @@ public class board {
             }
           }
         }
-        if(blackCaptured.get(x).role.equals("knight")){
-          if(y1>=7){
+        if (blackCaptured.get(x).role.equals("knight")) {
+          if (y1>=7) {
             return false;
           }
         }
-        if(blackCaptured.get(x).role.equals("lance")){
-          if(y1==8){
+        if (blackCaptured.get(x).role.equals("lance")) {
+          if (y1==8) {
             return false;
           }
         }
@@ -1508,6 +1507,18 @@ public class board {
       return false;
     } else {
       if (Turn) {
+        boolean truth = false;
+
+        if (whiteCheck) {
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
+              truth = true;
+            }
+          }
+          if(!truth){
+            return false;
+          }
+        }
         if (whiteCaptured.get(x).role.equals("pawn")) {
           if (y1 == 0) {
             return false;
@@ -1520,12 +1531,12 @@ public class board {
             }
           }
         }
-        if(whiteCaptured.get(x).role.equals("knight")){
+        if (whiteCaptured.get(x).role.equals("knight")) {
           if (y1 <= 1) {
             return false;
           }
         }
-        if(whiteCaptured.get(x).role.equals("lance")){
+        if (whiteCaptured.get(x).role.equals("lance")) {
           if (y1 == 0) {
             return false;
           }
@@ -1550,6 +1561,17 @@ public class board {
         }  
         return true;
       } else {
+        if (blackCheck) {
+          boolean truth = false;
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
+              truth = true;
+            }
+          }
+          if (!truth) {
+            return false;
+          }
+        }
         if (blackCaptured.get(x).role.equals("pawn")) {
           if (y1==8) {
             return false;
@@ -1562,13 +1584,13 @@ public class board {
             }
           }
         }
-        if(blackCaptured.get(x).role.equals("knight")){
-          if(y1>=7){
+        if (blackCaptured.get(x).role.equals("knight")) {
+          if (y1>=7) {
             return false;
           }
         }
-        if(blackCaptured.get(x).role.equals("lance")){
-          if(y1==8){
+        if (blackCaptured.get(x).role.equals("lance")) {
+          if (y1==8) {
             return false;
           }
         }
@@ -1611,12 +1633,12 @@ public class board {
             }
           }
         }
-        if(whiteCaptured.get(x).role.equals("knight")){
+        if (whiteCaptured.get(x).role.equals("knight")) {
           if (y1 <= 1) {
             return false;
           }
         }
-        if(whiteCaptured.get(x).role.equals("lance")){
+        if (whiteCaptured.get(x).role.equals("lance")) {
           if (y1 == 0) {
             return false;
           }
@@ -1657,13 +1679,13 @@ public class board {
             }
           }
         }
-        if(blackCaptured.get(x).role.equals("knight")){
-          if(y1>=7){
+        if (blackCaptured.get(x).role.equals("knight")) {
+          if (y1>=7) {
             return false;
           }
         }
-        if(blackCaptured.get(x).role.equals("lance")){
-          if(y1==8){
+        if (blackCaptured.get(x).role.equals("lance")) {
+          if (y1==8) {
             return false;
           }
         }
@@ -2563,6 +2585,9 @@ public class board {
       System.out.println("ANYTHING ABOVE?");
     }
     if (saveTheKing.size() > 0) {
+      for (int i = 0; i < saveTheKing.size(); i++) {
+        System.out.println("SAVE THE KING: " + Arrays.toString(saveTheKing.get(i)) + " " + blackCheck);
+      }
       saveTheKing.clear();
     }
     if (restricted.size() > 0) {
