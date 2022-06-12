@@ -128,9 +128,11 @@ void keyPressed() {
       }
       showPromote=false;
       piece.canPromote=false;
+      System.out.println("PRAYER");
       Board.unthreaten(InitialSelected.get(1), InitialSelected.get(0), true);
+      System.out.println("LOVER");
 
-      piece.promote();
+      Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece.promote();
       if (piece.isRoyal) {
         Board.royalPotential(InitialSelected.get(1), InitialSelected.get(0));
       } else {
@@ -349,7 +351,7 @@ void mouseClicked() {
       }
     }
   }
-  if (onePlayer && !Turn && !Theme.equals("Alien")) {
+  if (onePlayer && !Turn && !Theme.equals("Alien") && !showPromote) {
     Beyond();
   }
 }
@@ -593,7 +595,8 @@ void Beyond() {
   } else if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
     System.out.println(lMoves.size() + " LOVE " + lMovesIndex);
-    System.out.println(blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
+    System.out.println("BALCK: " + blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
+    System.out.println("LEGAL: " + lMoves.get(lMovesIndex)[1]+ " " + lMoves.get(lMovesIndex)[0]);
 
     Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
     Turn=!Turn;
@@ -687,14 +690,18 @@ void draw() {
   //System.out.println(Board.blackCaptured.size());
   //System.out.println(Board.whiteCaptured.size());
   if (!Tutorial) {
+    if(!animating && Theme.equals("Alien") && !Turn && onePlayer && !showPromote){
+                Beyond();
+
+    }
     if (animating) {
       if (animateCounter >= animateTime) {
         System.out.println("ENDED!" + " " + Turn);
         animating = false;
         animateCounter = 0;
-        if (onePlayer && !Turn) {
-          Beyond();
-        }
+        //if (onePlayer && !Turn && !showPromote) {
+        //  Beyond();
+        //}
       } else {
         System.out.println(animateCounter);
         animateCounter +=1;
@@ -1812,6 +1819,13 @@ public class board {
         }
       }
       // if there is a piece on other tile, move to Captured array 
+      unthreaten(x, y, true);
+      if (board[x1][y1].piece != null) {
+        System.out.println("1");
+        unthreaten(x1, y1, true);
+                System.out.println("2");
+
+      }
       if (board[x1][y1].piece!=null) {
         if (board[x1][y1].piece.white==true) {
           board[x1][y1].piece.demote();
@@ -1823,10 +1837,7 @@ public class board {
       }
       // UNTHREATEN BOTH 
       // NEED TO UNTHREATEN other tile
-      unthreaten(x, y, true);
-      if (board[x1][y1].piece != null) {
-        unthreaten(x1, y1, true);
-      }
+      
       // move current piece to other tile, set current tile's piece to null
       board[x1][y1].setPiece(board[x][y].piece);
       board[x][y].setPiece(null);
@@ -1975,6 +1986,8 @@ public class board {
   void unthreaten(int x, int y, boolean human) {
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       if (board[x][y].piece.isRoyal) {
+        System.out.println(board[x][y].piece.role);
+        //System.out.println(x + " " + y + " " + human);
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
       }
       if (board[x][y].piece.white) {
@@ -2648,6 +2661,7 @@ public class board {
     }
   }
   void forcePromote(int x, int y) {
+    System.out.println("GOD IS GOOD");
     Piece piece = Board.board[x][y].piece;
     showPromote=false;
     piece.canPromote=false;

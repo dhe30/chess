@@ -108,7 +108,7 @@ public class Knight extends Piece {
     if (idleCounter <= 180) {
       start = 1;
       end = 26;
-    }  else {
+    } else {
       start = 27;
       end = 52;
     }
@@ -153,12 +153,12 @@ public class Knight extends Piece {
             if (lines[i].charAt(a)!='0') {
               if (animating) {
                 System.out.println(displayX+ " " +displayY);
-                rect(displayX + (a*(scale-0.8)), displayY+((i-start)*(scale-1.1)), scale, scale);
+                rect(displayX + (a*(scale-0.9)), displayY+((i-start)*(scale-1.2)), scale, scale);
                 if (movingCounter >= Stop) {
                   animating = false;
                 }
               } else {
-              rect(x + (a*(scale-0.8)), y+((i-start)*(scale-1.1)), scale, scale);
+                rect(x + (a*(scale-0.9)), y+((i-start)*(scale-1.2)), scale, scale);
               }
             }
           }
@@ -215,57 +215,109 @@ public class Knight extends Piece {
         }
       }
     } else {
-      fill(173, 168, 164);
-      rect(x +17, y +13, 60, 50);
-      triangle(x +17, y +63, x +77, y +63, x +47, y +93);
-      fill(255);
-      if (Theme.equals("Hell")) {
-        fill(255, 225, 214);
-      }
-      rect(x +20, y +10, 60, 50);
-      triangle(x +20, y +60, x +80, y +60, x +50, y +90);
-      fill(0);
-      if (promoted) {
+      if (Theme.equals("Alien")) {
+        lines = loadStrings(alienDisplay);
+        int scale = 4;
+        //x+=idleCounter;
+        idleCounter+=1;
+        if (idleCounter == 360) {
+          idleCounter =0;
+        }
+        if (animating) {
+          start = 1;
+          end = 26;
+          movingCounter +=1;
+          scaleY+=2;
+          displayX += scaleX;
+          displayY += scaleY;
 
-        fill(211, 4, 4);
-      }
-      if (English) {          
-        text(role, x+30, y+45);
-      } else {
-        if (promoted) {
-          x=x +31;
-          y=y +24;
-          for (int i = 1; i < lines.length; i++) {
-            for (int a = 0; a < lines[i].length(); a++) {
-              if (lines[i].charAt(a)=='1') {
-
-                rect(x + (a*2.2), y+(i*2.25), 2.3, 3.3);
+          //if (movingCounter > 20) {
+          //  scaleX= 0;
+          //  scaleY= 0;
+          //  start = 35;
+          //  end = 51;
+          //}
+        }
+        for (int i = start; i < end; i++) {
+          //System.out.println(i);
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='1') {
+              fill(One);
+            } else if (lines[i].charAt(a)=='2') {
+              fill(Two);
+            } else if (lines[i].charAt(a)=='3') {
+              fill(Three);
+            } else if (lines[i].charAt(a)=='4') {
+              fill(Four);
+            } else if (lines[i].charAt(a)=='5') {
+              fill(Five);
+            } 
+            if (lines[i].charAt(a)!='0') {
+              if (animating) {
+                System.out.println(displayX+ " " +displayY);
+                rect(displayX + (a*(scale-0.9)), displayY+((i-start)*(scale-1.2)), scale, scale);
+                if (movingCounter >= Stop) {
+                  animating = false;
+                }
+              } else {
+                rect(x + (a*(scale-0.9)), y+((i-start)*(scale-1.2)), scale, scale);
               }
             }
           }
         }
-        // TO FLIP THE IMAGES
-        //int newRow = 0;
-        //String store1 = "";
-        //String store2= "";
-        //for (int i = 1; i <= lines.length / 2; i++) {
-        //  newRow = lines.length - i;
-        //  for (int a = lines[i].length() - 1; a >= 0; a--) {
-        //    store1 += lines[i].substring(a, a+1);
-        //    store2 += lines[newRow].substring(a, a+1);
-        //  }
-        //  lines[i] = store2;
-        //  lines[newRow] = store1;
-        //  store1="";
-        //  store2="";
-        else {
+      } else {
+        fill(173, 168, 164);
+        rect(x +17, y +13, 60, 50);
+        triangle(x +17, y +63, x +77, y +63, x +47, y +93);
+        fill(255);
+        if (Theme.equals("Hell")) {
+          fill(255, 225, 214);
+        }
+        rect(x +20, y +10, 60, 50);
+        triangle(x +20, y +60, x +80, y +60, x +50, y +90);
+        fill(0);
+        if (promoted) {
 
-          x=x +35;
-          y=y +26;
-          for (int i = 1; i < lines.length; i++) {
-            for (int a = 0; a < lines[i].length(); a++) {
-              if (lines[i].charAt(a)=='1') {       
-                rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+          fill(211, 4, 4);
+        }
+        if (English) {          
+          text(role, x+30, y+45);
+        } else {
+          if (promoted) {
+            x=x +31;
+            y=y +24;
+            for (int i = 1; i < lines.length; i++) {
+              for (int a = 0; a < lines[i].length(); a++) {
+                if (lines[i].charAt(a)=='1') {
+
+                  rect(x + (a*2.2), y+(i*2.25), 2.3, 3.3);
+                }
+              }
+            }
+          }
+          // TO FLIP THE IMAGES
+          //int newRow = 0;
+          //String store1 = "";
+          //String store2= "";
+          //for (int i = 1; i <= lines.length / 2; i++) {
+          //  newRow = lines.length - i;
+          //  for (int a = lines[i].length() - 1; a >= 0; a--) {
+          //    store1 += lines[i].substring(a, a+1);
+          //    store2 += lines[newRow].substring(a, a+1);
+          //  }
+          //  lines[i] = store2;
+          //  lines[newRow] = store1;
+          //  store1="";
+          //  store2="";
+          else {
+
+            x=x +35;
+            y=y +26;
+            for (int i = 1; i < lines.length; i++) {
+              for (int a = 0; a < lines[i].length(); a++) {
+                if (lines[i].charAt(a)=='1') {       
+                  rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+                }
               }
             }
           }

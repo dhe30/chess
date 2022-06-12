@@ -110,12 +110,20 @@ public class Piece {
               if (animating) {
                 System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                }
                 if (movingCounter >= Stop) {
                   animating = false;
                   System.out.println(movingCounter);
                 }
               } else {
                 rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+                }
               }
             }
           }
@@ -203,12 +211,21 @@ public class Piece {
             if (lines[i].charAt(a)!='0') {
               if (animating) {
                 System.out.println(displayX+ " " +displayY);
-                rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
+                }
                 if (movingCounter >= Stop) {
                   animating = false;
                 }
               } else {
+
                 rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
+                }
               }
             }
           }
