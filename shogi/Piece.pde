@@ -143,7 +143,7 @@ public class Piece {
           fill(211, 4, 4);
         }
         if (English) {
-          text(Board.board[y/100][x/100].piece.role, x+30, y+55);
+          text(role, x+30, y+55);
         } else {
 
           x=x +35;
@@ -229,7 +229,7 @@ public class Piece {
           fill(211, 4, 4);
         }
         if (English) {
-          text(Board.board[y/100][x/100].piece.role, x+30, y+55);
+          text(role, x+30, y+45);
         } else {
           x=x +35;
           y=y +26;

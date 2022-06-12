@@ -50,7 +50,7 @@ void setup() {
 void Hell() {
 }
 void keyPressed() {
-  if(key == 'e' && Theme.equals("Traditional")){
+  if(key == 'e'){
     English = !English;
   }
   if (key == 'r') {

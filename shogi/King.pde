@@ -61,7 +61,7 @@ public class King extends Piece {
     int end = 13;
     if (upDownInt == 0) {
       upDown = -2;
-    } else if(upDownInt == -22){
+    } else if (upDownInt == -22) {
       upDown = 2;
     }
     upDownInt += upDown;
@@ -148,14 +148,19 @@ public class King extends Piece {
         }
         rect(x +20, y +40, 60, 50);
         triangle(x +20, y +40, x +80, y +40, x +50, y +10);
-        x=x +34;
-        y=y +40;
-        fill(0);
+        if (English) {   
+          fill(0);
+          text(role, x+30, y+55);
+        } else {
+          x=x +34;
+          y=y +40;
+          fill(0);
 
-        for (int i = 1; i < lines.length; i++) {
-          for (int a = 0; a < lines[i].length(); a++) {
-            if (lines[i].charAt(a)=='1') {  
-              rect(x + (a*2), y+(i*1.9), 2.8, 3.8);
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {  
+                rect(x + (a*2), y+(i*1.9), 2.8, 3.8);
+              }
             }
           }
         }
@@ -170,8 +175,7 @@ public class King extends Piece {
       }
       rect(x +20, y +10, 60, 50);
       triangle(x +20, y +60, x +80, y +60, x +50, y +90);
-      x=x +35;
-      y=y +27;
+
       //int newRow = 0;
       //String store1 = "";
       //String store2= "";
@@ -186,12 +190,18 @@ public class King extends Piece {
       //  store1="";
       //  store2="";
       //}
-
-      for (int i = 1; i < lines.length; i++) {
-        for (int a = 0; a < lines[i].length(); a++) {
-          if (lines[i].charAt(a)=='1') {  
-            fill(0);
-            rect(x + (a*2), y+(i*1.9), 2.8, 3.8);
+      if (English) {  
+        fill(0);
+        text(role, x+30, y+45);
+      } else {
+        x=x +35;
+        y=y +27;
+        for (int i = 1; i < lines.length; i++) {
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='1') {  
+              fill(0);
+              rect(x + (a*2), y+(i*1.9), 2.8, 3.8);
+            }
           }
         }
       }
