@@ -8,6 +8,8 @@ public class Bishop extends Piece {
   final color Seven = color(255, 255, 255);
   int upDown = 1;
   int upDownInt = 0;
+  float accelerationY = 0;
+  float accelerationX = 0;
   public Bishop(String x) {
     super(x);
     role="bishop";
@@ -120,14 +122,15 @@ public class Bishop extends Piece {
         upDown = 2;
       }
       upDownInt += upDown;
-      //if (animating) {
-      //  start = 35;
-      //  end = 51;
-      //  movingCounter +=1;
-      //  scaleY+=2;
-      //  displayX += scaleX;
-      //  displayY += scaleY;
-      //}
+      if (animating) {
+
+        movingCounter +=1;
+        scaleX+=accelerationX;
+
+        scaleY+=accelerationY;
+        displayX += scaleX;
+        displayY += scaleY;
+      }
       if (white) {
         for (int i = start; i < end; i++) {
           for (int a = lines[i].length() - 1; a >= 0; a--) {
@@ -213,12 +216,21 @@ public class Bishop extends Piece {
     }
   }
   void animate(int x, int y, int x1, int y1) {
+    accelerationY =0;
+    accelerationX = 0;
     animating = true;
     movingCounter = 0;
     displayY = x*100;
     displayX = y*100;
-    scaleY = ((((x1*100)-(x*100))-(0.5*2*20*20))/20);
-    scaleX = ((y1*100)-(y*100))/Stop;
+    if (white) {
+      displayX-=10;
+    }
+    scaleY = 0;
+    scaleX = 0;
+    accelerationX = (2.0*((y1*100.0)-(y*100.0)))/(Stop*Stop);
+    accelerationY = (2*((x1*100)-(x*100)))/(Stop*Stop);
+
+
     System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }

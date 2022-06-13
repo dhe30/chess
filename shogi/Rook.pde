@@ -111,11 +111,11 @@ public class Rook extends Piece {
       end = 0;
     }
     if (white) {
-      x-=14;
       if (Theme.equals("Alien")) {
+      x-=10;
 
         lines = loadStrings(alienDisplay);
-        float scale = 3.5;
+        float scale = 3.4;
         //x+=idleCounter;
         idleCounter+=1;
         if (idleCounter == 360) {
@@ -174,8 +174,18 @@ public class Rook extends Piece {
               if (animating) {
                 if (fly) {
                   rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale)-8, scale+0.5, scale+0.5);
+                  if (promoted) {
+                  fill(#F965FA, 100);
+                                    rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale)-8, scale+0.5, scale+0.5);
+
+                  }
                 } else {
                   rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale+0.5, scale+0.5);
+                  if (promoted) {
+                  fill(#F965FA, 100);
+                                    rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale+0.5, scale+0.5);
+
+                  }
                 }
                 if (movingCounter >= Stop) {
                   animating = false;
@@ -183,6 +193,11 @@ public class Rook extends Piece {
                 }
               } else {
                 rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale+0.5, scale+0.5);
+                if (promoted) {
+                  fill(#F965FA, 100);
+                                  rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale+0.5, scale+0.5);
+
+                }
               }
             }
           }
@@ -231,7 +246,7 @@ public class Rook extends Piece {
       if (Theme.equals("Alien")) {
 
         lines = loadStrings(alienDisplay);
-        float scale = 3.5;
+        float scale = 3.4;
         //x+=idleCounter;
         idleCounter+=1;
         if (idleCounter == 360) {
@@ -291,8 +306,18 @@ public class Rook extends Piece {
                 System.out.println(displayX+ " " +displayY + " " + scaleX);
                 if (fly) {
                   rect(displayX + (a*scale), displayY+((i-start)*scale)-8, scale+0.5, scale+0.5);
+                  if (promoted) {
+                  fill(#F965FA, 100);
+                                    rect(displayX + (a*scale), displayY+((i-start)*scale)-8, scale+0.5, scale+0.5);
+
+                  }
                 } else {
                   rect(displayX + (a*scale), displayY+((i-start)*scale), scale+0.5, scale+0.5);
+                  if (promoted) {
+                  fill(#F965FA, 100);
+                                    rect(displayX + (a*scale), displayY+((i-start)*scale), scale+0.5, scale+0.5);
+
+                  }
                 }
                 if (movingCounter >= Stop) {
                   animating = false;
@@ -300,6 +325,11 @@ public class Rook extends Piece {
                 }
               } else {
                 rect(x + (a*scale), y+((i-start)*scale), scale+0.5, scale+0.5);
+                if (promoted) {
+                  fill(#F965FA, 100);
+                                  rect(x + (a*scale), y+((i-start)*scale), scale+0.5, scale+0.5);
+
+                }
               }
             }
           }
@@ -371,6 +401,10 @@ public class Rook extends Piece {
     movingCounter = 0;
     displayY = x*100;
     displayX = y*100;
+    if(white){
+          displayX-=10;
+
+    }
     scaleY = ((x1*100)-(x*100.0))/Stop;
     scaleX = ((y1*100)-(y*100.0))/Stop;
     System.out.println(scaleX + " " + scaleY);
