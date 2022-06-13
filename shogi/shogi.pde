@@ -958,6 +958,7 @@ void draw() {
       text("Moves",1683, 60);
       textSize(15);
       text("'U' for theme",1668, 120);
+      text("'E' for English",1666, 150);
     if (InitialSelected.size() > 1 && selected) {
       ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
       fill(20, 50);
