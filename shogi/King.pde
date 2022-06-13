@@ -12,8 +12,6 @@ public class King extends Piece {
   final color Eleven = color(86, 76, 116);
   int upDown = 1;
   int upDownInt = 0;
-  float bscaleX;
-  float bscaleY;
   public King(String x) {
     super(x);
     role="king";
@@ -80,7 +78,7 @@ public class King extends Piece {
     if (white) {
       if (Theme.equals("Alien")) {
         lines = loadStrings(alienDisplay);
-        int scale = 4;
+        float scale = 4;
         //x+=idleCounter;
         idleCounter+=1;
         if (idleCounter == 360) {
@@ -90,8 +88,8 @@ public class King extends Piece {
           start = 1;
           end = 13;
           movingCounter +=1;
-          scaleY+=2;
-          scaleX+=2;
+          scaleY+=1;
+          scaleX+=1;
           displayX += scaleX;
           displayY += scaleY;
 
@@ -182,8 +180,8 @@ public class King extends Piece {
           start = 1;
           end = 13;
           movingCounter +=1;
-          scaleY+=2;
-          scaleX+=2;
+          scaleY+=1;
+          scaleX+=1;
           displayX += scaleX;
           displayY += scaleY;
 
@@ -281,8 +279,8 @@ public class King extends Piece {
     movingCounter = 0;
     displayY = x*100;
     displayX = y*100;
-    scaleY = ((((x1*100)-(x*100))-(0.5*2*20*20))/20);
-    scaleX = ((((y1*100)-(y*100))-(0.5*2*20*20))/20);
+    scaleY = ((((x1*100)-(x*100))-(0.5*1*20*20))/20);
+    scaleX = ((((y1*100)-(y*100))-(0.5*1*20*20))/20);
     System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }
