@@ -66,7 +66,8 @@ public class Piece {
     }
     if (white) {
       if (Theme.equals("Alien")) {
-
+        x+= 14;
+        y+=8;
         lines = loadStrings(alienDisplay);
         int scale = 4;
         //x+=idleCounter;
@@ -168,6 +169,8 @@ public class Piece {
       }
     } else {
       if (Theme.equals("Alien")) {
+         x+= 14;
+        y+=8;
         lines = loadStrings(alienDisplay);
         int scale = 4;
         //x+=idleCounter;
@@ -264,8 +267,8 @@ public class Piece {
   void animate(int x, int y, int x1, int y1) {
     animating = true;
     movingCounter = 0;
-    displayY = x*100;
-    displayX = y*100;
+    displayY = x*100 + 8;
+    displayX = y*100 + 14;
     scaleY = ((((x1*100)-(x*100))-(0.5*0.55*20*20))/20);
     scaleX = ((y1*100)-(y*100))/Stop;
     System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);

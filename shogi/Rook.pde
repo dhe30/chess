@@ -111,6 +111,7 @@ public class Rook extends Piece {
       end = 0;
     }
     if (white) {
+      x-=14;
       if (Theme.equals("Alien")) {
 
         lines = loadStrings(alienDisplay);
