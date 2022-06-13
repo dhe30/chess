@@ -130,7 +130,6 @@ public class King extends Piece {
             }
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
                 if (movingCounter >= Stop) {
                   animating = false;
@@ -223,7 +222,6 @@ public class King extends Piece {
             }
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
                 if (movingCounter >= Stop) {
                   animating = false;
@@ -284,6 +282,5 @@ public class King extends Piece {
     displayX = y*100 + 15;
     scaleY = ((((x1*100)-(x*100))-(0.5*1*20*20))/20);
     scaleX = ((((y1*100)-(y*100))-(0.5*1*20*20))/20);
-    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }

@@ -154,7 +154,6 @@ public class Knight extends Piece {
             } 
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*(scale-0.9)), displayY+((i-start)*(scale-1.2)), scale, scale);
                 if (promoted) {
                   fill(225, 225, 36, 70);
@@ -266,7 +265,6 @@ public class Knight extends Piece {
             } 
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*(scale-0.9)), displayY+((i-start)*(scale-1.2)), scale, scale);
                 if (promoted) {
                   fill(225, 225, 36, 70);
@@ -352,6 +350,5 @@ public class Knight extends Piece {
     displayX = y*100 + 17;
     scaleY = ((((x1*100)-(x*100))-(0.5*2*20*20))/20);
     scaleX = ((y1*100)-(y*100))/Stop;
-    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }

@@ -303,7 +303,6 @@ public class Rook extends Piece {
             }
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY + " " + scaleX);
                 if (fly) {
                   rect(displayX + (a*scale), displayY+((i-start)*scale)-8, scale+0.5, scale+0.5);
                   if (promoted) {
@@ -407,18 +406,15 @@ public class Rook extends Piece {
     }
     scaleY = ((x1*100)-(x*100.0))/Stop;
     scaleX = ((y1*100)-(y*100.0))/Stop;
-    System.out.println(scaleX + " " + scaleY);
     if (Math.abs(scaleX) > 15 || Math.abs(scaleY) > 15) {
       fly = true;
       if (scaleY == 0) {
         scaleX = 0;
         accelerationX = (2.0*((y1*100.0)-(y*100.0)))/(Stop*Stop);
-        System.out.println(accelerationX + " " + accelerationY);
       } else if (scaleX == 0) {
         scaleY = 0;
         accelerationY = (2*((x1*100)-(x*100)))/(Stop*Stop);
       }
     }
-    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }

@@ -136,11 +136,9 @@ public class GoldGeneral extends Piece {
             }
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + ((lines[i].length()-a)*scale), displayY+((i-start)*scale), scale, scale);
                 if (movingCounter >= Stop) {
                   animating = false;
-                  System.out.println(movingCounter);
                 }
               } else {
                 rect(x + ((lines[i].length()-a)*scale), y+((i-start)*scale), scale, scale);
@@ -170,11 +168,9 @@ public class GoldGeneral extends Piece {
             }
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
                 if (movingCounter >= Stop) {
                   animating = false;
-                  System.out.println(movingCounter);
                 }
               } else {
                 rect(x + (a*scale), y+((i-start)*scale), scale, scale);
@@ -198,6 +194,5 @@ public class GoldGeneral extends Piece {
     }
     scaleY = ((x1*100)-(x*100))/Stop;
     scaleX = ((y1*100)-(y*100))/Stop;
-    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }

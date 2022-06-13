@@ -154,7 +154,6 @@ public class Bishop extends Piece {
 
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + ((lines[i].length() - a)*(scale-1.3)), displayY+((i-start)*(scale-1.3)), scale, scale);
                 if (promoted) {
                   fill(225, 225, 36, 70);
@@ -194,7 +193,6 @@ public class Bishop extends Piece {
             } 
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*(scale-1.3)), displayY+((i-start)*(scale-1.3)), scale, scale);
                 if (promoted) {
                   fill(225, 225, 36, 70);
@@ -235,8 +233,5 @@ public class Bishop extends Piece {
     scaleX = 0;
     accelerationX = (2.0*((y1*100.0)-(y*100.0)))/(Stop*Stop);
     accelerationY = (2*((x1*100)-(x*100)))/(Stop*Stop);
-
-
-    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }

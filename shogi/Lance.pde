@@ -171,7 +171,6 @@ public class Lance extends Piece {
             }
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
                 if (promoted) {
                   fill(225, 225, 36, 70);
@@ -220,7 +219,6 @@ public class Lance extends Piece {
             }
             if (lines[i].charAt(a)!='0') {
               if (animating) {
-                System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
                 if (promoted) {
                   fill(225, 225, 36, 70);
@@ -251,6 +249,5 @@ public class Lance extends Piece {
     displayX = y*100+10;
     scaleY = ((((x1*100)-(x*100))-(0.5*2*20*20))/20);
     scaleX = ((y1*100)-(y*100))/Stop;
-    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }
