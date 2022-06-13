@@ -77,6 +77,8 @@ public class King extends Piece {
     //}
     if (white) {
       if (Theme.equals("Alien")) {
+           y+= 25;
+        x+= 15;
         lines = loadStrings(alienDisplay);
         float scale = 4;
         //x+=idleCounter;
@@ -168,7 +170,8 @@ public class King extends Piece {
       }
     } else {
       if (Theme.equals("Alien")) {
-        y+= 20;
+        y+= 25;
+        x+= 15;
         lines = loadStrings(alienDisplay);
         int scale = 4;
         //x+=idleCounter;
@@ -277,8 +280,8 @@ public class King extends Piece {
   void animate(int x, int y, int x1, int y1) {
     animating = true;
     movingCounter = 0;
-    displayY = x*100;
-    displayX = y*100;
+    displayY = x*100 + 25;
+    displayX = y*100 + 15;
     scaleY = ((((x1*100)-(x*100))-(0.5*1*20*20))/20);
     scaleX = ((((y1*100)-(y*100))-(0.5*1*20*20))/20);
     System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
