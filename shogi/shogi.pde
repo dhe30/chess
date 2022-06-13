@@ -753,8 +753,6 @@ void draw() {
           fill(214, 130, 130);
           //fill(200, 100, 255);
           rect(j*100+5, i*100+5, 90, 90);
-          float b = random(-1, 1);
-
           // ellipse(j*100+50, i*100+45 + b, 90, 55);
           //quad(j*100+5, (i*100)+45+5,j*100+45+5, (i*100)+5+20,j*100+90+5,(i*100)+45+5, j*100+45+5,(i*100)+70+5);
           //fill(147,27,27);
@@ -958,6 +956,9 @@ void draw() {
       if (Theme.equals("Hell")) {
         fill(0);
         fill(222, 217, 215, 150);
+      } else if(Theme.equals("Alien")){
+        fill(0);
+        fill(206, 17, 39, 150);
       }
       for (int i = 0; i < list.size(); i++) {
         int x = list.get(i)[0];

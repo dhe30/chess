@@ -110,6 +110,8 @@ public class Bishop extends Piece {
     //  end = 51;
     //}
     if (Theme.equals("Alien")) {
+      x+=6;
+      y+=25;
       float scale = 3.5;
       //x+=idleCounter;
       idleCounter+=1;
@@ -172,6 +174,7 @@ public class Bishop extends Piece {
           }
         }
       } else {
+        x+=10;
         for (int i = start; i < end; i++) {
           for (int a = 0; a < lines[i].length(); a++) {
             if (lines[i].charAt(a)=='7') {
@@ -220,8 +223,11 @@ public class Bishop extends Piece {
     accelerationX = 0;
     animating = true;
     movingCounter = 0;
-    displayY = x*100;
-    displayX = y*100;
+    displayY = x*100 + 25;
+    displayX = y*100 + 6;
+    if (!white){
+      displayY+=10;
+    }
     if (white) {
       displayX-=10;
     }
