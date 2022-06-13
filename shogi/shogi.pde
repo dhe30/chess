@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
 board Board;
+boolean English = false;
 String[] frame;
 String Theme = "Traditional";
 boolean Test = false;
@@ -49,6 +50,9 @@ void setup() {
 void Hell() {
 }
 void keyPressed() {
+  if(key == 'e'){
+    English = !English;
+  }
   if (key == 'r') {
     if (makeSure == true || Board.checkmate == true) {
       makeSure = false;
@@ -124,9 +128,11 @@ void keyPressed() {
       }
       showPromote=false;
       piece.canPromote=false;
+      System.out.println("PRAYER");
       Board.unthreaten(InitialSelected.get(1), InitialSelected.get(0), true);
+      System.out.println("LOVER");
 
-      piece.promote();
+      Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece.promote();
       if (piece.isRoyal) {
         Board.royalPotential(InitialSelected.get(1), InitialSelected.get(0));
       } else {
@@ -345,7 +351,7 @@ void mouseClicked() {
       }
     }
   }
-  if (onePlayer && !Turn && !Theme.equals("Alien")) {
+  if (onePlayer && !Turn && !Theme.equals("Alien") && !showPromote) {
     Beyond();
   }
 }
@@ -374,6 +380,9 @@ void Beyond() {
   float currentVal=0.0;
   int lMovesIndex=-1;
   int blackCoorsIndex=-1;
+  boolean doDrop=false;
+  int graveyardIndex=-1;
+  int[] dropIndex={-1, -1};
   for (int i = 0; i < blackCoors.size(); i++) {
     //System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
     // System.out.println("LORD 2!");
@@ -466,11 +475,11 @@ void Beyond() {
             }
             Board.threaten(lMoves2.get(l)[1], lMoves2.get(l)[0], false);
           }
-          if (piece2!=null) {
-            int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
-            //blackCoors.add(bc);
-            //System.out.println("blackCoors added " + Arrays.toString(bc));
-          }
+          //if(piece2!=null){
+          //  int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
+          //  blackCoors.add(bc);
+          //  System.out.println("blackCoors added " + Arrays.toString(bc));
+          //}
         }
       }
       Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
@@ -496,18 +505,100 @@ void Beyond() {
         whiteCoors.add(wc);
         //System.out.println("whiteCoors added " + Arrays.toString(wc));
       }
-      System.out.println(currentVal);
+      //System.out.println(currentVal);
     }
   }
-  System.out.println(highestVal);
+  if (Board.blackCaptured.size()>=1) {
+    for (int m = 0; m < Board.blackCaptured.size(); m++) {
+      Piece piece = Board.blackCaptured.get(m);
+      for (int i = 2; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+          if (Board.dropX(m, j, i)) {
+            for (int y = 0; y < 9; y++) {
+              for (int z = 0; z < 9; z++) {
+                if (Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null) {
+                  currentVal+=Board.board[y][z].piece.value;
+                }
+              }
+            }
+            for (int k = 0; k < whiteCoors.size(); k++) {
+              ArrayList<int[]> lMoves2 = Board.legalMoves(whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
+
+              for (int l = 0; l < lMoves2.size(); l++) {
+                Piece piece2=null;
+                if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece!=null) {
+                  piece2 = Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece;
+                  currentVal-=Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece.value*1.5;
+                }
+                Board.moveX(whiteCoors.get(k)[0], whiteCoors.get(k)[1], lMoves2.get(l)[1], lMoves2.get(l)[0]);
+                for (int y = 0; y < 9; y++) {
+                  for (int z = 0; z < 9; z++) {
+                    if (Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null) {
+                      currentVal-=Board.board[y][z].piece.value;
+                    }
+                  }
+                }
+                if (currentVal>highestVal) {
+                  highestVal=currentVal;
+                  lMovesIndex=-1;
+                  blackCoorsIndex=-1;
+                  doDrop=true;
+                  graveyardIndex=m;
+                  int[] dropIndex2 ={j, i};
+                  dropIndex = Arrays.copyOf(dropIndex2, 2);
+                }
+                currentVal=0.0;
+                Board.moveX(lMoves2.get(l)[1], lMoves2.get(l)[0], whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
+                Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].setPiece(piece2);
+                if (piece2!=null) {
+                  if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.size() > 0) {
+                    ArrayList<int[]> temp2 = (ArrayList)Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.clone();
+                    for (int a = 0; a < temp2.size(); a++) {
+                      //coordinate pair [0],[1] because r.T is in RMo
+                      Board.unthreaten(temp2.get(a)[0], temp2.get(a)[1], false);
+                      Board.royalPotential(temp2.get(a)[0], temp2.get(a)[1]);
+                      Board.threaten(temp2.get(a)[0], temp2.get(a)[1], false);
+                    }
+                  }
+                  Board.threaten(lMoves2.get(l)[1], lMoves2.get(l)[0], false);
+                }
+                //System.out.println("first threat didnt break");
+              }
+            }
+            //System.out.println("second threat didnt break");
+            Board.unthreaten(i, j, false);
+            Board.board[i][j].setPiece(null);
+
+            if (Board.board[i][j].royalThreats.size() > 0) {
+              ArrayList<int[]> temp = (ArrayList)Board.board[i][j].royalThreats.clone();
+              for (int a = 0; a < temp.size(); a++) {
+                Board.unthreaten(temp.get(a)[0], temp.get(a)[1], false);
+                Board.royalPotential(temp.get(a)[0], temp.get(a)[1]);
+                Board.threaten(temp.get(a)[0], temp.get(a)[1], false);
+              }
+            }
+            piece.white=true;
+            Board.blackCaptured.add(m, piece);
+          }
+        }
+      }
+    }
+  }
+  //System.out.println(highestVal);
   //System.out.println("ended for loop");
-  if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
+  if (doDrop) {
+    Board.drop(graveyardIndex, dropIndex[0], dropIndex[1]);
+    Turn=!Turn;
+    Board.revertPreviousPreventCheck();
+    Board.preventCheck();
+    Board.checkCheck();
+  } else if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
     System.out.println(lMoves.size() + " LOVE " + lMovesIndex);
-    System.out.println(blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
+    System.out.println("BALCK: " + blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
+    System.out.println("LEGAL: " + lMoves.get(lMovesIndex)[1]+ " " + lMoves.get(lMovesIndex)[0]);
 
     Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
-
     Turn=!Turn;
     //System.out.println("Turned");
     Board.revertPreviousPreventCheck();
@@ -596,15 +687,21 @@ void prayer(int x, int y, int weight) {
 
 
 void draw() {
+  //System.out.println(Board.blackCaptured.size());
+  //System.out.println(Board.whiteCaptured.size());
   if (!Tutorial) {
+    if(!animating && Theme.equals("Alien") && !Turn && onePlayer && !showPromote){
+                Beyond();
+
+    }
     if (animating) {
       if (animateCounter >= animateTime) {
         System.out.println("ENDED!" + " " + Turn);
         animating = false;
         animateCounter = 0;
-        if (onePlayer && !Turn) {
-          Beyond();
-        }
+        //if (onePlayer && !Turn && !showPromote) {
+        //  Beyond();
+        //}
       } else {
         System.out.println(animateCounter);
         animateCounter +=1;
@@ -619,6 +716,7 @@ void draw() {
       fill(0);
       rect(0, 0, 900, 900);
     } else if (Theme.equals("Alien")) {
+
       fill(255, 255, 255);
       rect(0, 0, 900, 900);
     }
@@ -633,6 +731,7 @@ void draw() {
         line(100*i, 0, 100*i, 900);
         line(0, 100*i, 900, 100*i);
       } else if (Theme.equals("Alien")) {
+
         stroke(214, 130, 130);
         line(100*i, 0, 100*i, 900);
         line(0, 100*i, 900, 100*i);
@@ -650,6 +749,7 @@ void draw() {
         } else if (Theme.equals("Hell")) {
           prayer(j*100+3, i*100, 5);
         } else if (Theme.equals("Alien")) {
+
           fill(214, 130, 130);
           //fill(200, 100, 255);
           rect(j*100+5, i*100+5, 90, 90);
@@ -698,6 +798,12 @@ void draw() {
             }
           }
           //}
+        }
+        if(InitialSelected.size()==1){
+          if(Board.dropTest(InitialSelected.get(0), j, i)){
+            fill(20, 50);
+            rect(j*100, i*100, 100, 100);
+          }
         }
       }
     }
@@ -777,9 +883,9 @@ void draw() {
           textSize(15);
 
           if (Turn) {
-            text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role, 950, 85);
+            text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role.replace("\n", " "), 950, 85);
           } else {
-            text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role, 950, 85);
+            text("selected " + Board.blackCaptured.get(InitialSelected.get(0)).role.replace("\n", " "), 950, 85);
           }
           textSize(20);
         }
@@ -907,7 +1013,6 @@ void draw() {
       //text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
       x++;
     }
-
     if (!Tutorial) {
       //fill(#b27e4d);
       //rect(1200, 5, 430, 302);
@@ -1036,6 +1141,25 @@ void draw() {
       text("press 1 or 2 to scroll through tutorial", 950, 600);
       break;
     case 11:
+      PImage graveyard = loadImage("graveyard.jpg");
+      image(graveyard, 0, 0, 900, 900);
+      strokeWeight(1);
+      stroke(0);
+      noFill();
+      rect(40, 300, 285, 100);
+      rect(40, 600, 285, 100);
+      text("black graveyard", 50, 450);
+      text("white graveyard", 50, 750);
+      text("Any piece captured will be sent to your graveyard.\nAll captured pieces are automatically demoted", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 12:
+      PImage drop = loadImage("drop.jpg");
+      image(drop, 0, 0, 900, 900);
+      text("you can drop a piece on any empty square\nwith the following restrictions:\n \n1. you can't place a pawn on the same \ncolumn as an unpromoted ally pawn\n \n2. you cant place a piece \nwhere it cant move on the next turn\nsuch as a pawn on the last row \nor a knight on the last two rows", 950, 50);
+      text("press 1 or 2 to scroll through tutorial", 950, 600);
+      break;
+    case 13:
       Tutorial=false;
       break;
     }
@@ -1045,21 +1169,10 @@ void draw() {
   fill(255);
   fill(0);
 }
-boolean oneDrop() {
-  int index = (int)(Math.random()*Board.blackCaptured.size()-1);
-  for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 9; j++) {
-      if (Board.board[i][j].piece==null) {
-        int rand = (int)(Math.random()*10);
-        if (Board.drop(index, i, j) && rand%2==0) {
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
 boolean botMove() {
+  if (Board.checkmate) {
+    return false;
+  }
   int xCor = (int)(Math.random()*9);
   int yCor = (int)(Math.random()*9);
   if (Board.board[yCor][xCor].piece!=null) {
@@ -1351,13 +1464,13 @@ public class board {
     }
     return -1;
   }
-  boolean drop(int x, int x1, int y1) { // x1 and y1 are not row major order
+  boolean dropTest(int x, int x1, int y1) {
     if (board[y1][x1].piece!=null) {
       return false;
     } else {
       if (Turn) {
         if (whiteCaptured.get(x).role.equals("pawn")) {
-          if (y1 > 6) {
+          if (y1 == 0) {
             return false;
           }
           for (int i = 0; i < 9; i++) {
@@ -1366,6 +1479,197 @@ public class board {
                 return false;
               }
             }
+          }
+        }
+        if (whiteCaptured.get(x).role.equals("knight")) {
+          if (y1 <= 1) {
+            return false;
+          }
+        }
+        if (whiteCaptured.get(x).role.equals("lance")) {
+          if (y1 == 0) {
+            return false;
+          }
+        }
+        return true;
+      } else {
+        if (blackCaptured.get(x).role.equals("pawn")) {
+          if (y1==8) {
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
+                return false;
+              }
+            }
+          }
+        }
+        if (blackCaptured.get(x).role.equals("knight")) {
+          if (y1>=7) {
+            return false;
+          }
+        }
+        if (blackCaptured.get(x).role.equals("lance")) {
+          if (y1==8) {
+            return false;
+          }
+        }
+        return true;
+      }
+    }
+  }
+  boolean dropX(int x, int x1, int y1) { // x1 and y1 are not row major order
+    if (board[y1][x1].piece!=null) {
+      return false;
+    } else {
+      if (Turn) {
+        boolean truth = false;
+
+        if (whiteCheck) {
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
+              truth = true;
+            }
+          }
+          if(!truth){
+            return false;
+          }
+        }
+        if (whiteCaptured.get(x).role.equals("pawn")) {
+          if (y1 == 0) {
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
+                return false;
+              }
+            }
+          }
+        }
+        if (whiteCaptured.get(x).role.equals("knight")) {
+          if (y1 <= 1) {
+            return false;
+          }
+        }
+        if (whiteCaptured.get(x).role.equals("lance")) {
+          if (y1 == 0) {
+            return false;
+          }
+        }
+        board[y1][x1].setPiece(whiteCaptured.get(x));
+        whiteCaptured.remove(x);
+        board[y1][x1].piece.switchSides();
+        if (board[y1][x1].piece.isRoyal) {
+          royalPotential(y1, x1);
+          threaten(y1, x1, false);
+        } else {
+          board[y1][x1].piece.calcPotential(x1, y1);
+          threaten(y1, x1, false);
+        }
+        if (board[y1][x1].royalThreats.size() > 0) {
+          ArrayList<int[]> temp = (ArrayList)board[y1][x1].royalThreats.clone();
+          for (int i = 0; i < temp.size(); i++) {           
+            unthreaten(temp.get(i)[0], temp.get(i)[1], false);
+            royalPotential(temp.get(i)[0], temp.get(i)[1]);
+            threaten(temp.get(i)[0], temp.get(i)[1], false);
+          }
+        }  
+        return true;
+      } else {
+        if (blackCheck) {
+          boolean truth = false;
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
+              truth = true;
+            }
+          }
+          if (!truth) {
+            return false;
+          }
+        }
+        if (blackCaptured.get(x).role.equals("pawn")) {
+          if (y1==8) {
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && !board[i][x1].piece.white) {
+                return false;
+              }
+            }
+          }
+        }
+        if (blackCaptured.get(x).role.equals("knight")) {
+          if (y1>=7) {
+            return false;
+          }
+        }
+        if (blackCaptured.get(x).role.equals("lance")) {
+          if (y1==8) {
+            return false;
+          }
+        }
+        board[y1][x1].setPiece(blackCaptured.get(x));
+        blackCaptured.remove(x);
+        board[y1][x1].piece.switchSides();
+        if (board[y1][x1].piece.isRoyal) {
+          royalPotential(y1, x1);
+          threaten(y1, x1, false);
+        } else {
+          board[y1][x1].piece.calcPotential(x1, y1);
+          threaten(y1, x1, false);
+        }
+        if (board[y1][x1].royalThreats.size() > 0) {
+          ArrayList<int[]> temp = (ArrayList)board[y1][x1].royalThreats.clone();
+          for (int i = 0; i < temp.size(); i++) {           
+            unthreaten(temp.get(i)[0], temp.get(i)[1], false);
+            royalPotential(temp.get(i)[0], temp.get(i)[1]);
+            threaten(temp.get(i)[0], temp.get(i)[1], false);
+          }
+        }
+        return true;
+      }
+    }
+  }
+  boolean drop(int x, int x1, int y1) { // x1 and y1 are not row major order
+    if (board[y1][x1].piece!=null) {
+      return false;
+    } else {
+      if (Turn) {
+        if (whiteCheck) {
+                  boolean truth = false;
+
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
+              truth = true;
+            }
+          }
+          if(!truth){
+            return false;
+          }
+        }
+        if (whiteCaptured.get(x).role.equals("pawn")) {
+          if (y1 == 0) {
+            return false;
+          }
+          for (int i = 0; i < 9; i++) {
+            if (board[i][x1].piece!=null) {
+              if (board[i][x1].piece.role.equals("pawn") && board[i][x1].piece.white) {
+                return false;
+              }
+            }
+          }
+        }
+        if (whiteCaptured.get(x).role.equals("knight")) {
+          if (y1 <= 1) {
+            return false;
+          }
+        }
+        if (whiteCaptured.get(x).role.equals("lance")) {
+          if (y1 == 0) {
+            return false;
           }
         }
         board[y1][x1].setPiece(whiteCaptured.get(x));
@@ -1392,8 +1696,19 @@ public class board {
         }  
         return true;
       } else {
+        if (blackCheck) {
+          boolean truth = false;
+          for (int i = 0; i < saveTheKing.size(); i++) {
+            if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
+              truth = true;
+            }
+          }
+          if (!truth) {
+            return false;
+          }
+        }
         if (blackCaptured.get(x).role.equals("pawn")) {
-          if (y1 < 2) {
+          if (y1==8) {
             return false;
           }
           for (int i = 0; i < 9; i++) {
@@ -1402,6 +1717,16 @@ public class board {
                 return false;
               }
             }
+          }
+        }
+        if (blackCaptured.get(x).role.equals("knight")) {
+          if (y1>=7) {
+            return false;
+          }
+        }
+        if (blackCaptured.get(x).role.equals("lance")) {
+          if (y1==8) {
+            return false;
           }
         }
         board[y1][x1].setPiece(blackCaptured.get(x));
@@ -1500,6 +1825,13 @@ public class board {
         }
       }
       // if there is a piece on other tile, move to Captured array 
+      unthreaten(x, y, true);
+      if (board[x1][y1].piece != null) {
+        System.out.println("1");
+        unthreaten(x1, y1, true);
+                System.out.println("2");
+
+      }
       if (board[x1][y1].piece!=null) {
         if (board[x1][y1].piece.white==true) {
           board[x1][y1].piece.demote();
@@ -1511,10 +1843,7 @@ public class board {
       }
       // UNTHREATEN BOTH 
       // NEED TO UNTHREATEN other tile
-      unthreaten(x, y, true);
-      if (board[x1][y1].piece != null) {
-        unthreaten(x1, y1, true);
-      }
+      
       // move current piece to other tile, set current tile's piece to null
       board[x1][y1].setPiece(board[x][y].piece);
       board[x][y].setPiece(null);
@@ -1663,6 +1992,8 @@ public class board {
   void unthreaten(int x, int y, boolean human) {
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       if (board[x][y].piece.isRoyal) {
+        System.out.println(board[x][y].piece.role);
+        //System.out.println(x + " " + y + " " + human);
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
       }
       if (board[x][y].piece.white) {
@@ -1755,8 +2086,8 @@ public class board {
         }
       }
     } else if (whiteCheck || blackCheck) {
-      System.out.println("SHOULD NOT BE ZERO, UNLESS CHECKMATED: " + saveTheKing.size());
-      System.out.println("white check: " + whiteCheck + " black check: " + blackCheck);
+      //System.out.println("SHOULD NOT BE ZERO, UNLESS CHECKMATED: " + saveTheKing.size());
+      //System.out.println("white check: " + whiteCheck + " black check: " + blackCheck);
       for (int i = 0; i < ans.size(); i++) {
         boolean found = false;
         for (int a = 0; a < saveTheKing.size() && !found; a++) {
@@ -2300,6 +2631,9 @@ public class board {
       System.out.println("ANYTHING ABOVE?");
     }
     if (saveTheKing.size() > 0) {
+      for (int i = 0; i < saveTheKing.size(); i++) {
+        System.out.println("SAVE THE KING: " + Arrays.toString(saveTheKing.get(i)) + " " + blackCheck);
+      }
       saveTheKing.clear();
     }
     if (restricted.size() > 0) {
@@ -2333,6 +2667,7 @@ public class board {
     }
   }
   void forcePromote(int x, int y) {
+    System.out.println("GOD IS GOOD");
     Piece piece = Board.board[x][y].piece;
     showPromote=false;
     piece.canPromote=false;

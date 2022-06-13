@@ -100,7 +100,7 @@ public class Lance extends Piece {
   }
   void promote() {
     promoted=true;
-    isRoyal = true;
+    isRoyal = false;
     role="promoted\nlance";
     value=8;
   }
@@ -132,50 +132,109 @@ public class Lance extends Piece {
         idleCounter =0;
       }
       if (animating) {
-          start = 35;
-          end = 51;
-          movingCounter +=1;
-          scaleY+=2;
-          displayX += scaleX;
-          displayY += scaleY;
-        }
-      for (int i = start; i < end; i++) {
-        for (int a = 0; a < lines[i].length(); a++) {
-          if (lines[i].charAt(a)=='7') {
-            fill(Seven);
-          } else if (lines[i].charAt(a)=='1') {
-            fill(One);
-          } else if (lines[i].charAt(a)=='2') {
-            fill(Two);
-          } else if (lines[i].charAt(a)=='3') {
-            fill(Three);
-          } else if (lines[i].charAt(a)=='4') {
-            fill(Four);
-          } else if (lines[i].charAt(a)=='5') {
-            fill(Five);
-          } else if (lines[i].charAt(a)=='6') {
-            fill(Six);
-          } else if (lines[i].charAt(a)=='c') {
-            fill(Twelve);
-          } else if (lines[i].charAt(a)=='8') {
-            fill(Eight);
-          } else if (lines[i].charAt(a)=='9') {
-            fill(Nine);
-          } else if (lines[i].charAt(a)=='a') {
-            fill(Ten);
-          } else if (lines[i].charAt(a)=='b') {
-            fill(Eleven);
+        start = 35;
+        end = 51;
+        movingCounter +=1;
+        scaleY+=2;
+        displayX += scaleX;
+        displayY += scaleY;
+      }
+      if (white) {
+        for (int i = start; i < end; i++) {
+          for (int a = lines[i].length() - 1; a >= 0; a--) {
+            if (lines[i].charAt(a)=='7') {
+              fill(Seven);
+            } else if (lines[i].charAt(a)=='1') {
+              fill(One);
+            } else if (lines[i].charAt(a)=='2') {
+              fill(Two);
+            } else if (lines[i].charAt(a)=='3') {
+              fill(Three);
+            } else if (lines[i].charAt(a)=='4') {
+              fill(Four);
+            } else if (lines[i].charAt(a)=='5') {
+              fill(Five);
+            } else if (lines[i].charAt(a)=='6') {
+              fill(Six);
+            } else if (lines[i].charAt(a)=='c') {
+              fill(Twelve);
+            } else if (lines[i].charAt(a)=='8') {
+              fill(Eight);
+            } else if (lines[i].charAt(a)=='9') {
+              fill(Nine);
+            } else if (lines[i].charAt(a)=='a') {
+              fill(Ten);
+            } else if (lines[i].charAt(a)=='b') {
+              fill(Eleven);
+            }
+            if (lines[i].charAt(a)!='0') {
+              if (animating) {
+                System.out.println(displayX+ " " +displayY);
+                rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
+                }
+                if (movingCounter >= Stop) {
+                  animating = false;
+                }
+              } else {
+                rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
+                }
+              }
+            }
           }
-          if (lines[i].charAt(a)!='0') {
-            if (animating) {
+        }
+      } else {
+        for (int i = start; i < end; i++) {
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='7') {
+              fill(Seven);
+            } else if (lines[i].charAt(a)=='1') {
+              fill(One);
+            } else if (lines[i].charAt(a)=='2') {
+              fill(Two);
+            } else if (lines[i].charAt(a)=='3') {
+              fill(Three);
+            } else if (lines[i].charAt(a)=='4') {
+              fill(Four);
+            } else if (lines[i].charAt(a)=='5') {
+              fill(Five);
+            } else if (lines[i].charAt(a)=='6') {
+              fill(Six);
+            } else if (lines[i].charAt(a)=='c') {
+              fill(Twelve);
+            } else if (lines[i].charAt(a)=='8') {
+              fill(Eight);
+            } else if (lines[i].charAt(a)=='9') {
+              fill(Nine);
+            } else if (lines[i].charAt(a)=='a') {
+              fill(Ten);
+            } else if (lines[i].charAt(a)=='b') {
+              fill(Eleven);
+            }
+            if (lines[i].charAt(a)!='0') {
+              if (animating) {
                 System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                }
                 if (movingCounter >= Stop) {
                   animating = false;
                 }
               } else {
                 rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+                }
               }
+            }
           }
         }
       }

@@ -15,7 +15,7 @@ public class King extends Piece {
   public King(String x) {
     super(x);
     role="king";
-    value=100;
+    value=50;
     display = "king.txt";
     alienDisplay = "kingBot.txt";
   }
@@ -61,7 +61,7 @@ public class King extends Piece {
     int end = 13;
     if (upDownInt == 0) {
       upDown = -2;
-    } else if(upDownInt == -22){
+    } else if (upDownInt == -22) {
       upDown = 2;
     }
     upDownInt += upDown;
@@ -78,19 +78,20 @@ public class King extends Piece {
     if (white) {
       if (Theme.equals("Alien")) {
         lines = loadStrings(alienDisplay);
-        int scale = 4;
+        float scale = 4;
         //x+=idleCounter;
         idleCounter+=1;
         if (idleCounter == 360) {
           idleCounter =0;
         }
         if (animating) {
-          //start = 1;
-          //end = 17;
-          //movingCounter +=1;
-          //scaleY+=0.5;
-          //displayX += scaleX;
-          //displayY += scaleY;
+          start = 1;
+          end = 13;
+          movingCounter +=1;
+          scaleY+=1;
+          scaleX+=1;
+          displayX += scaleX;
+          displayY += scaleY;
 
           //if (movingCounter > 20) {
           //  scaleX= 0;
@@ -126,15 +127,15 @@ public class King extends Piece {
               fill(Eleven);
             }
             if (lines[i].charAt(a)!='0') {
-              //if (animating) {
-              //  System.out.println(displayX+ " " +displayY);
-              //  rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
-              //  if (movingCounter >= Stop) {
-              //    animating = false;
-              //  }
-              //} else {
+              if (animating) {
+                System.out.println(displayX+ " " +displayY);
+                rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                if (movingCounter >= Stop) {
+                  animating = false;
+                }
+              } else {
               rect(x + (a*scale), y+((i-start)*scale) + upDownInt, scale, scale);
-              //}
+              }
             }
           }
         }
@@ -148,53 +149,138 @@ public class King extends Piece {
         }
         rect(x +20, y +40, 60, 50);
         triangle(x +20, y +40, x +80, y +40, x +50, y +10);
-        x=x +34;
-        y=y +40;
-        fill(0);
+        if (English) {   
+          fill(0);
+          text(role, x+30, y+55);
+        } else {
+          x=x +34;
+          y=y +40;
+          fill(0);
 
-        for (int i = 1; i < lines.length; i++) {
-          for (int a = 0; a < lines[i].length(); a++) {
-            if (lines[i].charAt(a)=='1') {  
-              rect(x + (a*2), y+(i*1.9), 2.8, 3.8);
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {  
+                rect(x + (a*2), y+(i*1.9), 2.8, 3.8);
+              }
             }
           }
         }
       }
     } else {
-      fill(173, 168, 164);
-      rect(x +17, y +13, 60, 50);
-      triangle(x +17, y +63, x +77, y +63, x +47, y +93);
-      fill(255);
-      if (Theme.equals("Hell")) {
-        fill(255, 225, 214);
-      }
-      rect(x +20, y +10, 60, 50);
-      triangle(x +20, y +60, x +80, y +60, x +50, y +90);
-      x=x +35;
-      y=y +27;
-      //int newRow = 0;
-      //String store1 = "";
-      //String store2= "";
-      //for (int i = 1; i <= lines.length / 2; i++) {
-      //  newRow = lines.length - i;
-      //  for (int a = lines[i].length() - 1; a >= 0; a--) {
-      //    store1 += lines[i].substring(a, a+1);
-      //    store2 += lines[newRow].substring(a, a+1);
-      //  }
-      //  lines[i] = store2;
-      //  lines[newRow] = store1;
-      //  store1="";
-      //  store2="";
-      //}
+      if (Theme.equals("Alien")) {
+        y+= 20;
+        lines = loadStrings(alienDisplay);
+        int scale = 4;
+        //x+=idleCounter;
+        idleCounter+=1;
+        if (idleCounter == 360) {
+          idleCounter =0;
+        }
+        if (animating) {
+          start = 1;
+          end = 13;
+          movingCounter +=1;
+          scaleY+=1;
+          scaleX+=1;
+          displayX += scaleX;
+          displayY += scaleY;
 
-      for (int i = 1; i < lines.length; i++) {
-        for (int a = 0; a < lines[i].length(); a++) {
-          if (lines[i].charAt(a)=='1') {  
-            fill(0);
-            rect(x + (a*2), y+(i*1.9), 2.8, 3.8);
+          //if (movingCounter > 20) {
+          //  scaleX= 0;
+          //  scaleY= 0;
+          //  start = 35;
+          //  end = 51;
+          //}
+        }
+        for (int i = start; i < end; i++) {
+          //System.out.println(i);
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='7') {
+              fill(Seven);
+            } else if (lines[i].charAt(a)=='1') {
+              fill(242, 238, 95);
+            } else if (lines[i].charAt(a)=='2') {
+              fill(255, 251, 121);
+            } else if (lines[i].charAt(a)=='3') {
+              fill(255, 252, 162);
+            } else if (lines[i].charAt(a)=='4') {
+              fill(255, 255, 255);
+            } else if (lines[i].charAt(a)=='5') {
+              fill(203, 200, 92);
+            } else if (lines[i].charAt(a)=='6') {
+              fill(Six);
+            } else if (lines[i].charAt(a)=='8') {
+              fill(Eight);
+            } else if (lines[i].charAt(a)=='9') {
+              fill(Nine);
+            } else if (lines[i].charAt(a)=='a') {
+              fill(Ten);
+            } else if (lines[i].charAt(a)=='b') {
+              fill(Eleven);
+            }
+            if (lines[i].charAt(a)!='0') {
+              if (animating) {
+                System.out.println(displayX+ " " +displayY);
+                rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                if (movingCounter >= Stop) {
+                  animating = false;
+                }
+              } else {
+              rect(x + (a*scale), y+((i-start)*scale) + upDownInt, scale, scale);
+              }
+            }
+          }
+        }
+      } else {
+        fill(173, 168, 164);
+        rect(x +17, y +13, 60, 50);
+        triangle(x +17, y +63, x +77, y +63, x +47, y +93);
+        fill(255);
+        if (Theme.equals("Hell")) {
+          fill(255, 225, 214);
+        }
+        rect(x +20, y +10, 60, 50);
+        triangle(x +20, y +60, x +80, y +60, x +50, y +90);
+
+        //int newRow = 0;
+        //String store1 = "";
+        //String store2= "";
+        //for (int i = 1; i <= lines.length / 2; i++) {
+        //  newRow = lines.length - i;
+        //  for (int a = lines[i].length() - 1; a >= 0; a--) {
+        //    store1 += lines[i].substring(a, a+1);
+        //    store2 += lines[newRow].substring(a, a+1);
+        //  }
+        //  lines[i] = store2;
+        //  lines[newRow] = store1;
+        //  store1="";
+        //  store2="";
+        //}
+        if (English) {  
+          fill(0);
+          text(role, x+30, y+45);
+        } else {
+          x=x +35;
+          y=y +27;
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {  
+                fill(0);
+                rect(x + (a*2), y+(i*1.9), 2.8, 3.8);
+              }
+            }
           }
         }
       }
     }
+  }
+  void animate(int x, int y, int x1, int y1) {
+    animating = true;
+    movingCounter = 0;
+    displayY = x*100;
+    displayX = y*100;
+    scaleY = ((((x1*100)-(x*100))-(0.5*1*20*20))/20);
+    scaleX = ((((y1*100)-(y*100))-(0.5*1*20*20))/20);
+    System.out.println(displayX + " " + displayY + " " + scaleX + " " + scaleY);
   }
 }

@@ -161,27 +161,28 @@ public class SilverGeneral extends Piece {
         //  end = 51;
         //}
       }
-      for (int i = start; i < end; i++) {
-        for (int a = 0; a < lines[i].length(); a++) {
-          if (lines[i].charAt(a)=='7') {
-            fill(Seven);
-          } else if (lines[i].charAt(a)=='1') {
-            fill(One);
-          } else if (lines[i].charAt(a)=='2') {
-            fill(Two);
-          } else if (lines[i].charAt(a)=='3') {
-            fill(Three);
-          } else if (lines[i].charAt(a)=='4') {
-            fill(Four);
-          } else if (lines[i].charAt(a)=='5') {
-            fill(Five);
-          } else if (lines[i].charAt(a)=='6') {
-            fill(Six);
-          } else if (lines[i].charAt(a)=='8') {
-            fill(Eight);
-          }
-          if (lines[i].charAt(a)!='0') {
-            if (animating) {
+      if (white) {
+        for (int i = start; i < end; i++) {
+          for (int a = 0; a < lines[i].length(); a++) {
+            if (lines[i].charAt(a)=='7') {
+              fill(Seven);
+            } else if (lines[i].charAt(a)=='1') {
+              fill(One);
+            } else if (lines[i].charAt(a)=='2') {
+              fill(Two);
+            } else if (lines[i].charAt(a)=='3') {
+              fill(Three);
+            } else if (lines[i].charAt(a)=='4') {
+              fill(Four);
+            } else if (lines[i].charAt(a)=='5') {
+              fill(Five);
+            } else if (lines[i].charAt(a)=='6') {
+              fill(Six);
+            } else if (lines[i].charAt(a)=='8') {
+              fill(Eight);
+            }
+            if (lines[i].charAt(a)!='0') {
+              if (animating) {
                 System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
                 if (movingCounter >= Stop) {
@@ -191,6 +192,49 @@ public class SilverGeneral extends Piece {
               } else {
                 rect(x + (a*scale), y+((i-start)*scale), scale, scale);
               }
+            }
+          }
+        }
+      } else {
+        for (int i = start; i < end; i++) {
+          for (int a = lines[i].length() - 1; a >=0; a--) {
+            if (lines[i].charAt(a)=='7') {
+              fill(Seven);
+            } else if (lines[i].charAt(a)=='1') {
+              fill(One);
+            } else if (lines[i].charAt(a)=='2') {
+              fill(Two);
+            } else if (lines[i].charAt(a)=='3') {
+              fill(Three);
+            } else if (lines[i].charAt(a)=='4') {
+              fill(Four);
+            } else if (lines[i].charAt(a)=='5') {
+              fill(Five);
+            } else if (lines[i].charAt(a)=='6') {
+              fill(Six);
+            } else if (lines[i].charAt(a)=='8') {
+              fill(Eight);
+            }
+            if (lines[i].charAt(a)!='0') {
+              if (animating) {
+                System.out.println(displayX+ " " +displayY);
+                rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
+                }
+                if (movingCounter >= Stop) {
+                  animating = false;
+                  System.out.println(movingCounter);
+                }
+              } else {
+                rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
+                }
+              }
+            }
           }
         }
       }

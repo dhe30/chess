@@ -110,12 +110,20 @@ public class Piece {
               if (animating) {
                 System.out.println(displayX+ " " +displayY);
                 rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                }
                 if (movingCounter >= Stop) {
                   animating = false;
                   System.out.println(movingCounter);
                 }
               } else {
                 rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+                }
               }
             }
           }
@@ -142,13 +150,18 @@ public class Piece {
         if (promoted) {
           fill(211, 4, 4);
         }
-        x=x +35;
-        y=y +38;
-        for (int i = 1; i < lines.length; i++) {
-          for (int a = 0; a < lines[i].length(); a++) {
-            if (lines[i].charAt(a)=='1') {
+        if (English) {
+          text(role, x+30, y+55);
+        } else {
 
-              rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+          x=x +35;
+          y=y +38;
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {
+
+                rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+              }
             }
           }
         }
@@ -179,7 +192,7 @@ public class Piece {
         }
         for (int i = start; i < end; i++) {
           //System.out.println(i);
-          for (int a = 0; a < lines[i].length(); a++) {
+          for (int a = lines[i].length() - 1; a >= 0; a--) {
             if (lines[i].charAt(a)=='7') {
               fill(Seven);
             } else if (lines[i].charAt(a)=='1') {
@@ -198,12 +211,21 @@ public class Piece {
             if (lines[i].charAt(a)!='0') {
               if (animating) {
                 System.out.println(displayX+ " " +displayY);
-                rect(displayX + (a*scale), displayY+((i-start)*scale), scale, scale);
+                rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(displayX + ((lines[i].length() - a)*scale), displayY+((i-start)*scale), scale, scale);
+                }
                 if (movingCounter >= Stop) {
                   animating = false;
                 }
               } else {
-                rect(x + (a*scale), y+((i-start)*scale), scale, scale);
+
+                rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
+                if (promoted) {
+                  fill(225, 225, 36, 70);
+                  rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale), scale, scale);
+                }
               }
             }
           }
@@ -223,12 +245,16 @@ public class Piece {
         if (promoted) {
           fill(211, 4, 4);
         }
-        x=x +35;
-        y=y +26;
-        for (int i = 1; i < lines.length; i++) {
-          for (int a = 0; a < lines[i].length(); a++) {
-            if (lines[i].charAt(a)=='1') {       
-              rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+        if (English) {
+          text(role, x+30, y+45);
+        } else {
+          x=x +35;
+          y=y +26;
+          for (int i = 1; i < lines.length; i++) {
+            for (int a = 0; a < lines[i].length(); a++) {
+              if (lines[i].charAt(a)=='1') {       
+                rect(x + (a*2), y+(i*2.05), 2.3, 3.3);
+              }
             }
           }
         }
