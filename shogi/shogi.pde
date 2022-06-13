@@ -109,10 +109,8 @@ void keyPressed() {
     }
   }
   if (key=='t') {
-    System.out.println("PRESSED T:" + " " + Tutorial);
     Tutorial=true;
     showTutorial=false;
-    System.out.println("After:" + " " + Tutorial + " SHOW:" + showTutorial);
   }
   if (key=='l' && moves.size() == 0) {
     onePlayer=true;
@@ -130,9 +128,8 @@ void keyPressed() {
       }
       showPromote=false;
       piece.canPromote=false;
-      System.out.println("PRAYER");
       Board.unthreaten(InitialSelected.get(1), InitialSelected.get(0), true);
-      System.out.println("LOVER");
+
 
       Board.board[InitialSelected.get(1)][InitialSelected.get(0)].piece.promote();
       if (piece.isRoyal) {
@@ -144,7 +141,6 @@ void keyPressed() {
 
       InitialSelected.clear();
       Turn=!Turn;
-      System.out.println("Turn terminated, promoted, if false then it is black's turn: " + Turn);
       Board.revertPreviousPreventCheck();
       Board.preventCheck();
       Board.checkCheck();
@@ -158,8 +154,6 @@ void keyPressed() {
       showPromote=false;
       InitialSelected.clear();
       Turn = !Turn;
-      System.out.println("Turn terminated, not promoted, if false then it is black's turn: " + Turn);
-
       Board.revertPreviousPreventCheck();
       Board.preventCheck();
       Board.checkCheck();
@@ -187,7 +181,6 @@ void mouseClicked() {
     System.out.println("WHit threats:"  + " "+ Board.board[mouseY / 100][mouseX / 100].whiteThreatened + " Black threats: " + Board.board[mouseY / 100][mouseX / 100].blackThreatened);
   } else {
     if (!animating) {
-      System.out.println("Hit 1");
       if (mouseX < 900 && mouseY < 900) {
         // ex. mouse at (456,789) refers to tile (4,7)
         if (InitialSelected.size() == 0 && Board.board[mouseY / 100][mouseX / 100].piece != null) {
@@ -199,8 +192,6 @@ void mouseClicked() {
             selected=true;
           }
         } else if (InitialSelected.size() > 1 && selected) {
-          System.out.println("Hit 2");
-
           // Only occurs when piece has been selected, row order means x and y switch positions!
           // make new tile piece disappear (it is being replaced by the selected piece)
           if (InitialSelected.get(1) == mouseY/100 && InitialSelected.get(0) == mouseX/100) {
@@ -298,13 +289,11 @@ void mouseClicked() {
               }
             }
             if (piece.canPromote) {
-              System.out.println("Promotion box initiated, turn should teminate below");
               showPromote=true;
             } else {
               InitialSelected.clear();
               if (didMove) {
                 Turn = !Turn;
-                System.out.println("Love");
                 Board.revertPreviousPreventCheck();
                 Board.preventCheck(); // do this at the start of a turn, it goes after turn = nextTurn because that is when the nextTurn first begins
                 Board.checkCheck();
@@ -312,7 +301,7 @@ void mouseClicked() {
             }
           }
         } else if (InitialSelected.size()==1) {
-          System.out.println("Hit 3");
+
 
           canDrop=true;
           if (Board.drop(InitialSelected.get(0), mouseX/100, mouseY/100)==false) {
@@ -327,7 +316,7 @@ void mouseClicked() {
           }
         }
       } else {
-        System.out.println("Hit 4");
+
 
         canDrop=true;
         if (InitialSelected.size() == 1) {
@@ -341,7 +330,6 @@ void mouseClicked() {
               }
             }
           } else {
-            System.out.println("CACKING");
             for (int i = 0; i < Board.blackCaptured.size(); i++) {
               Piece piece = Board.blackCaptured.get(i);
               if (mouseX>=piece.x && mouseX<=piece.x+60 && mouseY>=piece.y && mouseY<=piece.y+50) {
@@ -374,10 +362,7 @@ void Beyond() {
       }
     }
   }
-  //System.out.println("JFDJFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-  //for(int w = 0; w < whiteCoors.size(); w++){
-  //  System.out.println(Arrays.toString(whiteCoors.get(w)));
-  //}
+
   float highestVal=0.0;
   float currentVal=0.0;
   int lMovesIndex=-1;
@@ -386,11 +371,7 @@ void Beyond() {
   int graveyardIndex=-1;
   int[] dropIndex={-1, -1};
   for (int i = 0; i < blackCoors.size(); i++) {
-    //System.out.println(blackCoors.get(i)[0] + "," + blackCoors.get(i)[1]);
-    // System.out.println("LORD 2!");
-
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(i)[0], blackCoors.get(i)[1]);//yx
-    //System.out.println("didnt break");
     for (int j = 0; j < lMoves.size(); j++) {
       Piece piece=null;
       if (Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].piece!=null) {
@@ -399,17 +380,13 @@ void Beyond() {
         System.out.println(whiteCoors.size());
         for (int v = 0; v < whiteCoors.size(); v++) {
           int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
-          //  System.out.println("RemEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEoved: " + Arrays.toString(wc) + " " + Arrays.toString(whiteCoors.get(v)));
-
           if (Arrays.equals(whiteCoors.get(v), wc)) {
             whiteCoors.remove(v);
             v--; // CHANGE 1
           }
         }
       }
-      //System.out.println("move" + i + " The Piece: " + Board.board[blackCoors.get(i)[0]][blackCoors.get(i)[1]].piece);
       Board.moveX(blackCoors.get(i)[0], blackCoors.get(i)[1], lMoves.get(j)[1], lMoves.get(j)[0]);
-      //System.out.println("move" + i + " didnt break");
       for (int y = 0; y < 9; y++) {
         for (int z = 0; z < 9; z++) {
           if (Board.board[y][z].blackThreatened>0 && Board.board[y][z].piece!=null) {
@@ -418,32 +395,15 @@ void Beyond() {
         }
       }
       Board.moveX(lMoves.get(j)[1], lMoves.get(j)[0], blackCoors.get(i)[0], blackCoors.get(i)[1]);
-      //System.out.println("j="+j);
-      //System.out.println(whiteCoors.size());
       for (int k = 0; k < whiteCoors.size(); k++) {
-        //System.out.println("k="+k);
-        //System.out.print(Arrays.toString(whiteCoors.get(k)));
-        // System.out.println("LORD !");
         ArrayList<int[]> lMoves2 = Board.legalMoves(whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
-        //    System.out.println("LORD !!");
-
         for (int l = 0; l < lMoves2.size(); l++) {
-          //System.out.println(Arrays.toString(lMoves2.get(l)));
           Piece piece2=null;
           if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece!=null) {
             piece2 = Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece;
             currentVal-=Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].piece.value*1.5;
-            //for(int v = 0; v < blackCoors.size(); v++){
-            //  int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
-            //  if(Arrays.equals(blackCoors.get(v), bc)){
-            //    //blackCoors.remove(v);
-            //    v--; // CHANGE 2
-            //  }
-            //}
           }
-          //System.out.println("lMove2 = [" + lMoves2.get(l)[0] + "," + lMoves2.get(l)[1] + "]");
           Board.moveX(whiteCoors.get(k)[0], whiteCoors.get(k)[1], lMoves2.get(l)[1], lMoves2.get(l)[0]);
-          //System.out.print("abcd");
           for (int y = 0; y < 9; y++) {
             for (int z = 0; z < 9; z++) {
               if (Board.board[y][z].whiteThreatened>0 && Board.board[y][z].piece!=null) {
@@ -458,15 +418,9 @@ void Beyond() {
           }
           currentVal=0.0;
           Board.moveX(lMoves2.get(l)[1], lMoves2.get(l)[0], whiteCoors.get(k)[0], whiteCoors.get(k)[1]);
-
-          //System.out.print("cba");
           Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].setPiece(piece2);
-
-          //System.out.print("aa");
           if (piece2!=null) {
             if (Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.size() > 0) {
-              //  System.out.println("LORD 3!");
-
               ArrayList<int[]> temp2 = (ArrayList)Board.board[lMoves2.get(l)[1]][lMoves2.get(l)[0]].royalThreats.clone();
               for (int a = 0; a < temp2.size(); a++) {
                 //coordinate pair [0],[1] because r.T is in RMo
@@ -477,37 +431,27 @@ void Beyond() {
             }
             Board.threaten(lMoves2.get(l)[1], lMoves2.get(l)[0], false);
           }
-          //if(piece2!=null){
-          //  int[] bc = {lMoves2.get(l)[1], lMoves2.get(l)[0]};
-          //  blackCoors.add(bc);
-          //  System.out.println("blackCoors added " + Arrays.toString(bc));
-          //}
         }
       }
       Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].setPiece(piece);
 
       if (piece!=null) {
         if (Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].royalThreats.size() > 0) {
-          //  System.out.println("LORD 4!");
 
           ArrayList<int[]> temp = (ArrayList)Board.board[lMoves.get(j)[1]][lMoves.get(j)[0]].royalThreats.clone();
           for (int a = 0; a < temp.size(); a++) {
             //coordinate pair [0],[1] because r.T is in RMO
-            //System.out.println("Threaten rouals after setting 2");
             Board.unthreaten(temp.get(a)[0], temp.get(a)[1], false);
             Board.royalPotential(temp.get(a)[0], temp.get(a)[1]);
             Board.threaten(temp.get(a)[0], temp.get(a)[1], false);
           }
         }
-        //System.out.println("Threaten after setting 2 ");
         Board.threaten(lMoves.get(j)[1], lMoves.get(j)[0], false);
       }
       if (piece!=null) {
         int[] wc = {lMoves.get(j)[1], lMoves.get(j)[0]};
         whiteCoors.add(wc);
-        //System.out.println("whiteCoors added " + Arrays.toString(wc));
       }
-      //System.out.println(currentVal);
     }
   }
   if (Board.blackCaptured.size()>=1) {
@@ -564,10 +508,8 @@ void Beyond() {
                   }
                   Board.threaten(lMoves2.get(l)[1], lMoves2.get(l)[0], false);
                 }
-                //System.out.println("first threat didnt break");
               }
             }
-            //System.out.println("second threat didnt break");
             Board.unthreaten(i, j, false);
             Board.board[i][j].setPiece(null);
 
@@ -586,8 +528,6 @@ void Beyond() {
       }
     }
   }
-  //System.out.println(highestVal);
-  //System.out.println("ended for loop");
   if (doDrop) {
     Board.drop(graveyardIndex, dropIndex[0], dropIndex[1]);
     Turn=!Turn;
@@ -596,20 +536,14 @@ void Beyond() {
     Board.checkCheck();
   } else if (lMovesIndex!=-1 && blackCoorsIndex!=-1) {
     ArrayList<int[]> lMoves = Board.legalMoves(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1]);
-    System.out.println(lMoves.size() + " LOVE " + lMovesIndex);
-    System.out.println("BALCK: " + blackCoors.get(blackCoorsIndex)[0]+ " " + blackCoors.get(blackCoorsIndex)[1]);
-    System.out.println("LEGAL: " + lMoves.get(lMovesIndex)[1]+ " " + lMoves.get(lMovesIndex)[0]);
-
     Board.move(blackCoors.get(blackCoorsIndex)[0], blackCoors.get(blackCoorsIndex)[1], lMoves.get(lMovesIndex)[1], lMoves.get(lMovesIndex)[0]);
     Turn=!Turn;
-    //System.out.println("Turned");
     Board.revertPreviousPreventCheck();
     Board.preventCheck();
     Board.checkCheck();
   } else {
     botMove();
     Turn=!Turn;
-    //System.out.println("Turned problem?");
     Board.revertPreviousPreventCheck();
     Board.preventCheck();
     Board.checkCheck();
@@ -689,22 +623,18 @@ void prayer(int x, int y, int weight) {
 
 
 void draw() {
-  //System.out.println(Board.blackCaptured.size());
-  //System.out.println(Board.whiteCaptured.size());
   if (!Tutorial) {
     if (!animating && Theme.equals("Alien") && !Turn && onePlayer && !showPromote) {
       Beyond();
     }
     if (animating) {
       if (animateCounter >= animateTime) {
-        System.out.println("ENDED!" + " " + Turn);
         animating = false;
         animateCounter = 0;
         //if (onePlayer && !Turn && !showPromote) {
         //  Beyond();
         //}
       } else {
-        System.out.println(animateCounter);
         animateCounter +=1;
       }
     }
@@ -807,7 +737,6 @@ void draw() {
     if (!Tutorial) {
       int scale = 20;
       for (int i = 1; i < frame.length; i++) {
-        //System.out.println(i);
         for (int a = 0; a < frame[i].length(); a++) {
           if (frame[i].charAt(a)=='1') {
             fill(90, 189, 19);
@@ -834,7 +763,11 @@ void draw() {
             text("White in check", 950, 50);
           }
         } else {
-          text("White's turn", 950, 50);
+          if(Board.checkmate){
+                        text("Black MATED!", 950, 50);
+
+          } else {
+          text("White's turn", 950, 50);}
         }
       } else {
         if (Board.blackCheck) {
@@ -929,36 +862,35 @@ void draw() {
       textSize(20);
       text("One Player", 1010, 257);
     }
-      for (int i = 1; i < banner.length; i++) {
-            int scale = 11;
+    for (int i = 1; i < banner.length; i++) {
+      int scale = 11;
 
-        //System.out.println(i);
-        for (int a = 0; a < banner[i].length(); a++) {
-          if (banner[i].charAt(a)=='1') {
-            fill(178,184,194);
-          } else if (banner[i].charAt(a)=='2') {
-            fill(103,115,141);
-          } else if (banner[i].charAt(a)=='3') {
-            fill(136,0,20);
-          } else if (banner[i].charAt(a)=='4') {
-            fill(247,91,99);
-          } else if (banner[i].charAt(a)=='5') { 
-            fill(84,10,23);
-          } else if (banner[i].charAt(a)=='6') { 
-            fill(181,41,85);
-          } else if (banner[i].charAt(a)=='7') { 
-            fill(196,4,36);
-          }
-          if (banner[i].charAt(a)!='0') {
-            rect(1611 + (a*scale), ((i)*scale) - 10, scale, scale);
-          }
+      for (int a = 0; a < banner[i].length(); a++) {
+        if (banner[i].charAt(a)=='1') {
+          fill(178, 184, 194);
+        } else if (banner[i].charAt(a)=='2') {
+          fill(103, 115, 141);
+        } else if (banner[i].charAt(a)=='3') {
+          fill(136, 0, 20);
+        } else if (banner[i].charAt(a)=='4') {
+          fill(247, 91, 99);
+        } else if (banner[i].charAt(a)=='5') { 
+          fill(84, 10, 23);
+        } else if (banner[i].charAt(a)=='6') { 
+          fill(181, 41, 85);
+        } else if (banner[i].charAt(a)=='7') { 
+          fill(196, 4, 36);
+        }
+        if (banner[i].charAt(a)!='0') {
+          rect(1611 + (a*scale), ((i)*scale) - 10, scale, scale);
         }
       }
-      fill(255);
-      text("Moves",1683, 60);
-      textSize(15);
-      text("'U' for theme",1668, 120);
-      text("'E' for English",1666, 150);
+    }
+    fill(255);
+    text("Moves", 1683, 60);
+    textSize(15);
+    text("'U' for theme", 1668, 120);
+    text("'E' for English", 1666, 150);
     if (InitialSelected.size() > 1 && selected) {
       ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
       fill(20, 50);
@@ -982,49 +914,49 @@ void draw() {
       rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     }
     if (!Tutorial) {
-    textSize(12);
-    int x=0;
-    for (int i = 0; i < Board.whiteCaptured.size(); i++) {
-      if (x==8) {
-        x=0;
-      }
-      int j=i/8;
-      fill(255);
+      textSize(12);
+      int x=0;
+      for (int i = 0; i < Board.whiteCaptured.size(); i++) {
+        if (x==8) {
+          x=0;
+        }
+        int j=i/8;
+        fill(255);
 
-      //rect(x*100+950, j*100+640, 60, 50);
-      //triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
-      if (Theme.equals("Alien")) {      
-        Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).alienDisplay);
-      } else {
-        Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).display);
+        //rect(x*100+950, j*100+640, 60, 50);
+        //triangle(x*100+950, j*100+640, x*100+1010, j*100+640, x*100+980, j*100+610);
+        if (Theme.equals("Alien")) {      
+          Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).alienDisplay);
+        } else {
+          Board.whiteCaptured.get(i).displayPiece(x*100+950 -17, j*100+640 -24, true, Board.whiteCaptured.get(i).display);
+        }
+        Board.whiteCaptured.get(i).x=x*100+950;
+        Board.whiteCaptured.get(i).y=j*100+640;
+        //fill(0);
+        //text(Board.whiteCaptured.get(i).role, x*100+960, j*100+655);
+        x++;
       }
-      Board.whiteCaptured.get(i).x=x*100+950;
-      Board.whiteCaptured.get(i).y=j*100+640;
-      //fill(0);
-      //text(Board.whiteCaptured.get(i).role, x*100+960, j*100+655);
-      x++;
-    }
-    x=0;
-    for (int i = 0; i < Board.blackCaptured.size(); i++) {
-      if (x==8) {
-        x=0;
+      x=0;
+      for (int i = 0; i < Board.blackCaptured.size(); i++) {
+        if (x==8) {
+          x=0;
+        }
+        int j=i/8;
+        //fill(255);
+        //rect(x*100+950, j*100+310, 60, 50);
+        //triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
+        if (Theme.equals("Alien")) {    
+          Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).alienDisplay);
+        } else {
+          Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
+        }
+        Board.blackCaptured.get(i).x=x*100+950;
+        Board.blackCaptured.get(i).y=j*100+310;
+        //fill(0);
+        //text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
+        x++;
       }
-      int j=i/8;
-      //fill(255);
-      //rect(x*100+950, j*100+310, 60, 50);
-      //triangle(x*100+950, j*100+360, x*100+1010, j*100+360, x*100+980, j*100+390);
-      if (Theme.equals("Alien")) {    
-        Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).alienDisplay);
-      } else {
-        Board.blackCaptured.get(i).displayPiece(x*100+950 -20, j*100+310 -10, false, Board.blackCaptured.get(i).display);
-      }
-      Board.blackCaptured.get(i).x=x*100+950;
-      Board.blackCaptured.get(i).y=j*100+310;
-      //fill(0);
-      //text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
-      x++;
-    }
-    
+
       //fill(#b27e4d);
       //rect(1200, 5, 430, 302);
       //line(1420, 5, 1420, 305);
@@ -1340,9 +1272,6 @@ public class board {
     boolean block = false;
     int x; 
     int y;
-    if (saveTheKing.size() > 0) {
-      System.out.println("SOMETHING IS VERY VERY WRONG!!!!!");
-    }
     if (Turn) {
       x = whiteKingLocation[0];
       y = whiteKingLocation[1];
@@ -1398,13 +1327,9 @@ public class board {
           }
         }
         if (index == -1) {
-          System.out.println("INDEX IS STILL -1");
         } else {
-          System.out.println("TARGETS BEING PROCESSED");
           for (int i = oneHundred + 1; i < index; i++) { // not index + 1 because king's tile should not be processed 
-            System.out.println("PLEASE: " + targets.get(i)[1] + " " + targets.get(i)[0] + "WHITE THREATENED: " + board[targets.get(i)[1]][targets.get(i)[0]].whiteThreatened);
             if (board[targets.get(i)[1]][targets.get(i)[0]].whiteThreatened > 0) { // king still threatens tiles in front of it, fix king threaten
-
               block = true;
               saveTheKing.add(new int[]{targets.get(i)[0], targets.get(i)[1]});
             }
@@ -2003,8 +1928,6 @@ public class board {
   void unthreaten(int x, int y, boolean human) {
     for (int i = 0; i < board[x][y].piece.potentialMoves.size(); i++) {
       if (board[x][y].piece.isRoyal) {
-        System.out.println(board[x][y].piece.role);
-        //System.out.println(x + " " + y + " " + human);
         board[board[x][y].piece.potentialMoves.get(i)[1]][board[x][y].piece.potentialMoves.get(i)[0]].removeRoyalThreat(new int[] {x, y});
       }
       if (board[x][y].piece.white) {
@@ -2014,17 +1937,12 @@ public class board {
               int index = -1;
               for (int a = 0; a < blackCheckers.size(); a++) {
                 if (x == blackCheckers.get(a)[0] && y == blackCheckers.get(a)[1]) {
-                  System.out.println("BLACK CHECKER: " + x + " " + y);
                   index = a;
                 }
               }
-              if (index == -1) { 
-                System.out.println("PLEASE FIX!");
+              if (index == -1) {
               } else {
                 blackCheckers.remove(index);
-                System.out.println("REMOVED BLACK CHECKERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
-                System.out.println(blackCheckers.size());
-
                 if (blackCheckers.size() == 0) {
                   blackCheck = false;
                   saveTheKing.clear(); // MAY BE BUGGY 
@@ -2072,6 +1990,9 @@ public class board {
     }
   }
   ArrayList<int[]> legalMoves(int x, int y) {
+    if(checkmate){
+      return new ArrayList<int[]>();
+    }
     ArrayList<int[]> ans = new ArrayList();
     //System.out.println("GOD HELP ME: " + x + " " + y);
     Piece piece = board[x][y].piece;
@@ -2617,7 +2538,6 @@ public class board {
     int ogX; 
     int ogY;
     if (Turn) {
-      System.out.println("TURNED PASS " + Turn);
       ogX = whiteKingLocation[0];
       ogY = whiteKingLocation[1];
     } else {
@@ -2635,26 +2555,11 @@ public class board {
   }
 
   void revertPreviousPreventCheck() {
-    if (Turn) {
-      for (int i = 0; i < whiteCheckers.size(); i++) {
-        System.out.println("WHITE KILLER: " + whiteCheckers.get(i)[0] + " " +  whiteCheckers.get(i)[1]);
-      } 
-      System.out.println("ANYTHING ABOVE?");
-    }
     if (saveTheKing.size() > 0) {
-      for (int i = 0; i < saveTheKing.size(); i++) {
-        System.out.println("SAVE THE KING: " + Arrays.toString(saveTheKing.get(i)) + " " + blackCheck);
-      }
       saveTheKing.clear();
     }
     if (restricted.size() > 0) {
-      String answ ="";
       for (int i = 0; i < restricted.size(); i++) {
-        answ += "[" + restricted.get(i)[0] + "," + restricted.get(i)[1] + "], ";
-      }
-      System.out.println("RESTRICTED BEING PROCESSED: " + answ);
-      for (int i = 0; i < restricted.size(); i++) {
-        System.out.println("BUGG: "+restricted.get(i)[0] + " " + restricted.get(i)[1] );
         unthreaten(restricted.get(i)[0], restricted.get(i)[1], true);
         if (board[restricted.get(i)[0]][restricted.get(i)[1]].piece.isRoyal) {
           royalPotential(restricted.get(i)[0], restricted.get(i)[1]);
@@ -2667,7 +2572,6 @@ public class board {
     }
     if (supplementalThreats.size() > 0) {
       for (int i = 0; i < supplementalThreats.size(); i++) {
-        System.out.println(Turn + " Supplements in threat: " + supplementalThreats.get(i)[0] + " " + supplementalThreats.get(i)[1]);
         if (Turn) {
           board[supplementalThreats.get(i)[0]][supplementalThreats.get(i)[1]].setWhiteThreats(-1);
         } else {
@@ -2678,7 +2582,6 @@ public class board {
     }
   }
   void forcePromote(int x, int y) {
-    System.out.println("GOD IS GOOD");
     Piece piece = Board.board[x][y].piece;
     showPromote=false;
     piece.canPromote=false;

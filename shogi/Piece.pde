@@ -16,7 +16,6 @@ public class Piece {
   final color Five = color(155, 173, 183);
   final color Six = color(134, 157, 169);
   final color Seven = color(50, 60, 57);
-  int counter = 0;
   int movingCounter = 0;
   boolean animating = false;
   float Stop = animateTime;
