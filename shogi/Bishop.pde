@@ -167,7 +167,7 @@ public class Bishop extends Piece {
                 rect(x + ((lines[i].length() - a)*(scale - 1.3)), y+((i-start)*(scale-1.3))+ upDownInt, scale, scale);
                 if (promoted) {
                   fill(225, 225, 36, 70);
-                  rect(x + ((lines[i].length() - a)*scale), y+((i-start)*scale) + upDownInt, scale, scale);
+                  rect(x + ((lines[i].length() - a)*(scale - 1.3)), y+((i-start)*(scale - 1.3)) + upDownInt, scale, scale);
                 }
               }
             }

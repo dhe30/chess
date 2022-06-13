@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 board Board;
 boolean English = false;
+String[] banner;
 String[] frame;
 String Theme = "Traditional";
 boolean Test = false;
@@ -27,6 +28,7 @@ int animateCounter = 0;
 int idleCounter = 0;
 boolean makeSure = false;
 void setup() {
+  banner = loadStrings("banner.txt");
   frame = loadStrings("frame.txt");
   frameRate(30);
   //The board is 900 by 900, each tile is 100 by 100 
@@ -50,7 +52,7 @@ void setup() {
 void Hell() {
 }
 void keyPressed() {
-  if(key == 'e'){
+  if (key == 'e') {
     English = !English;
   }
   if (key == 'r') {
@@ -690,9 +692,8 @@ void draw() {
   //System.out.println(Board.blackCaptured.size());
   //System.out.println(Board.whiteCaptured.size());
   if (!Tutorial) {
-    if(!animating && Theme.equals("Alien") && !Turn && onePlayer && !showPromote){
-                Beyond();
-
+    if (!animating && Theme.equals("Alien") && !Turn && onePlayer && !showPromote) {
+      Beyond();
     }
     if (animating) {
       if (animateCounter >= animateTime) {
@@ -764,24 +765,6 @@ void draw() {
     for (int i = 0; i < 9; i++) {
       for (int j = 0; j < 9; j++) {
         if (Board.board[i][j].piece!=null) {
-          //if ( animating) {
-          //  if (Arrays.equals(new int[]{i, j}, moving.get(0))) {
-          //  } else {
-          //    if (Board.board[i][j].piece.white==true) {
-          //      if (Theme.equals("Alien")) {
-          //        Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
-          //      } else {
-          //        Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.display);
-          //      }
-          //    } else {            
-          //      if (Theme.equals("Alien")) {
-          //        Board.board[i][j].piece.displayPiece(j*100, i*100, true, "robot.txt");
-          //      } else {
-          //        Board.board[i][j].piece.displayPiece(j*100, i*100, false, Board.board[i][j].piece.display);
-          //      }
-          //    }
-          //  }
-          //} else {
           if (Board.board[i][j].piece.white==true) {
             if (Theme.equals("Alien")) {
               Board.board[i][j].piece.displayPiece(j*100, i*100, true, Board.board[i][j].piece.alienDisplay);
@@ -797,20 +780,14 @@ void draw() {
           }
           //}
         }
-        if(InitialSelected.size()==1){
-          if(Board.dropTest(InitialSelected.get(0), j, i)){
+        if (InitialSelected.size()==1) {
+          if (Board.dropTest(InitialSelected.get(0), j, i)) {
             fill(20, 50);
             rect(j*100, i*100, 100, 100);
           }
         }
       }
     }
-
-
-
-
-
-
     fill(0);
     ellipse(300, 300, 6, 6);
     ellipse(300, 600, 6, 6);
@@ -827,8 +804,6 @@ void draw() {
     }
     fill(0);
     textSize(20);
-    //fill(225);
-    //fill(0);
     if (!Tutorial) {
       int scale = 20;
       for (int i = 1; i < frame.length; i++) {
@@ -853,18 +828,25 @@ void draw() {
       fill(0);
       if (Turn) {
         if (Board.whiteCheck) {
-          text("White in check", 950, 50);
+          if (Board.checkmate) {
+            text("White MATED!", 950, 50);
+          } else {
+            text("White in check", 950, 50);
+          }
         } else {
           text("White's turn", 950, 50);
         }
       } else {
         if (Board.blackCheck) {
-          text("Black in check", 950, 50);
+          if (Board.checkmate) {
+            text("Black MATED!", 950, 50);
+          } else {
+            text("Black in check", 950, 50);
+          }
         } else {
           text("Black's turn", 950, 50);
         }
       }
-      text(frameRate, 1100, 50);
       if (makeSure) {
         text("Press r to confirm", 950, 90);
       } else if (canDrop) {
@@ -879,7 +861,6 @@ void draw() {
           textSize(20);
         } else if (InitialSelected.size()==1) {
           textSize(15);
-
           if (Turn) {
             text("selected " + Board.whiteCaptured.get(InitialSelected.get(0)).role.replace("\n", " "), 950, 85);
           } else {
@@ -895,9 +876,7 @@ void draw() {
         }
       }
     }
-    if (Board.checkmate) {
-      text("YOU HAVE BEEN MATED!", 950, 75);
-    } 
+
     if (showPromote && !makeSure && !Board.checkmate) {
       fill(13, 178, 46, 150);
       ellipse(980, 190, 50, 50);
@@ -950,13 +929,42 @@ void draw() {
       textSize(20);
       text("One Player", 1010, 257);
     }
+      for (int i = 1; i < banner.length; i++) {
+            int scale = 11;
+
+        //System.out.println(i);
+        for (int a = 0; a < banner[i].length(); a++) {
+          if (banner[i].charAt(a)=='1') {
+            fill(178,184,194);
+          } else if (banner[i].charAt(a)=='2') {
+            fill(103,115,141);
+          } else if (banner[i].charAt(a)=='3') {
+            fill(136,0,20);
+          } else if (banner[i].charAt(a)=='4') {
+            fill(247,91,99);
+          } else if (banner[i].charAt(a)=='5') { 
+            fill(84,10,23);
+          } else if (banner[i].charAt(a)=='6') { 
+            fill(181,41,85);
+          } else if (banner[i].charAt(a)=='7') { 
+            fill(196,4,36);
+          }
+          if (banner[i].charAt(a)!='0') {
+            rect(1611 + (a*scale), ((i)*scale) - 10, scale, scale);
+          }
+        }
+      }
+      fill(255);
+      text("Moves",1683, 60);
+      textSize(15);
+      text("'U' for theme",1668, 120);
     if (InitialSelected.size() > 1 && selected) {
       ArrayList<int [] > list = Board.legalMoves(InitialSelected.get(1), InitialSelected.get(0));
       fill(20, 50);
       if (Theme.equals("Hell")) {
         fill(0);
         fill(222, 217, 215, 150);
-      } else if(Theme.equals("Alien")){
+      } else if (Theme.equals("Alien")) {
         fill(0);
         fill(206, 17, 39, 150);
       }
@@ -972,6 +980,7 @@ void draw() {
       fill(20, 50);
       rect(InitialSelected.get(0)*100, InitialSelected.get(1)*100, 100, 100);
     }
+    if (!Tutorial) {
     textSize(12);
     int x=0;
     for (int i = 0; i < Board.whiteCaptured.size(); i++) {
@@ -1014,7 +1023,7 @@ void draw() {
       //text(Board.blackCaptured.get(i).role, x*100+960, j*100+345);
       x++;
     }
-    if (!Tutorial) {
+    
       //fill(#b27e4d);
       //rect(1200, 5, 430, 302);
       //line(1420, 5, 1420, 305);
@@ -1048,19 +1057,20 @@ void draw() {
         ellipse(1520, i*35 + 6, 3, 3);
         ellipse(1520, i*35 + 25, 3, 3);
       }
-    }
-    if (moves.size()>8) {
-      moves.remove(0);
-    }
-    if (pieceMoved.size()>10) {
-      pieceMoved.remove(0);
-    }
-    for (int i = moves.size()-1; i >= 0; i--) {
-      fill(225);
-      textSize(13);
-      text(pieceMoved.get(i), 1210, i*35+20);
-      text(moves.get(i)[0], 1465, i*35+20);
-      text(moves.get(i)[1], 1570, i*35+20);
+
+      if (moves.size()>8) {
+        moves.remove(0);
+      }
+      if (pieceMoved.size()>10) {
+        pieceMoved.remove(0);
+      }
+      for (int i = moves.size()-1; i >= 0; i--) {
+        fill(225);
+        textSize(13);
+        text(pieceMoved.get(i), 1210, i*35+20);
+        text(moves.get(i)[0], 1465, i*35+20);
+        text(moves.get(i)[1], 1570, i*35+20);
+      }
     }
   }
   textSize(30);
@@ -1533,7 +1543,7 @@ public class board {
               truth = true;
             }
           }
-          if(!truth){
+          if (!truth) {
             return false;
           }
         }
@@ -1640,14 +1650,14 @@ public class board {
     } else {
       if (Turn) {
         if (whiteCheck) {
-                  boolean truth = false;
+          boolean truth = false;
 
           for (int i = 0; i < saveTheKing.size(); i++) {
             if (Arrays.equals(saveTheKing.get(i), new int[]{x1, y1})) {
               truth = true;
             }
           }
-          if(!truth){
+          if (!truth) {
             return false;
           }
         }
@@ -1830,8 +1840,7 @@ public class board {
       if (board[x1][y1].piece != null) {
         System.out.println("1");
         unthreaten(x1, y1, true);
-                System.out.println("2");
-
+        System.out.println("2");
       }
       if (board[x1][y1].piece!=null) {
         if (board[x1][y1].piece.white==true) {
@@ -1844,7 +1853,7 @@ public class board {
       }
       // UNTHREATEN BOTH 
       // NEED TO UNTHREATEN other tile
-      
+
       // move current piece to other tile, set current tile's piece to null
       board[x1][y1].setPiece(board[x][y].piece);
       board[x][y].setPiece(null);
